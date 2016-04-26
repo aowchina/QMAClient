@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:paddingLeft="6dp"
+              android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_visit_special"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center_vertical|left"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_visit_special"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:textSize="10sp"
+            android:text="美容"/>
+
+        <TextView
+            android:id="@+id/tv_visit2_special"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:textSize="8sp"
+            android:gravity="left"
+            android:text="美容"/>
+    </LinearLayout>
+</LinearLayout>

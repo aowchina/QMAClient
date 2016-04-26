@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f2f2f2"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_top" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/feedback_content_et"
+            android:textSize="13sp"
+            android:gravity="top"
+            android:layout_weight="0.7"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/shape_feedback_edit"
+            android:hint="我们的成长离不开您的支持..." />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/feedback_Contact_et"
+        android:textSize="13sp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="0.1"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:padding="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape_feedback_edit"
+        android:hint="请留下您的邮箱,QQ或者电话(选填)" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.78"
+        android:background="#ffff" />
+
+</LinearLayout>

@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_top"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/phone_msg"/>
+
+    <EditText
+        android:id="@+id/ed_reg_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入昵称"/>
+    <EditText
+        android:id="@+id/ed_reg_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请选择年龄"
+        android:inputType="number"/>
+    <EditText
+        android:id="@+id/ed_reg_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="手机号"/>
+    <EditText
+        android:id="@+id/ed_reg_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="密码"/>
+
+
+</LinearLayout>

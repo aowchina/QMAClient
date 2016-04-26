@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@drawable/bg_bottom"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_consult"
+        android:layout_width="0dp"
+        android:layout_weight="10"
+        android:text="在线咨询"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:background="@null"
+        android:onClick="onClick"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="0dp"
+        android:layout_weight="0.03"
+        android:layout_height="30dp"
+        android:background="#ffffffff"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"/>
+    <Button
+        android:id="@+id/btn_order"
+        android:layout_width="0dp"
+        android:layout_weight="10"
+        android:text="预约(定金300)"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:background="@null"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

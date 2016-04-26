@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#88ff0000"
+    android:clickable="true"
+    android:onClick="onClick"
+    android:padding="10dp">
+
+    <com.minfo.quanmei.widget.CircleImageView
+        android:id="@+id/civ_doctor"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:src="@mipmap/conversation_icon_group" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/civ_doctor"
+        android:layout_marginLeft="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="夏医生在线"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="对这个项目感兴趣？我可以帮你预定"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+</RelativeLayout>

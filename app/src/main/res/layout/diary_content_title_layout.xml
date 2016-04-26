@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="75dp"
+              android:background="#dddddd"
+              android:orientation="vertical"
+              android:paddingTop="15dp">
+
+    <TextView
+        android:id="@+id/tv_diary_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="隆鼻加垫鼻尖，果然让我魅力大增，哈哈"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="医院: "/>
+
+        <TextView
+            android:id="@+id/tv_hos_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="北京悦丽汇整形医院"
+            android:textColor="@color/basic_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="花费: "/>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2-5万"
+            android:textColor="@color/basic_color"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,79 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.minfo.quanmei.activity.GroupNotifyActivity">
+
+
+    <include layout="@layout/common_top"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40.0dip"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_reply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="回复"/>
+            <TextView
+                android:id="@+id/tv_reply_num"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                android:text="3"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/shape_circle_view"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_reprove"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/tab_top_bg"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_reprove"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="有用"
+                android:textColor="@android:color/white"/>
+            <TextView
+                android:id="@+id/tv_reprove_num"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                android:text="3"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/shape_circle_view"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+</LinearLayout>

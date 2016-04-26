@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/my_post_title"
+        layout="@layout/common_top" />
+
+
+   <TextView
+       android:id="@+id/tv_receive"
+       android:text="共3条收藏"
+       android:paddingBottom="10dp"
+       android:paddingTop="10dp"
+       android:paddingLeft="5dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" />
+    <com.minfo.quanmei.widget.RefreshListView
+        android:id="@+id/lv_receive_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="5dp"
+
+        android:scrollbars="none"
+        />
+</LinearLayout>

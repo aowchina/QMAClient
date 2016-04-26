@@ -1,0 +1,190 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/appointment_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/action_bar_back" />
+
+
+        <TextView
+            android:id="@+id/tv_recent_gtype"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="#444"
+            android:text="付款详情"
+
+            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/iv_help_appoint"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.4dp"
+        android:background="#ddd" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:text="订单信息："
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_productname_appointpop"
+                android:gravity="center_vertical"
+                android:textColor="#444"
+                android:text="［玻尿酸］瑞蓝玻尿酸 尽显青春活力"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.4dp"
+            android:background="#eee" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.4dp"
+            android:background="#eee" />
+        <LinearLayout
+            android:id="@+id/ll_account_appointpop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:text="支付宝账户："
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_phone_appointpop"
+                android:text="137＊＊＊＊5633 >"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.4dp"
+            android:background="#eee" />
+        <LinearLayout
+            android:id="@+id/ll_paymethod_appointpop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:text="付款方式："
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:text="余额宝 >"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.4dp"
+            android:background="#eee" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <TextView
+                android:text="需付款："
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:textColor="#444"
+                android:layout_height="match_parent" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_productmoney_appointpop"
+                android:text="300元"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:textColor="#444"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.4dp"
+            android:background="#eee" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_weight="0.5"
+            android:layout_height="0dp"/>
+
+        <TextView
+            android:id="@+id/tv_sure_appiontmentpop"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00f"
+            android:text="确认支付"
+            android:gravity="center"
+            android:textSize="17sp"
+            android:textColor="#fff"
+            android:layout_weight="0.7"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="15dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

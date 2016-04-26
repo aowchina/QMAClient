@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.minfo.quanmei.fragment.ProjectInfoFragment">
+
+    <com.minfo.quanmei.widget.RefreshListView
+        android:id="@+id/rlv_reply_me"
+        android:layout_width="match_parent"
+        android:divider="#f5f5f5"
+        android:scrollbars="none"
+        android:dividerHeight="3dp"
+        android:layout_height="match_parent"/>
+
+</FrameLayout>

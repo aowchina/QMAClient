@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'quanmei'
+            keyPassword 'quanmei'
+            storeFile file('/Users/minfo008/Desktop/quanmei.jks')
+            storePassword 'quanmei'
+        }
+    }
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
+    defaultConfig {
+        applicationId "com.minfo.quanmei"
+        minSdkVersion 8
+        targetSdkVersion 22
+        versionCode 2
+        versionName "1.0.1"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            //开启代码混淆
+            minifyEnabled false
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+repositories{
+    flatDir{
+        dirs 'libs' //就是你放aar的目录地址
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('libs/volley.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/universal-image-loader-1.9.3.jar')
+    compile files('libs/mta-sdk-1.6.2.jar')
+    compile files('libs/weiboSDKCore_3.1.2.jar')
+    compile files('libs/libammsdk.jar')
+    compile files('libs/alipaySDK-20150818.jar')
+    compile files('libs/jpush-sdk-release1.8.2.jar')
+    compile files('libs/jpush-android-2.0.5.jar')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    compile name: 'SMSSDK-2.0.2', ext: 'aar'
+    compile name: 'SMSSDKGUI-2.0.2', ext: 'aar'
+    compile files('libs/MobCommons-2016.0223.1655.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
+}

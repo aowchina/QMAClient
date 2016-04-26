@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:padding="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_response_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/tv_response_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:text="三吧少年"
+                android:textColor="@color/basic_color"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_response_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="3月15日"
+                android:layout_gravity="center_vertical"
+                android:textColor="#aaa"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="35dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/tv_response_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="医院环境还不错，护士也还算不错，态度也超级好，还给我说了一些皮肤保养的小秘诀。"
+            android:textSize="13sp" />
+
+
+            <TextView
+                android:id="@+id/tv_response_from"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:background="#f7f7f7"
+
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="旧梦:[白瓷娃娃]弧度流畅 皮下埋线更显自然"
+                android:textSize="13sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/iv_response_delete"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/note_delete" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#f7f7f7"/>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="260dp"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:padding="20dp"
+              android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rg_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/rb_alipay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/my_checkbox_pay"
+            android:checked="true"
+            android:drawablePadding="15dp"
+            android:drawableRight="@mipmap/dialog_alipay"/>
+        <RadioButton
+            android:id="@+id/rb_wxpay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="15dp"
+            android:layout_marginTop="20dp"
+            android:button="@drawable/my_checkbox_pay"
+            android:drawableRight="@mipmap/dialog_wxpay"/>
+    </RadioGroup>
+    <Button
+        android:id="@+id/btn_yes"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="确定"
+        android:background="@drawable/btn_universal"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include  android:id="@+id/common_top" layout="@layout/common_top"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/common_top"
+        android:paddingBottom="40dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/diary_title_layout"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dddddd"/>
+            <include layout="@layout/diary_content_title_layout"/>
+
+
+
+            <com.minfo.quanmei.widget.LimitListView
+                android:id="@+id/llv_first_reply"
+                android:layout_width="match_parent"
+                android:listSelector="@android:color/transparent"
+                android:layout_height="wrap_content"
+                android:divider="#00000000"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:background="#dddddd"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="7dp">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/puss_default_circle_head"/>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/puss_default_circle_head"
+                    android:layout_marginLeft="6dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="right|center_vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher"/>
+                <TextView
+                    android:id="@+id/tv_like_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="271人觉得有用"
+                    android:layout_marginLeft="7dp"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_all_reply"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="全部回帖(125)"
+                android:paddingLeft="6dp"
+                android:gravity="center_vertical"
+                android:background="#dddddd"/>
+            <com.minfo.quanmei.widget.LimitListView
+                android:id="@+id/llv_all_reply"
+                android:layout_width="match_parent"
+                android:listSelector="@android:color/transparent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/layout_bottom_reply_note"/>
+
+</RelativeLayout>

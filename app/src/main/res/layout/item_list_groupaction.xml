@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="#fff"
+    android:padding="5dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/iv_icon_groupaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_content_groupactionitem"
+            android:text=" [全切双眼皮] 去除多余组织，打造完美双眼"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textColor="@color/black"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/tv_name_groupactionitem"
+            android:text="成都恩喜爱医学美容医院"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2">
+            <TextView
+                android:id="@+id/tv_np_groupactionitem"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="¥1680元"
+
+                android:gravity="center"
+                android:textColor="@color/basic_color"/>
+
+            <TextView
+                android:id="@+id/tv_op__groupactionitem"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:text="¥2380元"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

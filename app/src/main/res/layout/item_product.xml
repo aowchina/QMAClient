@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal"
+              android:padding="5dp">
+
+
+    <com.minfo.quanmei.widget.SquareImage
+        android:id="@+id/iv_pro_logo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.4"
+        android:src="@mipmap/default_pic"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:paddingLeft="5dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_pro_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="4dp"
+            android:ellipsize="end"
+            android:text="一针帮你补足水，无需每天敷面膜"
+            android:textColor="#171717"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_hos_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="北京解放军总装医院"
+            android:textSize="13sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="25dp">
+
+            <TextView
+                android:id="@+id/tv_new_price"
+                android:layout_width="wrap_content"
+                android:text="¥1680"
+                android:textColor="#ee817e"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_old_price"
+                android:layout_width="wrap_content"
+                android:text="¥999"
+                android:textSize="13sp"
+                android:layout_marginLeft="15dp"
+                android:gravity="bottom"
+                android:textColor="#959595"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tv_sale_nums"
+                android:layout_width="wrap_content"
+                android:text="已售45"
+                android:textSize="13sp"
+                android:gravity="bottom"
+                android:layout_marginRight="10dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

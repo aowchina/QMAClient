@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical">
+
+
+        <com.minfo.quanmei.widget.LimitGridView
+            android:id="@+id/grid_project_relative"
+            android:numColumns="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:verticalSpacing="5dp"
+            android:visibility="gone"
+            android:horizontalSpacing="5dp"
+
+            />
+
+        <com.minfo.quanmei.widget.LimitListView
+            android:id="@+id/rsl_diary"
+            android:visibility="gone"
+            android:divider="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.minfo.quanmei.widget.LimitListView>
+        <com.minfo.quanmei.widget.LimitListView
+            android:id="@+id/rsl_tiezi"
+            android:visibility="gone"
+            android:divider="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+
+        </com.minfo.quanmei.widget.LimitListView>
+
+    </LinearLayout>
+</LinearLayout>

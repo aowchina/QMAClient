@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#00000000">
+
+
+    <LinearLayout
+        android:id="@+id/ll_second_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="4dp">
+        <TextView
+            android:id="@+id/tv_user_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="依旧亦久"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20小时前"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:textColor="@color/tv_hint"/>
+    </LinearLayout>
+</LinearLayout>

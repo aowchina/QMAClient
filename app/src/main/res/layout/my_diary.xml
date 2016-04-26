@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/my_diary_title"
+        layout="@layout/common_top" />
+
+    <LinearLayout
+        android:id="@+id/ll_diary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:visibility="gone"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/iv_mydiary_invitation"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/topic_upload_pic"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="6dp"
+            android:text="发布新日记"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_diary_my"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/tv_my_post"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="我发布的"
+            android:textColor="@color/white"
+            android:background="@color/basic_color" />
+
+        <TextView
+            android:id="@+id/tv_my_reply"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="我回复的" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/nothing_diary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/bookicon"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂无日记"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="快去发表日记吧"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.minfo.quanmei.widget.RefreshListView
+        android:id="@+id/my_diary_listview"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:divider="@null"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>

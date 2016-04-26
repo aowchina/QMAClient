@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/gv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:clipChildren="true"
+        android:gravity="center"
+        android:horizontalSpacing="3dip"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="3dip"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="50dp"
+        android:paddingRight="5dp">
+    </GridView>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_ly"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:clickable="true" >
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="取消"
+            android:background="@drawable/border_universal"
+            android:textColor="@color/basic_color" />
+
+        <TextView
+            android:id="@+id/tv_selected_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_forget_pwd"
+            android:layout_centerInParent="true"
+            android:text="最多可选9张"
+            android:layout_marginLeft="200dp"/>
+
+        <Button
+            android:id="@+id/btn_complete"
+            android:layout_width="50dip"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="完成"
+            android:background="@drawable/btn_universal"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+</RelativeLayout>
