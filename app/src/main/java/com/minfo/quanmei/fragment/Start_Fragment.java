@@ -192,6 +192,9 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
         reqSignState();
         reqStartList();
+        if(!isSigned){
+            reqSign();
+        }
         HorizontalScrollView scrollView = ((HorizontalScrollView) v.findViewById(R.id.hs_start));
         scroll.setOnRefreshListener(new PullScrollView.OnRefreshListener() {
             @Override
@@ -345,11 +348,12 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onRequestNoData(BaseResponse response) {
+
                 int errorcode = response.getErrorcode();
                 if (errorcode == 13) {
-                    ToastUtils.show(mActivity, "今日已签到");
+//                    ToastUtils.show(mActivity, "今日已签到");
                 } else if (errorcode == 15) {
-                    ToastUtils.show(mActivity, "签到失败");
+//                    ToastUtils.show(mActivity, "签到失败");
                 } else if (errorcode == 11 || errorcode == 12) {
                     LoginActivity.isJumpLogin = true;
                     utils.jumpAty(mActivity, LoginActivity.class, null);

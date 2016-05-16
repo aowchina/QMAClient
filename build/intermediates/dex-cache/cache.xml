@@ -2,130 +2,137 @@
 <items version="2" >
 
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-f332857cf692f0db77ec47a1c1c2127150f10a9f.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/SMSSDKGUI-2.0.2/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="a62a723a7f179156de6d72767b77ec10ed539125">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-65c0b556cbed21851b2a6549520984e7c4fce950.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/weiboSDKCore_3.1.2.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="1c0bfcddc15de1e8a90ff166da0b9abe011346af">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/weiboSDKCore_3.1.2-b3be0eea0cf0ea85c19deab7f6739d3224e49728.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/libammsdk.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/libammsdk.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="47f4993168154fa73377d7470b9f6887d48a8023">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/libammsdk-ffef12ecb821d5908ee500641a41f79af09439d5.jar" />
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/libammsdk-c8e571c17386d6d18489a028d60ef0dc22d160b8.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-f248321df632deb3e432db5d61b46b36712c5c7e.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="f8efd0096475e0daf054267b61544e10dc776503">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-0db14dbdf7351ac03946ea9a5f7eaf2a2f543d9f.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/universal-image-loader-1.9.5.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.5-5d06d09782e96c210cc33e502c39b095ed647193.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/MobTools-2016.0223.1655.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="fe9bb68bf9983f6fd4882e89ea11bf6f2bbb1ded">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/MobTools-2016.0223.1655-1f1abc4a860786f3aba8a1b520477dd04d4d74ef.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/SMSSDK-2.0.2/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="5b9e185ca044fb8d1fcc6a28fe9bfa95721b5ed9">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-885a993dec2ffcc1121ff7a865d55549c1e1ea41.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/MobCommons-2016.0223.1655.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="9ac79e45bfe01ce2bac0a1d1ead2aba2524f4c8b">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/MobCommons-2016.0223.1655-29a014fadc2dc4c8672967eec3db3323299498ac.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/open_sdk_r5276.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="9e2c4b8c07d6cfc4de7f7f65251971e0e1025bf1">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/open_sdk_r5276-5b7a8c5d51c71bce13bd0eb478c1d0a7f2d92b93.jar" />
-    </item>
-    <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/jars/classes.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/design/22.2.1/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="1821601ddbec5ff125653097812823388700af74">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-4728f058d19206c5716b8c5b9e37003312fe2454.jar" />
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-d91c038195f401f04640a8acc29afa9f78d8f6ee.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/alipaySDK-20150818.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/SMSSDKGUI-2.0.2/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="6dde19fc34adb03c637b17fdaa754e0c02cf75a0">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/alipaySDK-20150818-b2636440e5dda7354b5c637cb1113e9910654c22.jar" />
+        sha1="a62a723a7f179156de6d72767b77ec10ed539125">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-bcf6050d8af43b6287d2675709a4d5c6b6888919.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/gson-2.2.4.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/volley.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="973e832af433b44c3ed11c426f2f390b29f3f3f8">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/gson-2.2.4-495d41235a4c3a8abd69d42b9c2bd208a1e85364.jar" />
+        sha1="4a94601db9bdfb7dc60efabb3dea91a0675f591d">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/volley-8fe6f5587c2793880a8c90dcffb683029dc840d1.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/jpush-android-2.0.5.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/universal-image-loader-1.9.5.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="f2c821a0d13219a2e70490085c390bab03fb5953">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/jpush-android-2.0.5-e17e95ae69b6164f4deed0e81ce4b5f3ffe8e589.jar" />
+        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.5-886799821a58e57e604fbb9e53391387a0d17b3c.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-fed1561fe9bd2b59c12f69483c55e673ed937c60.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f8efd0096475e0daf054267b61544e10dc776503">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-21d348d9a1a75c7096b9315f85c8295dacd62c9c.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/weiboSDKCore_3.1.2.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1c0bfcddc15de1e8a90ff166da0b9abe011346af">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/weiboSDKCore_3.1.2-4c2500fba7e8dce0fe1b0aaf2e7f715541320fd7.jar" />
     </item>
     <item
         jar="/Users/minfo008/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.1/support-annotations-22.2.1.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-9eaf9b46b71722f91add717927f001defc2483d3.jar" />
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-9eaf9b46b71722f91add717927f001defc2483d3.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/mta-sdk-1.6.2.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/SMSSDK-2.0.2/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="5b9e185ca044fb8d1fcc6a28fe9bfa95721b5ed9">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-652641a208d323010a56280881d9a3fb9364b4be.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/mta-sdk-1.6.2.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="c184c69f43b1fe46390f7123717c65bd844bccb6">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/mta-sdk-1.6.2-8276a6117b9dce9e43a891c88cc8fb8986b3e357.jar" />
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/mta-sdk-1.6.2-998bd18474d88e5fea23408cd94b1a1b0e97fa04.jar" />
     </item>
     <item
-        jar="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/libs/volley.jar"
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/MobTools-2016.0223.1655.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="4a94601db9bdfb7dc60efabb3dea91a0675f591d">
-        <dex dex="/Users/minfo008/Projects/全美-Android/QuanMei-master/app/build/intermediates/pre-dexed/debug/volley-5cbfbd0d17473c4d5158e86e27179b67c4c23c19.jar" />
+        sha1="fe9bb68bf9983f6fd4882e89ea11bf6f2bbb1ded">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/MobTools-2016.0223.1655-5eed4738adb3bf4290ebc3cd878d7dfd183bec4a.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/core-2.3.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="80a402b12accd66d4be7e5dbcb44e42baa0bdd7c">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/core-2.3.0-4206b9da5b4db68d2009f49c847c0fcfb63e2cf8.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/open_sdk_r5276.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9e2c4b8c07d6cfc4de7f7f65251971e0e1025bf1">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/open_sdk_r5276-79a3d661f48288df877b25288bdda62780fad1e6.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/classes-4b47c14d65a13f2b80d8161156bdda96d06fa524.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/jpush-android-2.0.5.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f2c821a0d13219a2e70490085c390bab03fb5953">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/jpush-android-2.0.5-68277dfa49b425fe590af9987353872ef722d709.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/gson-2.2.4.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="973e832af433b44c3ed11c426f2f390b29f3f3f8">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/gson-2.2.4-90004d76b45cfb1d1efeccf5b243d011aae4813a.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/alipaySDK-20150818.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6dde19fc34adb03c637b17fdaa754e0c02cf75a0">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/alipaySDK-20150818-fb9b0354ee6f30f3192100dd13ac14c01f83a163.jar" />
+    </item>
+    <item
+        jar="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/libs/MobCommons-2016.0223.1655.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9ac79e45bfe01ce2bac0a1d1ead2aba2524f4c8b">
+        <dex dex="/Users/minfo008/Downloads/AndroidStudioProjects/QuanMei-master/app/build/intermediates/pre-dexed/debug/MobCommons-2016.0223.1655-04e14696488497920ad9a5f8fb4cc6003f9fd230.jar" />
     </item>
 
 </items>

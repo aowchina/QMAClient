@@ -156,7 +156,12 @@ public class PocketActivity extends BaseActivity implements View.OnClickListener
                 helper.setText(R.id.tv_content,item.getOrder_num());
                 helper.setImageResource(R.id.iv_type,R.mipmap.item_pocket);
             }
-            helper.setText(R.id.tv_item_grade,"+"+item.getPoint());
+            if(item.getStatus().equals("1")) {
+                helper.setText(R.id.tv_item_grade, "+" + item.getPoint());
+            }else{
+                helper.setText(R.id.tv_item_grade, "-" + item.getPoint());
+            }
+
             helper.setText(R.id.tv_week,item.getWeek());
             helper.setText(R.id.tv_date,item.getMonth()+"-"+item.getDay());
 

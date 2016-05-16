@@ -75,6 +75,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private ImageView ivMsg;
 
+    private int currentIndex = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -198,8 +200,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             mainRelative.setBackgroundResource(R.mipmap.start_title2);
             rlSearch.setVisibility(View.GONE);
             llScanner.setVisibility(View.GONE);
+            civAvatar.setVisibility(View.VISIBLE);
             tvTitle.setVisibility(View.VISIBLE);
-            civAvatar.setVisibility(View.GONE);
             tv_right.setVisibility(View.VISIBLE);
             tv_right.setText("个人资料");
             tvTitle.setText("我的");
@@ -277,15 +279,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(new Intent(this,PersonInfoActivity.class));
                 break;
             case R.id.ll_main:
+                currentIndex = 0;
                 setSelect(0);
                 break;
             case R.id.ll_group:
+                currentIndex = 1;
                 setSelect(1);
                 break;
             case R.id.ll_special:
+                currentIndex = 2;
                 setSelect(2);
                 break;
             case R.id.ll_my:
+                currentIndex = 3;
                 setSelect(3);
                 break;
             case R.id.rl_search:
@@ -295,7 +301,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 utils.jumpAty(this,SearchActivity.class,null);
                 break;
             case R.id.rl_user_avatar:
-                setSelect(3);
+                if(currentIndex!=3) {
+                    setSelect(3);
+                }
                 break;
             case R.id.ll_scanner:
                 utils.jumpAty(this,MessageActivity.class,null);

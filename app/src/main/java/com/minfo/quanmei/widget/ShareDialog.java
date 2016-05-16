@@ -86,6 +86,6 @@ public class ShareDialog extends AlertDialog implements View.OnClickListener {
      * 区分分享的类别，微信好友，朋友圈，qq好友
      */
     public enum Type{
-       WECHAT_FRIEND,WECHAT_CIRCLE,QQ,CANCEL
+       WECHAT_FRIEND,WECHAT_CIRCLE,QQ
     }
 }

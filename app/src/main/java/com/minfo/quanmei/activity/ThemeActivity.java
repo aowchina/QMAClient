@@ -16,7 +16,6 @@ import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
-import com.minfo.quanmei.widget.LimitGridView;
 import com.minfo.quanmei.widget.PullScrollView;
 
 import java.util.ArrayList;
@@ -144,6 +143,7 @@ public class ThemeActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onRequestNoData(BaseResponse response) {
+                ToastUtils.show(ThemeActivity.this,response.getErrorcode()+"");
                 pslTheme.setheaderViewReset();
                 pslTheme.setfooterViewGone();
                 ToastUtils.show(ThemeActivity.this, "服务器繁忙");

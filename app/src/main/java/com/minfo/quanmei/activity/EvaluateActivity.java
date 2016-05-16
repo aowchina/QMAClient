@@ -1,6 +1,7 @@
 package com.minfo.quanmei.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -61,8 +62,9 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initViews() {
-        ordeId = getIntent().getExtras().getString("OrdeID");
-        hID = getIntent().getExtras().getInt("HID");
+        Bundle bundle = getIntent().getBundleExtra("info");
+        ordeId = bundle.getString("orderid");
+        hID = bundle.getInt("hid");
 
         back.setOnClickListener(this);
         goodLl.setOnClickListener(this);
@@ -136,6 +138,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         String context = evaluateEt.getText().toString().trim();
 
         String url = getResources().getString(R.string.api_baseurl) + "order/AddPj.php";
+        Log.e(TAG,Constant.user.getUserid() + "*" + ordeId + "*" + hID + "*" + flowerLevel + "*" + asetheticNum + "*" + environmentNum + "*" + serviceNum);
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + ordeId + "*" + hID + "*" + flowerLevel + "*" + asetheticNum + "*" + environmentNum + "*" + serviceNum + "*" +utils.convertChinese(context));
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
 
@@ -157,7 +160,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     LoginActivity.isJumpLogin = true;
                     utils.jumpAty(EvaluateActivity.this, LoginActivity.class, null);
                 }else{
-                    ToastUtils.show(EvaluateActivity.this,"服务器繁忙");
+                    ToastUtils.show(EvaluateActivity.this,"服务器繁忙"+errorcode);
                 }
             }
             @Override

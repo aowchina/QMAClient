@@ -23,8 +23,7 @@ import com.minfo.quanmei.activity.MyCourseActivity;
 import com.minfo.quanmei.activity.MyDiaryActivity;
 import com.minfo.quanmei.activity.MyNoteActivity;
 import com.minfo.quanmei.activity.MyReceiveActivity;
-import com.minfo.quanmei.activity.OrderActivity;
-import com.minfo.quanmei.activity.PersonalHomePageActivity;
+import com.minfo.quanmei.activity.OrderListActivity;
 import com.minfo.quanmei.activity.PocketActivity;
 import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
@@ -215,13 +214,13 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.civ_head_image:
+            /*case R.id.civ_head_image:
                 if (myinfo != null) {
                     Intent intent = new Intent(getActivity(), PersonalHomePageActivity.class);
                     intent.putExtra("userid", myinfo.getUserid() + "");
                     startActivity(intent);
                 }
-                break;
+                break;*/
             case R.id.rl_diary:
                 startActivity(new Intent(getActivity(), MyDiaryActivity.class));
                 break;
@@ -232,7 +231,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(getActivity(), MyReceiveActivity.class));
                 break;
             case R.id.rl_order:
-                utils.jumpAty(getActivity(), OrderActivity.class, null);
+                utils.jumpAty(getActivity(), OrderListActivity.class, null);
                 break;
             case R.id.rl_update:
                 reqUpdate();

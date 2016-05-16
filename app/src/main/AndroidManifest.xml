@@ -82,6 +82,7 @@
         <activity
             android:name=".activity.ProductDetailActivity"
             android:screenOrientation="portrait">
+
         </activity>
         <activity
             android:name=".activity.HospitalActivity"
@@ -446,6 +447,16 @@
         <activity android:name=".activity.SecureActivity">
         </activity>
         <activity android:name=".activity.PocketActivity">
+        </activity>
+        <activity android:name=".activity.OrderListActivity">
+
+        </activity>
+        <activity
+            android:name=".activity.OrderPayActivity">
+
+        </activity>
+        <activity android:name=".activity.OrderDetailActivity">
+
         </activity>
     </application>
 

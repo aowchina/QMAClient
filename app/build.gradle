@@ -33,8 +33,8 @@ android {
         }
     }
 }
-repositories{
-    flatDir{
+repositories {
+    flatDir {
         dirs 'libs' //就是你放aar的目录地址
     }
 }
@@ -50,11 +50,12 @@ dependencies {
     compile files('libs/alipaySDK-20150818.jar')
     compile files('libs/jpush-sdk-release1.8.2.jar')
     compile files('libs/jpush-android-2.0.5.jar')
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:design:22.2.1'
     compile name: 'SMSSDK-2.0.2', ext: 'aar'
     compile name: 'SMSSDKGUI-2.0.2', ext: 'aar'
     compile files('libs/MobCommons-2016.0223.1655.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    compile files('libs/core-2.3.0.jar')
 }

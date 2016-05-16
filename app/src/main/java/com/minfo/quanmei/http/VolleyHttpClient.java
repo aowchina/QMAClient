@@ -8,7 +8,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.widget.LoadingDialog;
 
 import java.util.Map;
@@ -106,10 +105,9 @@ public class VolleyHttpClient {
                                 errMsg = "请求服务器出错，错误代码未知";
                             } else {
                                 errMsg = VolleyErrorHelper.getMessage(mContext, error);
+
                                 errCode = error.networkResponse == null ? errCode : error.networkResponse.statusCode;
                             }
-
-                            ToastUtils.show(mContext, errMsg);
                             if (listener != null) {
                                 listener.onRequestError(errCode, errMsg);
                             }

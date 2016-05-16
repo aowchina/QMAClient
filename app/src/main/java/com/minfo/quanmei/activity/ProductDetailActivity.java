@@ -392,14 +392,15 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
      */
     private void jumpCompleteOrder(String responseStr) {
         try {
+            Log.e(TAG,responseStr);
             JSONObject jsonObject = new JSONObject(responseStr);
             String orderid = jsonObject.getString("orderid");
-            String tel = jsonObject.getString("tel");
+
             Bundle bundle = new Bundle();
-            bundle.putSerializable("productdetail", productDetail);
-            bundle.putString("tel", tel);
+
             bundle.putString("orderid", orderid);
-            utils.jumpAty(ProductDetailActivity.this, AccomplishAppointmentActivity.class, bundle);
+
+            utils.jumpAty(ProductDetailActivity.this, OrderPayActivity.class, bundle);
         } catch (JSONException e) {
             e.printStackTrace();
         }

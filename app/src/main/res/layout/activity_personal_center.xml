@@ -43,6 +43,7 @@
                             android:id="@+id/civ_head_image"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:visibility="invisible"
                             android:src="@mipmap/puss_default_circle_head"/>
                     </LinearLayout>
 

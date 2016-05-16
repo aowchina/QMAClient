@@ -234,6 +234,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onRequestError(int code, String msg) {
                 loadingDialog.dismiss();
+                Log.e(TAG,code+"");
                 ToastUtils.show(LoginActivity.this,msg);
             }
         });
