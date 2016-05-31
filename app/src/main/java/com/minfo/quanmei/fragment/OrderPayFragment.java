@@ -3,7 +3,8 @@ package com.minfo.quanmei.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -39,6 +40,7 @@ public class OrderPayFragment extends BaseFragment {
     private int page = 1;
     private boolean isLoad;
     private List<Order> tempList = new ArrayList<>();
+    public static  Handler handler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,9 +62,24 @@ public class OrderPayFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putString("orderid", orderList.get(position - 1).getOrderid());
+                bundle.putInt("payType", 1);
+                bundle.putString("from", "OrderPayFragment");
                 utils.jumpAty(mActivity, OrderPayActivity.class, bundle);
             }
         });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what==1){
+                    page = 1;
+                    orderList.clear();
+                    tempList.clear();
+                    reqMyOrdeList();
+                }
+            }
+        };
     }
 
 
@@ -106,10 +123,8 @@ public class OrderPayFragment extends BaseFragment {
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG, "请求成功" + response.toString());
                 loadingDialog.dismiss();
                 tempList = response.getList(Order.class);
-                Log.e(TAG, tempList.toString());
                 if (isRefresh) {
                     isRefresh = false;
                     lvOrderPay.refreshComplete();
@@ -126,10 +141,15 @@ public class OrderPayFragment extends BaseFragment {
             @Override
             public void onRequestNoData(BaseResponse response) {
                 loadingDialog.dismiss();
-                ToastUtils.show(mActivity, response.getErrorcode() + "");
                 lvOrderPay.refreshComplete();
                 lvOrderPay.loadComplete();
-                ToastUtils.show(mActivity, "服务器繁忙");
+                int errorcode = response.getErrorcode();
+                if(errorcode==11||errorcode==12){
+                    utils.jumpAty(mActivity,LoginActivity.class,null);
+                    LoginActivity.isJumpLogin = true;
+                }else {
+                    ToastUtils.show(mActivity, "服务器繁忙");
+                }
             }
 
             @Override

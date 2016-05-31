@@ -3,7 +3,8 @@ package com.minfo.quanmei.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.LoginActivity;
 import com.minfo.quanmei.activity.OrderDetailActivity;
+import com.minfo.quanmei.activity.OrderPayActivity;
 import com.minfo.quanmei.adapter.BaseViewHolder;
 import com.minfo.quanmei.adapter.CommonAdapter;
 import com.minfo.quanmei.entity.Order;
@@ -40,6 +42,7 @@ public class OrderServiceFragment extends BaseFragment {
     private LoadingDialog loadingDialog;
     private List<Order> tempList = new ArrayList<>();
 
+    public static Handler handler;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +64,27 @@ public class OrderServiceFragment extends BaseFragment {
                 utils.jumpAty(mActivity, OrderDetailActivity.class, bundle);
             }
         });
-
         reqMyOrdeList();
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if(msg.what==1){
+                    page = 1;
+                    orderList.clear();
+                    tempList.clear();
+                    reqMyOrdeList();
+                }
+            }
+        };
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -105,10 +127,8 @@ public class OrderServiceFragment extends BaseFragment {
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG, "请求成功" + response.toString());
                 loadingDialog.dismiss();
                 tempList = response.getList(Order.class);
-                Log.e(TAG, tempList.toString());
                 if (isRefresh) {
                     isRefresh = false;
                     lvOrderService.refreshComplete();
@@ -125,10 +145,15 @@ public class OrderServiceFragment extends BaseFragment {
             @Override
             public void onRequestNoData(BaseResponse response) {
                 loadingDialog.dismiss();
-                ToastUtils.show(mActivity, response.getErrorcode() + "");
                 lvOrderService.refreshComplete();
                 lvOrderService.loadComplete();
-                ToastUtils.show(mActivity, "服务器繁忙");
+                int errorcode = response.getErrorcode();
+                if (errorcode == 11 || errorcode == 12) {
+                    utils.jumpAty(mActivity, LoginActivity.class, null);
+                    LoginActivity.isJumpLogin = true;
+                } else {
+                    ToastUtils.show(mActivity, "服务器繁忙");
+                }
             }
 
             @Override
@@ -169,7 +194,7 @@ public class OrderServiceFragment extends BaseFragment {
                 } else if (errorcode == 20) {
                     ToastUtils.show(mActivity, "订单记录不存在");
                 } else {
-                    ToastUtils.show(mActivity, "服务器繁忙" + errorcode);
+                    ToastUtils.show(mActivity, "服务器繁忙");
                 }
             }
 
@@ -197,13 +222,31 @@ public class OrderServiceFragment extends BaseFragment {
             helper.setText(R.id.tv_price, "￥" + item.getNewval());
             helper.setText(R.id.tv_hospital_name, item.getHname());
 
+            TextView tvRemainBalance = helper.getView(R.id.tv_remain_balance);
+
             UniversalImageUtils.displayImageUseDefOptions(item.getSimg(), (ImageView) helper.getView(R.id.iv_product_simg));
 
-            if(item.getStatus().equals("2")) {
+            if (item.getStatus().equals("2")) {
                 helper.setText(R.id.tv_pay_status, "定金支付");
-            }else if(item.getStatus().equals("5")){
+                tvRemainBalance.setVisibility(View.VISIBLE);
+
+                tvRemainBalance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("orderid", item.getOrderid());
+                        bundle.putInt("payType", 3);
+                        bundle.putString("from","OrderServiceFragment");
+                        utils.jumpAty(mActivity, OrderPayActivity.class,bundle);
+                    }
+                });
+
+            } else if (item.getStatus().equals("5")) {
                 helper.setText(R.id.tv_pay_status, "全款支付");
+                tvRemainBalance.setVisibility(View.GONE);
             }
+
+
 
             TextView tvCancel = helper.getView(R.id.tv_cancel);
             tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +255,8 @@ public class OrderServiceFragment extends BaseFragment {
                     reqCancel(item.getOrderid(), item);
                 }
             });
+
+
 
         }
     }

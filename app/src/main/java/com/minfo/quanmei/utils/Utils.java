@@ -98,6 +98,12 @@ public class Utils {
         m.what = msgtag;
         handler.sendMessage(m);
     }
+    public void sendMsg(Handler handler, int msgtag,Object object){
+        Message m = new Message();
+        m.what = msgtag;
+        m.obj = object;
+        handler.sendMessage(m);
+    }
 
 
 

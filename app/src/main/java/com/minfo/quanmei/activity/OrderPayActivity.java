@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.minfo.quanmei.R;
-import com.minfo.quanmei.entity.ProductDetail;
+import com.minfo.quanmei.fragment.OrderPayFragment;
+import com.minfo.quanmei.fragment.OrderServiceFragment;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.utils.Constant;
@@ -46,8 +47,6 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
 
     private SelectPayDialog selectPayDialog;
     private Bundle bundle;
-    private Intent intent;
-    private ProductDetail productDetail;
 
     private TextView tvProductName;
     private TextView tvPhone;
@@ -55,7 +54,6 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
     private TextView tvScore;
     private TextView tvPrice;
     private TextView tvMinusMoney;
-    private TextView tvRealMinusMoney;
     private Button btnPay;
     private EditText etPoint;
     private TextView tvPayMethod;
@@ -67,22 +65,23 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
     private TextView tvPayMoney;
 
     private int payMethod = 1;//微信2 支付宝1
-    private int payType = 1;//定金1 全款2
+    private int payType = 1;//定金1 全款2 尾款3
     //支付宝常量
     private static final int SDK_PAY_FLAG = 1;
 
-    private String phone;
     private String orderid;
+    private String tempOrderid;
     private double score;
     private String point_to_one;
     double minusMoney;
-    double realMinusMoney;
 
     private String productName;
 
     double payMoney;
 
     public static final String flag = "ORDER_TO_PAY";
+
+    public String from = "ProductDetail";
 
     private String consumePoint;//消耗积分
     private String tel;
@@ -125,7 +124,7 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
         tvOrderid = (TextView) findViewById(R.id.tv_order_id);
         tvScore = (TextView) findViewById(R.id.tv_score);
         tvMinusMoney = (TextView) findViewById(R.id.tv_minus_money);
-        tvRealMinusMoney = (TextView) findViewById(R.id.tv_real_minus_money);
+//        tvRealMinusMoney = (TextView) findViewById(R.id.tv_real_minus_money);
         tvPayMoney = (TextView) findViewById(R.id.tv_pay_money);
         tvLeftTime = (TextView) findViewById(R.id.tv_left_time);
         llLeftTime = (LinearLayout) findViewById(R.id.ll_left_time);
@@ -146,6 +145,12 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
                             OrderPayActivity.this.finish();
                         }
                     }, 1000);
+
+                    if(from.equals("OrderServiceFragment")){
+                        utils.sendMsg(OrderServiceFragment.handler,1);
+                    }else if(from.equals("OrderPayFragment")){
+                        utils.sendMsg(OrderPayFragment.handler,1);
+                    }
                 }
             }
         };
@@ -156,6 +161,12 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
         bundle = getIntent().getBundleExtra("info");
         if (bundle != null) {
             orderid = bundle.getString("orderid");
+            payType = bundle.getInt("payType");
+            if(payType==3){
+                rlPayType.setClickable(false);
+                tvPayType.setText("尾款");
+            }
+            from = bundle.getString("from");
             getWaitDetail();
         }
     }
@@ -165,9 +176,7 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
      */
     public void getPayMoney() {
         String url = getString(R.string.api_baseurl) + "order/Before_pay.php";
-        Log.e(TAG, Constant.user.getUserid() + "*" + orderid + "*" + payType + "*" + payMethod + "*" + consumePoint);
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + orderid + "*" + payType + "*" + payMethod + "*" + consumePoint);
-        Log.e("参数", params.toString());
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -183,15 +192,20 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
                     payMoney = jsonObject.getDouble("money");
                     if (payMoney == 0) {
                         ToastUtils.show(OrderPayActivity.this, "支付成功！");
-                        startActivity(new Intent(OrderPayActivity.this, OrderListActivity.class));
+                        if(from.equals("OrderServiceFragment")){
+                            utils.sendMsg(OrderServiceFragment.handler,1);
+                        }else if(from.equals("OrderPayFragment")){
+                            utils.sendMsg(OrderPayFragment.handler,1);
+                        }
                         finish();
                     } else {
                         if (payMethod == 1) {
+                            tempOrderid = jsonObject.getString("orderid");
                             pay();
                         } else {
 
                             wx_prepayid = jsonObject.getString("pid");
-                            orderid = jsonObject.getString("orderid");
+                            tempOrderid = jsonObject.getString("orderid");
                             WXPayEntryActivity.orderid = orderid;
                             WXPayEntryActivity.type = 1;
                             wx_prepay_nonestr = jsonObject.getString("nonce_str");
@@ -207,7 +221,21 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onRequestNoData(BaseResponse response) {
-                ToastUtils.show(OrderPayActivity.this, "服务器繁忙" + response.getErrorcode());
+                int errcode = response.getErrorcode();
+                if (errcode == 13 || errcode == 18) {
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(OrderPayActivity.this, LoginActivity.class, null);
+                } else if (errcode == 17) {
+                    ToastUtils.show(OrderPayActivity.this, "积分花费不合理");
+                } else if (errcode == 20) {
+                    ToastUtils.show(OrderPayActivity.this, "订单记录不存在");
+                } else if (errcode == 21) {
+                    ToastUtils.show(OrderPayActivity.this, "积分不足");
+                } else if (errcode == 22) {
+                    ToastUtils.show(OrderPayActivity.this, "请勿使用过多积分");
+                } else {
+                    ToastUtils.show(OrderPayActivity.this, "服务器繁忙");
+                }
             }
 
             @Override
@@ -263,7 +291,6 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
 
     private void getWaitDetail() {
         String url = getString(R.string.api_baseurl) + "order/WaitDetail.php";
-        Log.e(TAG, Constant.user.getUserid() + "*" + orderid);
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + orderid);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
@@ -273,13 +300,20 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG,response.toString());
                 setView(response.toString());
             }
 
             @Override
             public void onRequestNoData(BaseResponse response) {
-                ToastUtils.show(OrderPayActivity.this, "服务器繁忙" + response.getErrorcode());
+                int errorcode = response.getErrorcode();
+                if (errorcode == 10 || errorcode == 11 || errorcode == 12) {
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(OrderPayActivity.this, LoginActivity.class, null);
+                } else if (errorcode == 14) {
+                    ToastUtils.show(OrderPayActivity.this, "订单记录不存在");
+                } else {
+                    ToastUtils.show(OrderPayActivity.this, "服务器繁忙");
+                }
             }
 
             @Override
@@ -297,7 +331,17 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
 
             newval = jsonObject.getString("newval");
             dj = jsonObject.getString("dj");
-            tvPayMoney.setText(payType == 2 ? newval : dj);
+
+            if(payType==2){
+                tvPayMoney.setText(newval);
+            }else if(payType==1){
+                tvPayMoney.setText(dj);
+            }else if(payType==3){
+                double wkMoney = Double.parseDouble(newval) - Double.parseDouble(dj);
+                String wk = String.format("%.2f",wkMoney);
+                tvPayMoney.setText(wk);
+            }
+
             tvPrice.setText(jsonObject.getString("newval") + "元" + "(定金" + jsonObject.getString("dj") + "元)");
             tel = jsonObject.getString("tel");
             tvPhone.setText(tel);
@@ -311,7 +355,7 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
             tvScore.setText(score + "");
             leftTime = jsonObject.getInt("chatime");
 
-            if(leftTime>0) {
+            if (leftTime > 0) {
                 new CountDownTimer(leftTime * 1000, 1000) {
                     @Override
                     public void onFinish() {
@@ -325,7 +369,7 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
                         tvLeftTime.setText(minutes + ":" + seconds);
                     }
                 }.start();
-            }else{
+            } else {
                 llLeftTime.setVisibility(View.INVISIBLE);
             }
 
@@ -370,7 +414,7 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
          * get the out_trade_no for an order. 生成商户订单号，该值在商户端应保持唯一（可自定义格式规范）
          */
 //        key = UUID.randomUUID().toString();
-        String orderInfo = Pay_Utils.getOrderInfo(subject, body, price, orderid);
+        String orderInfo = Pay_Utils.getOrderInfo(subject, body, price, tempOrderid);
         // 对订单做RSA 签名
         String sign = Pay_Utils.sign(orderInfo);
         try {
@@ -413,7 +457,13 @@ public class OrderPayActivity extends BaseActivity implements View.OnClickListen
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         ToastUtils.show(OrderPayActivity.this, "支付成功");
+                        if(from.equals("OrderServiceFragment")){
+                            utils.sendMsg(OrderServiceFragment.handler,1);
+                        }else if(from.equals("OrderPayFragment")){
+                            utils.sendMsg(OrderPayFragment.handler,1);
+                        }
                         finish();
+
                     } else {
                         // 判断resultStatus 为非“9000”则代表可能支付失败
                         // “8000”代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态)

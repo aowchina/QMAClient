@@ -1,6 +1,7 @@
 package com.minfo.quanmei.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.entity.MyGrade;
+import com.minfo.quanmei.utils.Constant;
 
 import java.util.List;
 
@@ -18,10 +20,12 @@ import java.util.List;
 public class MyGradeAdapter extends BaseAdapter {
     private List<MyGrade> list;
     private Context context;
+    private int type;
 
-    public MyGradeAdapter(Context context, List<MyGrade> list) {
+    public MyGradeAdapter(Context context, List<MyGrade> list,int type) {
         this.context = context;
         this.list = list;
+        this.type = type;
     }
 
 
@@ -48,13 +52,16 @@ public class MyGradeAdapter extends BaseAdapter {
             convertView.setTag(new ViewHolder(convertView));
         }
 
-        MyGrade myGrade = (MyGrade) list.get(position);
+        MyGrade myGrade = list.get(position);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
         viewHolder.grade.setText(myGrade.getGrade());
         viewHolder.numerical.setText(myGrade.getNumerical());
-        if (position == 0) {
+        if (type == 0&&position== Constant.user.getStar()) {
             viewHolder.grade.setBackgroundResource(R.color.basic_color);
-            //(TextView)(viewHolder.numerical).setTextColor(R.color.basic_color);
+        }else if(type==1&&position==Constant.user.getLevel()){
+            viewHolder.grade.setBackgroundResource(R.color.basic_color);
+        }else{
+            viewHolder.grade.setBackgroundColor(Color.parseColor("#eeeeee"));
         }
 
         return convertView;

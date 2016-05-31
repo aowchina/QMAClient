@@ -29,6 +29,7 @@ public class User implements Serializable {
     private String city;
     private List<Group> group;
     private String bgimg;
+    private int point;
 
 
     public List<Group> getGroup() {
@@ -111,6 +112,15 @@ public class User implements Serializable {
         this.bgimg = bgimg;
     }
 
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -124,6 +134,7 @@ public class User implements Serializable {
                 ", city='" + city + '\'' +
                 ", group=" + group +
                 ", bgimg='" + bgimg + '\'' +
+                ", point=" + point +
                 '}';
     }
 }

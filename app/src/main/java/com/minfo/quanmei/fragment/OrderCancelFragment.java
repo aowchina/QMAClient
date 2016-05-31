@@ -3,7 +3,6 @@ package com.minfo.quanmei.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -99,10 +98,8 @@ public class OrderCancelFragment extends BaseFragment {
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG, "请求成功" + response.toString());
                 loadingDialog.dismiss();
                 tempList = response.getList(Order.class);
-                Log.e(TAG, tempList.toString());
                 if (isRefresh) {
                     isRefresh = false;
                     lvOrderCancel.refreshComplete();
@@ -152,9 +149,9 @@ public class OrderCancelFragment extends BaseFragment {
 
             UniversalImageUtils.displayImageUseDefOptions(item.getSimg(), (ImageView) helper.getView(R.id.iv_product_simg));
 
-            if(item.getStatus().equals("7")||item.getStatus().equals("9")){
+            if(item.getStatus().equals("7")||item.getStatus().equals("8")){
                 helper.setText(R.id.tv_refund_status,"退款中");
-            }else if(item.getStatus().equals("8")) {
+            }else if(item.getStatus().equals("9")) {
                 helper.setText(R.id.tv_refund_status,"已退款");
             }
         }

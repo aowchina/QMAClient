@@ -39,7 +39,11 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
     private List<ImageView> imageViews = new ArrayList<ImageView>();
     private List<View> views = new ArrayList<View>();
 
+
+
+
     private User user;
+    private TextView tvActivePoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
             UniversalImageUtils.disCircleImage(user.getUserimg(), icon);
             nickname.setText(user.getUsername());
             tv_grade.setText("LV" + user.getLevel() + "");
+            tvActivePoint.setText(user.getPoint()+"");
         }
     }
 
@@ -63,12 +68,13 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
         icon = ((ImageView) findViewById(R.id.iv_icon_mygrade));
         tv_grade = (TextView)findViewById(R.id.tv_grade_mygrade);
         nickname = ((TextView) findViewById(R.id.tv_nickname_mygrade));
-        active = ((TextView) findViewById(R.id.tv_active_megrade));
         newInvitation = ((TextView) findViewById(R.id.tv_newinvitation_megrade));
         response = ((TextView) findViewById(R.id.tv_response_megrade));
         starListView = ((LimitListView) findViewById(R.id.llv_star_mygrade));
         gradeListView = ((LimitListView) findViewById(R.id.llv_grade_mygrade));
         llContiner = ((LinearLayout) findViewById(R.id.ll_mygrde));
+        tvActivePoint = (TextView) findViewById(R.id.tv_active_point);
+
 
         //scroll.addBodyView(view);
 
@@ -82,40 +88,43 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
         gradeListView.setFocusable(false);
 
         back.setOnClickListener(this);
-        setGradeImg(3);
+        setGradeImg(Constant.user.getStar()+1);
         //if (listStar .size()==0) {
         initStarData(listStar);
         //}
         //if (listGrade .size()==0) {
         initGradeData(listGrade);
         //}
-        starListView.setAdapter(new MyGradeAdapter(this, listStar));
-        gradeListView.setAdapter(new MyGradeAdapter(this, listGrade));
+        starListView.setAdapter(new MyGradeAdapter(this, listStar,0));
+        gradeListView.setAdapter(new MyGradeAdapter(this, listGrade,1));
 
     }
 
     public void initStarData(List<MyGrade> list) {
         for (int i = 0; i < 12; i++) {
             MyGrade myGrade = null;
-            if (i == 0) {
-                myGrade = new MyGrade("新手", star[i]);
+            if (i <3) {
+                myGrade = new MyGrade(i+1+"星", star[i]);
             }
-            if (i == 11) {
-                myGrade = new MyGrade("皇冠", star[i]);
-            }
-            if (i > 0 & i <= 5) {
+            if (i>2&&i<=10) {
+                if((i+1)%4==0){
+                    myGrade = new MyGrade((i+1)/4+"钻",star[i]);
+                }else{
+                    myGrade = new MyGrade((i+1)/4+"钻"+(i+1)%4+"星", star[i]);
+                }
 
-                myGrade = new MyGrade(i + "星", star[i]);
             }
-            if (i > 5 & i <= 10) {
-
-                myGrade = new MyGrade(i + "钻", star[i]);
-            }
+           if(i==11){
+               myGrade = new MyGrade("皇冠", star[i]);
+           }
             list.add(myGrade);
         }
     }
     public void setGradeImg(int temp){
-        for (int i = 0; i < temp; i++) {
+        int mod = temp%4;
+        int quo = temp/4;
+
+        for (int i = 0; i < quo&&quo<3; i++) {
 
             View v1 = new View(this);
             v1.setLayoutParams(new RelativeLayout.LayoutParams(10,
@@ -124,10 +133,10 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
             ImageView tempIv = new ImageView(this);
 
 
-            tempIv.setBackgroundResource(R.drawable.puss_icon_star);
+            tempIv.setImageResource(R.drawable.puss_icon_diamond);
 
             tempIv.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT));
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
 
             llContiner.addView(v1);
             views.add(i, v1);
@@ -138,12 +147,57 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
             imageViews.add(i, tempIv);
 
         }
+
+        if(quo>=3){
+            View v1 = new View(this);
+            v1.setLayoutParams(new RelativeLayout.LayoutParams(10,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            ImageView tempIv = new ImageView(this);
+
+
+            tempIv.setImageResource(R.drawable.puss_icon_yellow);
+
+            tempIv.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            llContiner.addView(v1);
+            views.add(0, v1);
+
+            llContiner.addView(tempIv);
+
+
+            imageViews.add(0, tempIv);
+        }
+
+
+        for(int i = 0;i<mod&&quo<3;i++){
+            View v1 = new View(this);
+            v1.setLayoutParams(new RelativeLayout.LayoutParams(10,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            ImageView tempIv = new ImageView(this);
+
+
+            tempIv.setImageResource(R.drawable.puss_icon_star);
+
+            tempIv.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            llContiner.addView(v1);
+            views.add(i, v1);
+
+            llContiner.addView(tempIv);
+
+
+            imageViews.add(i, tempIv);
+        }
     }
 
     public void initGradeData(List<MyGrade> list) {
         for (int i = 0; i < 10; i++) {
             int t = i + 1;
-            MyGrade myGrade = new MyGrade("lv" + t, grade[i]);
+            MyGrade myGrade = new MyGrade("LV" + t, grade[i]);
 
             list.add(myGrade);
         }

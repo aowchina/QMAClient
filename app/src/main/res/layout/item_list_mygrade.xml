@@ -11,8 +11,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="#eee"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
+        android:gravity="center"
         android:layout_marginBottom="1dp"
         android:text="1星" />
     <TextView

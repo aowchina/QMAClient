@@ -32,27 +32,13 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1.5"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/civ_head_image"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:visibility="invisible"
-                            android:src="@mipmap/puss_default_circle_head"/>
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:id="@+id/personal_code_all"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="5dp"
                         android:layout_weight="0.5"
+                        android:paddingLeft="10dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -74,13 +60,16 @@
                             android:text="LV2"
                             android:textColor="@color/primary_text_default_material_dark"
                             android:textSize="14sp"/>
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/info_personal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="0.5">
+                        android:gravity="center_vertical|left|top"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="5dp"
+                        android:layout_weight="1">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -92,10 +81,11 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/iv_gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:src="@mipmap/god_icon_sex"/>
+                                android:src="@mipmap/sex_female"/>
 
                             <TextView
                                 android:id="@+id/my_age"
@@ -120,6 +110,10 @@
                                 android:textSize="12sp"/>
                         </LinearLayout>
                     </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
                 </LinearLayout>
             </RelativeLayout>
 

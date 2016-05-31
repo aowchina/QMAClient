@@ -399,6 +399,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             Bundle bundle = new Bundle();
 
             bundle.putString("orderid", orderid);
+            bundle.putInt("payType",1);
+            bundle.putString("from","ProductDetail");
 
             utils.jumpAty(ProductDetailActivity.this, OrderPayActivity.class, bundle);
         } catch (JSONException e) {
@@ -463,6 +465,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                     msg.mediaObject = webpage;
 
                     msg.description = productDetail.getHname()+productDetail.getName();
+//                    msg.description = "全美App下载";
                     Bitmap thumbBmp = Bitmap.createScaledBitmap(img, 150, 150, true);
 
                     img.recycle();

@@ -2,6 +2,7 @@ package com.minfo.quanmei.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,9 @@ public class LLUserTitle extends LinearLayout implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(context, PersonalHomePageActivity.class);
-        intent.putExtra("userid",userid);
-        context.startActivity(intent);
+        if(!TextUtils.isEmpty(userid)) {
+            intent.putExtra("userid", userid);
+            context.startActivity(intent);
+        }
     }
 }

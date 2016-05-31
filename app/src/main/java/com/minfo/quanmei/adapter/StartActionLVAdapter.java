@@ -55,7 +55,7 @@ public class StartActionLVAdapter extends BaseAdapter {
             convertView.setTag(new ViewHolder(convertView));
         }
 
-        Theme theme = (Theme) list.get(position);
+        Theme theme = list.get(position);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
         for (int i = 0; i <theme.getYyuser().size() ; i++) {
 
@@ -65,7 +65,7 @@ public class StartActionLVAdapter extends BaseAdapter {
 
             ImageView tempIv = new ImageView(context);
             viewHolder.continer.addView(v1);
-            viewHolder.continer.addView(tempIv, utils.dip2px(20),utils.dip2px(20));
+            viewHolder.continer.addView(tempIv, utils.dip2px(15),utils.dip2px(20));
             UniversalImageUtils.disCircleImage(theme.getYyuser().get(i).getUserimg(), tempIv);
 
 

@@ -27,7 +27,6 @@ import com.minfo.quanmei.entity.GroupTag;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.MinfoImg;
 import com.minfo.quanmei.utils.MinfoUtils;
-import com.minfo.quanmei.utils.MyCheck;
 import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.widget.LoadingDialog;
@@ -461,10 +460,10 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             ToastUtils.show(InvitationDetailActivity.this, "帖子内容不能为空");
             return false;
         }
-        if (!MyCheck.isNoteTitle(strTitle)) {
+       /* if (!MyCheck.isNoteTitle(strTitle)) {
             ToastUtils.show(InvitationDetailActivity.this, "帖子标题不合法");
             return false;
-        }
+        }*/
 
         return true;
     }

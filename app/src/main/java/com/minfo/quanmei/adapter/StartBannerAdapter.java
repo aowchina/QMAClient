@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.minfo.quanmei.activity.CourseActivity;
 import com.minfo.quanmei.activity.SecureActivity;
@@ -81,8 +82,12 @@ public class StartBannerAdapter extends PagerAdapter {
 
         for (int i = 0; i < lunbo.size(); i++) {
             ImageView imageView = new ImageView(mContext);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,utils.dip2px(206));
+            imageView.setLayoutParams(params);
+
             UniversalImageUtils.displayImageUseDefOptions(lunbo.get(i).getImg(), imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageViews.add(imageView);
         }
     }

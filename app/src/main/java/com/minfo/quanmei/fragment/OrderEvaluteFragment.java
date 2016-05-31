@@ -3,7 +3,6 @@ package com.minfo.quanmei.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.EvaluateActivity;
+import com.minfo.quanmei.activity.LoginActivity;
 import com.minfo.quanmei.activity.OrderDetailActivity;
 import com.minfo.quanmei.adapter.BaseViewHolder;
 import com.minfo.quanmei.adapter.CommonAdapter;
@@ -103,10 +103,8 @@ public class OrderEvaluteFragment extends BaseFragment {
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG, "请求成功" + response.toString());
                 loadingDialog.dismiss();
                 tempList = response.getList(Order.class);
-                Log.e(TAG, tempList.toString());
                 if (isRefresh) {
                     isRefresh = false;
                     lvOrderEvalute.refreshComplete();
@@ -123,10 +121,15 @@ public class OrderEvaluteFragment extends BaseFragment {
             @Override
             public void onRequestNoData(BaseResponse response) {
                 loadingDialog.dismiss();
-                ToastUtils.show(mActivity, response.getErrorcode() + "");
                 lvOrderEvalute.refreshComplete();
                 lvOrderEvalute.loadComplete();
-                ToastUtils.show(mActivity, "服务器繁忙");
+                int errorcode = response.getErrorcode();
+                if(errorcode==11||errorcode==12){
+                    utils.jumpAty(mActivity,LoginActivity.class,null);
+                    LoginActivity.isJumpLogin = true;
+                }else {
+                    ToastUtils.show(mActivity, "服务器繁忙");
+                }
             }
 
             @Override

@@ -138,6 +138,8 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
     }
 
 
+
+
     @Override
     protected View initViews() {
         view = View.inflate(mActivity, R.layout.fragment_start, null);
@@ -343,6 +345,13 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
                 isSigned = true;
                 tvSign.setImageResource(R.mipmap.signed);
                 signDialog.show();
+                tvSign.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        signDialog.dismiss();
+                    }
+                },1500);
+
                 signDialog.setPoint(response.toString());
             }
 
@@ -398,7 +407,6 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                //utils.saveAsFileWriter(response.toString(), "/sdcard/mdoor9.txt");
                 start = response.getObj(Start.class);
 
 

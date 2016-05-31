@@ -81,6 +81,7 @@
             android:layout_height="50dp">
 
             <TextView
+                android:id="@+id/tv_txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -92,7 +93,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/tv_txt_name"
                 android:layout_centerVertical="true"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="【开眼角】韩式精品，告别小眼睛"/>
         </RelativeLayout>
 
@@ -251,28 +255,29 @@
             <EditText
                 android:id="@+id/et_score"
                 android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/shape_square"
                 android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"/>
+                android:paddingBottom="5dp"
+                android:numeric="integer"
+                android:paddingTop="5dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="积分，抵消"
+                android:text="积分"
                 android:textColor="#c0c0c0"
                 android:textSize="12sp"/>
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/tv_real_minus_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="20元"
                 android:textColor="#c0c0c0"
-                android:textSize="12sp"/>
+                android:textSize="12sp"/>-->
         </LinearLayout>
     </LinearLayout>
 

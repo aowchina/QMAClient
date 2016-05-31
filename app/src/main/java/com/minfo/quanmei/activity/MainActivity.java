@@ -2,6 +2,8 @@ package com.minfo.quanmei.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.fragment.Group_Fragment;
 import com.minfo.quanmei.fragment.My_Fragment;
 import com.minfo.quanmei.fragment.Special_Fragment;
@@ -26,6 +29,8 @@ import com.minfo.quanmei.fragment.Start_Fragment;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
+
+import java.lang.ref.WeakReference;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -59,6 +64,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String message = "";
     private TextView tv_right;
 
+    private LinearLayout llMyNickname;
+    private TextView tvLevel;
+    private TextView tvNickname;
+    public static  MyHandler myHandler;
+
+
 
     //标题栏
     private ImageView civAvatar;//头像
@@ -82,8 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
-
+        myHandler = new MyHandler(this);
     }
 
 
@@ -109,6 +119,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         tv_right = (TextView) findViewById(R.id.tv_right);
         ivMsg = (ImageView) findViewById(R.id.iv_message);
         ivLeft = (ImageView) findViewById(R.id.iv_left);
+
+        tvLevel = (TextView) findViewById(R.id.tv_level);
+        tvNickname = (TextView) findViewById(R.id.tv_nickname);
+        llMyNickname = (LinearLayout) findViewById(R.id.ll_my_nickname);
+
 
         //reMain = ((RelativeLayout) findViewById(R.id.rl_main));
         tvTitle = (TextView) findViewById(R.id.tv_title);
@@ -149,6 +164,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private static class MyHandler extends Handler {
+        private WeakReference<MainActivity> activityWeakReference;
+        public MyHandler(MainActivity activity){
+            activityWeakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message message){
+            MainActivity activity = activityWeakReference.get();
+            if(activity!=null){
+                if(message.what==1){
+                    User user = (User) message.obj;
+                    activity.tvNickname.setText(user.getUsername());
+                    activity.tvLevel.setText("LV"+user.getLevel());
+                }
+            }
+        }
+    }
+
     /**
      * 切换fragmen时改变标题栏状态 2015-09-01
      */
@@ -176,6 +210,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             topLine.setVisibility(View.GONE);
             
             refreshMsg();
+            llMyNickname.setVisibility(View.INVISIBLE);
             
 
         } else if (fragment instanceof Group_Fragment) {
@@ -187,6 +222,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText("美人圈");
             topLine.setVisibility(View.VISIBLE);
+            llMyNickname.setVisibility(View.INVISIBLE);
         } else if (fragment instanceof Special_Fragment) {
             mainRelative.setBackgroundResource(R.mipmap.start_title2);
             rlSearch.setVisibility(View.GONE);
@@ -196,11 +232,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText("特惠");
             topLine.setVisibility(View.VISIBLE);
+            llMyNickname.setVisibility(View.INVISIBLE);
         } else if(fragment instanceof My_Fragment){
             mainRelative.setBackgroundResource(R.mipmap.start_title2);
             rlSearch.setVisibility(View.GONE);
             llScanner.setVisibility(View.GONE);
-            civAvatar.setVisibility(View.VISIBLE);
+            civAvatar.setVisibility(View.GONE);
+            llMyNickname.setVisibility(View.VISIBLE);
             tvTitle.setVisibility(View.VISIBLE);
             tv_right.setVisibility(View.VISIBLE);
             tv_right.setText("个人资料");

@@ -1,180 +1,272 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <include layout="@layout/common_top"/>
+
     <RelativeLayout
         android:id="@+id/rl_head"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.8"
+        android:onClick="onClick"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:onClick="onClick">
+        android:paddingRight="5dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="头像"/>
+            android:text="头像"
+            android:textColor="@color/black"/>
+
         <ImageView
             android:id="@+id/iv_arrow1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/puss__arrow"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+            android:src="@mipmap/puss__arrow"/>
+
         <ImageView
             android:id="@+id/civ_head_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@mipmap/puss_default_circle_head"
             android:layout_centerVertical="true"
+            android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/iv_arrow1"
-            android:layout_marginRight="3dp"/>
+            android:src="@mipmap/puss_default_circle_head"/>
 
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:background="#dddddd"/>
+
     <RelativeLayout
         android:id="@+id/rl_nickname"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:onClick="onClick"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:onClick="onClick">
+        android:paddingRight="5dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="昵称"/>
+            android:text="昵称"
+            android:textColor="@color/black"/>
+
         <ImageView
             android:id="@+id/iv_arrow2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/puss__arrow"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+            android:src="@mipmap/puss__arrow"/>
+
         <TextView
-            android:id="@+id/tv_nickname"
+            android:id="@+id/tv_person_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="杳杳"
+            android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/iv_arrow2"
-            android:layout_marginRight="3dp"/>
+            android:text="杳杳"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dddddd"/>
+    <RelativeLayout
+        android:id="@+id/rl_gender"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="onClick"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="性别"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:id="@+id/iv_arrown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/puss__arrow"/>
+
+        <TextView
+            android:id="@+id/tv_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@id/iv_arrown"
+            android:text="女"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#dddddd"/>
+
     <RelativeLayout
         android:id="@+id/rl_age"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:onClick="onClick"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:onClick="onClick">
+        android:paddingRight="5dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="年龄"/>
+            android:text="年龄"
+            android:textColor="@color/black"/>
+
         <ImageView
             android:id="@+id/iv_arrow3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/puss__arrow"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+            android:src="@mipmap/puss__arrow"/>
+
         <TextView
             android:id="@+id/tv_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="21"
+            android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/iv_arrow3"
-            android:layout_marginRight="3dp"/>
+            android:text="21"/>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#dddddd"/>
+
     <RelativeLayout
         android:id="@+id/rl_region"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:onClick="onClick"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:onClick="onClick">
+        android:paddingRight="5dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="地区"/>
+            android:text="地区"
+            android:textColor="@color/black"/>
+
         <ImageView
             android:id="@+id/iv_arrow4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/puss__arrow"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+            android:src="@mipmap/puss__arrow"/>
+
         <TextView
             android:id="@+id/tv_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="北京"
+            android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/iv_arrow4"
-            android:layout_marginRight="3dp"/>
+            android:text="北京"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dddddd"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_level"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="onClick"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="我的等级"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:id="@+id/iv_arrow5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/puss__arrow"/>
+
+        <TextView
+            android:id="@+id/tv_person_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3dp"
+            android:layout_toLeftOf="@id/iv_arrow5"
+            android:text="LV3"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#dddddd"/>
     <RelativeLayout
-        android:id="@+id/rl_level"
+        android:id="@+id/rl_qrcode"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:onClick="onClick"
         android:paddingLeft="10dp"
-        android:paddingRight="5dp"
-        android:onClick="onClick">
+        android:paddingRight="5dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:text="我的等级"/>
+            android:text="我的二维码"
+            android:textColor="@color/black"/>
+
         <ImageView
-            android:id="@+id/iv_arrow5"
+            android:id="@+id/iv_arrow6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/puss__arrow"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:id="@+id/tv_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="LV3"
-            android:layout_toLeftOf="@id/iv_arrow5"
-            android:layout_marginRight="3dp"/>
+            android:src="@mipmap/puss__arrow"/>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
         android:background="#dddddd"/>
+
+
 
 </LinearLayout>

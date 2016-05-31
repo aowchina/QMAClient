@@ -93,6 +93,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
             @Override
             public void onRequestError(int code, String msg) {
+                ToastUtils.show(WXEntryActivity.this,"服务器繁忙");
             }
 
 

@@ -124,10 +124,6 @@
             android:name=".activity.SearchActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".activity.PersonalCenterActivity"
-            android:screenOrientation="portrait">
-        </activity>
 
         <!-- qq登录 -->
         <activity

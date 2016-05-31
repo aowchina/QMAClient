@@ -58,12 +58,21 @@ public class Order {
     private String hname;
     private int hid;
     private String tel;
+    private String wk_real_money;
 
     private double true_pay;
     private double have_pay;
     private String ctime;
 
     private boolean isCheck;
+
+    public String getWk_real_money() {
+        return wk_real_money;
+    }
+
+    public void setWk_real_money(String wk_real_money) {
+        this.wk_real_money = wk_real_money;
+    }
 
     public String getCtime() {
         return ctime;

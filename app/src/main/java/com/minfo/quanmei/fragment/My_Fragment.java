@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.InitActivity;
 import com.minfo.quanmei.activity.LoginActivity;
+import com.minfo.quanmei.activity.MainActivity;
 import com.minfo.quanmei.activity.MyCourseActivity;
 import com.minfo.quanmei.activity.MyDiaryActivity;
 import com.minfo.quanmei.activity.MyNoteActivity;
@@ -73,7 +74,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rlCourse;
     private RelativeLayout rlsetting;
     private RelativeLayout rlUpdate;
-    private ImageView myHeadImage;
     private TextView myNickname;
     private TextView myLevel;
     private TextView myAge;
@@ -82,6 +82,8 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private ImageView ivInfoBg;
     private SelectPicDialog selectPicDialog;
     private Handler handler;
+
+    private ImageView ivGender;
 
 
     private String downloadUrl = "";
@@ -127,15 +129,14 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         rlsetting = (RelativeLayout) view.findViewById(R.id.rl_setting);
         rlUpdate = (RelativeLayout) view.findViewById(R.id.rl_update);
         rlPocket = (RelativeLayout) view.findViewById(R.id.rl_pocket);
-        myHeadImage = (ImageView) view.findViewById(R.id.civ_head_image);
-        myNickname = (TextView) view.findViewById(R.id.personal_code);
+//        myNickname = (TextView) view.findViewById(R.id.personal_code);
         myAge = (TextView) view.findViewById(R.id.my_age);
         myCity = (TextView) view.findViewById(R.id.my_city);
-        myLevel = (TextView) view.findViewById(R.id.my_level);
+//        myLevel = (TextView) view.findViewById(R.id.my_level);
         btnExit = (Button) view.findViewById(R.id.btn_exit_login);
         ivInfoBg = (ImageView) view.findViewById(R.id.iv_info_bg);
+        ivGender = (ImageView) view.findViewById(R.id.iv_gender);
         btnExit.setOnClickListener(this);
-        myHeadImage.setOnClickListener(this);
         rldiary.setOnClickListener(this);
         rlnote.setOnClickListener(this);
         rlcollect.setOnClickListener(this);
@@ -158,13 +159,20 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
     private void initView() {
         if (myinfo != null) {
-            UniversalImageUtils.disCircleImage(myinfo.getUserimg(), myHeadImage);
-            myNickname.setText(myinfo.getUsername());
+//            UniversalImageUtils.disCircleImage(myinfo.getUserimg(), myHeadImage);
             myAge.setText(myinfo.getAge() + "");
             myCity.setText(myinfo.getCity());
-            myLevel.setText("LV" + myinfo.getLevel());
+
+            utils.sendMsg(MainActivity.myHandler,1,myinfo);
+
             if (myinfo.getBgimg() != null && !"".equals(myinfo.getBgimg())) {
                 UniversalImageUtils.displayImageUseDefOptions(myinfo.getBgimg(), ivInfoBg);
+            }
+            String gender = myinfo.getSex();
+            if(gender!=null&&(gender.equals("暂未设置")||gender.equals("女"))){
+                ivGender.setImageResource(R.mipmap.sex_female);
+            }else{
+                ivGender.setImageResource(R.mipmap.sex_male);
             }
         }
         initHandler();
@@ -214,13 +222,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.civ_head_image:
-                if (myinfo != null) {
-                    Intent intent = new Intent(getActivity(), PersonalHomePageActivity.class);
-                    intent.putExtra("userid", myinfo.getUserid() + "");
-                    startActivity(intent);
-                }
-                break;*/
             case R.id.rl_diary:
                 startActivity(new Intent(getActivity(), MyDiaryActivity.class));
                 break;

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/common_top"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/white">
+<RelativeLayout
+    android:id="@+id/common_top"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/white">
 
 
     <LinearLayout
         android:id="@+id/ll_left"
         android:layout_width="100dp"
-        android:onClick="onClick"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:onClick="onClick">
 
         <ImageView
             android:id="@+id/iv_left"
@@ -18,15 +19,46 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
             android:onClick="onClick"
+            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="30dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
             android:src="@mipmap/action_bar_back"
             android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_my_nickname"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/god_bg_level"
+            android:gravity="center"
+            android:text="LV2"
+            android:textColor="@color/primary_text_default_material_dark"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10227670"
+            android:maxLength="7"
+            android:ellipsize="end"
+            android:textColor="@color/basic_color"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <TextView
@@ -57,12 +89,12 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:maxLength="10"
         android:text="登录"
         android:textColor="@color/basic_color"
         android:textSize="17sp"
         android:textStyle="bold"
-        android:maxLength="10"
-        android:ellipsize="end"
         android:visibility="gone"/>
 
     <Button
@@ -134,9 +166,9 @@
         android:layout_centerInParent="true"
         android:background="@drawable/start_search1"
         android:clickable="true"
-        android:visibility="gone"
+        android:paddingLeft="3dp"
         android:paddingRight="60dp"
-        android:paddingLeft="3dp">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_search"

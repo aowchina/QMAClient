@@ -2,11 +2,9 @@ package com.minfo.quanmei.activity;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -102,7 +100,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void initViews() {
         Bundle bundle = getIntent().getBundleExtra("info");
-        if(bundle!=null){
+        if (bundle != null) {
             orderid = bundle.getString("orderid");
             reqOrderDetail();
         }
@@ -113,9 +111,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
      */
     private void reqOrderDetail() {
         String url = getResources().getString(R.string.api_baseurl) + "order/OrderDetail.php";
-        Log.e(TAG,Constant.user.getUserid() + "*" + orderid);
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + orderid);
-        Log.e(TAG,params.toString());
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -124,7 +120,6 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG, response.toString());
 
                 order = response.getObj(Order.class);
                 setOrderView();
@@ -132,7 +127,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onRequestNoData(BaseResponse response) {
-                ToastUtils.show(OrderDetailActivity.this, "服务器繁忙"+response.getErrorcode());
+                ToastUtils.show(OrderDetailActivity.this, "服务器繁忙" + response.getErrorcode());
             }
 
             @Override
@@ -148,17 +143,17 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         tvOrderid.setText(orderid);
         tvProductName.setText("【" + order.getFname() + "】" + order.getName());
         tvTime.setText(order.getCtime());
-        tvTotalPrice.setText(order.getNewval()+"元");
-        tvRealMoney.setText("￥"+order.getTrue_pay()+"");
+        tvTotalPrice.setText(order.getNewval() + "元");
+        tvRealMoney.setText("￥" + order.getTrue_pay() + "");
         tvPoint.setText(order.getGet_point());
         tvMinusMoney.setText("(积分抵" + order.getPoint_money() + "元)");
         tvPhone.setText(order.getTel());
-        if(order.getWk_money().equals("0.00")){
+        if (order.getWk_real_money().equals("0.00")) {
             tvPayType.setText("定金支付");
-            tvPayMoney.setText("￥"+order.getDj());
-        }else{
+            tvPayMoney.setText("￥" + order.getDj());
+        } else {
             tvPayType.setText("全款支付");
-            tvPayMoney.setText("￥"+order.getNewval());
+            tvPayMoney.setText("￥" + order.getNewval());
         }
     }
 
@@ -175,9 +170,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void initDialog() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            dialog = new AlertDialog.Builder(this,R.style.dialog).create();
-        }
+        dialog = new AlertDialog.Builder(this, R.style.dialog).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.layout_bar_code);
         ImageView ivCode = (ImageView) dialog.getWindow().findViewById(R.id.iv_bar_code);
