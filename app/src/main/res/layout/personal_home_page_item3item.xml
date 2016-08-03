@@ -42,13 +42,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="150dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:scaleType="fitXY"
+            android:src="@mipmap/default_pic"/>
         <ImageView
             android:id="@+id/home_diary2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="150dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:scaleType="fitXY"
+            android:src="@mipmap/default_pic"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

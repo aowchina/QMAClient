@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private My_Fragment my_fragment;
     private FragmentManager supportFragmentManager;
     private FragmentTransaction transaction;
-    private String title[] = {"首页", "小组", "特惠","我的"};
+    private String title[] = {"首页", "小组", "特惠", "我的"};
     private Fragment currentFragment;
     private String message = "";
     private TextView tv_right;
@@ -67,8 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private LinearLayout llMyNickname;
     private TextView tvLevel;
     private TextView tvNickname;
-    public static  MyHandler myHandler;
-
+    public static MyHandler myHandler;
 
 
     //标题栏
@@ -88,14 +87,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private int currentIndex = 0;
 
+    private GroupNotifyActivity groupNotifyActivity;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+
         myHandler = new MyHandler(this);
     }
-
 
 
     @Override
@@ -106,7 +109,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
+        refreshMsg();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -143,7 +151,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         llMain = (LinearLayout) findViewById(R.id.ll_main);
         llGroup = (LinearLayout) findViewById(R.id.ll_group);
         llSpecial = (LinearLayout) findViewById(R.id.ll_special);
-        llMy = (LinearLayout)findViewById(R.id.ll_my);
+        llMy = (LinearLayout) findViewById(R.id.ll_my);
         ivMain = (ImageView) findViewById(R.id.iv_main);
         ivGroup = (ImageView) findViewById(R.id.iv_group);
         ivSpecial = (ImageView) findViewById(R.id.iv_special);
@@ -157,27 +165,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         if (message.equals("THEME") || message.equals("SPECIAL")) {
             setSelect(2);
-        } else if(message.equals("InFo")){
+        } else if (message.equals("InFo")) {
             setSelect(3);
-        }else{
+        } else {
             setSelect(0);
         }
     }
 
     private static class MyHandler extends Handler {
         private WeakReference<MainActivity> activityWeakReference;
-        public MyHandler(MainActivity activity){
+
+        public MyHandler(MainActivity activity) {
             activityWeakReference = new WeakReference<>(activity);
         }
 
         @Override
-        public void handleMessage(Message message){
+        public void handleMessage(Message message) {
             MainActivity activity = activityWeakReference.get();
-            if(activity!=null){
-                if(message.what==1){
+            if (activity != null) {
+                if (message.what == 1) {
                     User user = (User) message.obj;
                     activity.tvNickname.setText(user.getUsername());
-                    activity.tvLevel.setText("LV"+user.getLevel());
+                    activity.tvLevel.setText("LV" + user.getLevel());
                 }
             }
         }
@@ -187,14 +196,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * 切换fragmen时改变标题栏状态 2015-09-01
      */
     private void refreshTop(Fragment fragment) {
-        if(Constant.user!=null){
+        if (Constant.user != null) {
             tvLeft.setVisibility(View.GONE);
             rlUserAvatar.setVisibility(View.VISIBLE);
-           // Log.e(TAG,Constant.user.getImg());
-            if(Constant.user.getUserimg()!=null&&!Constant.user.getUserimg().equals("")) {
+            // Log.e(TAG,Constant.user.getImg());
+            if (Constant.user.getUserimg() != null && !Constant.user.getUserimg().equals("")) {
                 UniversalImageUtils.disCircleImage(Constant.user.getUserimg(), civAvatar);
             }
-        }else{
+        } else {
             tvLeft.setVisibility(View.VISIBLE);
             rlUserAvatar.setVisibility(View.GONE);
         }
@@ -208,10 +217,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvTitle.setVisibility(View.GONE);
             edSearch.setInputType(InputType.TYPE_NULL);
             topLine.setVisibility(View.GONE);
-            
+
             refreshMsg();
             llMyNickname.setVisibility(View.INVISIBLE);
-            
+
 
         } else if (fragment instanceof Group_Fragment) {
             rlSearch.setVisibility(View.GONE);
@@ -233,7 +242,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvTitle.setText("特惠");
             topLine.setVisibility(View.VISIBLE);
             llMyNickname.setVisibility(View.INVISIBLE);
-        } else if(fragment instanceof My_Fragment){
+        } else if (fragment instanceof My_Fragment) {
             mainRelative.setBackgroundResource(R.mipmap.start_title2);
             rlSearch.setVisibility(View.GONE);
             llScanner.setVisibility(View.GONE);
@@ -255,19 +264,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         int reproveNum = 0;
         replyNum = utils.getReceiveNum("receiveReply");
         reproveNum = utils.getReceiveNum("receiveReprove");
-        if((replyNum+reproveNum)==0){
+        if ((replyNum + reproveNum) == 0) {
             ivMsg.setImageResource(R.mipmap.start_no_message);
-        }else{
+        } else {
             ivMsg.setImageResource(R.mipmap.start_message);
         }
     }
 
-    //两次返回，退出
 
+    //两次返回，退出
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
             if (System.currentTimeMillis() - time > 2000) {
-                ToastUtils.show(this,"再按一次退出程序");
+                ToastUtils.show(this, "再按一次退出程序");
                 time = System.currentTimeMillis();
             } else {
                 JPushInterface.stopPush(getApplicationContext());
@@ -291,16 +300,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
-
-
-
     @Override
     public void jumpFragment(int i) {
         if (i == 4) {
             setSelect(3);
         } else if (i == 3) {
             setSelect(2);
-        }else if(i == 2){
+        } else if (i == 2) {
             setSelect(1);
         }
     }
@@ -309,12 +315,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_left:
-                startActivity(new Intent(this,LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case R.id.btn_right:
                 break;
             case R.id.tv_right:
-                startActivity(new Intent(this,PersonInfoActivity.class));
+                startActivity(new Intent(this, PersonInfoActivity.class));
                 break;
             case R.id.ll_main:
                 currentIndex = 0;
@@ -336,15 +342,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 break;
             case R.id.ed_search:
-                utils.jumpAty(this,SearchActivity.class,null);
+                utils.jumpAty(this, SearchActivity.class, null);
                 break;
             case R.id.rl_user_avatar:
-                if(currentIndex!=3) {
+                if (currentIndex != 3) {
                     setSelect(3);
                 }
                 break;
             case R.id.ll_scanner:
-                utils.jumpAty(this,MessageActivity.class,null);
+                utils.jumpAty(this, MessageActivity.class, null);
                 break;
         }
     }
@@ -360,8 +366,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (start_fragment == null) {
                     start_fragment = new Start_Fragment();
                     transaction.add(R.id.perfect_continer, start_fragment);
-                }
-                else {
+                } else {
                     transaction.show(start_fragment);
                 }
                 ivMain.setImageResource(R.mipmap.tab_main_p);
@@ -371,8 +376,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (group_fragment == null) {
                     group_fragment = new Group_Fragment();
                     transaction.add(R.id.perfect_continer, group_fragment);
-                }
-                else {
+                } else {
                     transaction.show(group_fragment);
 
                 }
@@ -383,8 +387,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (special_fragment == null) {
                     special_fragment = new Special_Fragment();
                     transaction.add(R.id.perfect_continer, special_fragment);
-                }
-                else {
+                } else {
                     transaction.show(special_fragment);
                 }
                 ivSpecial.setImageResource(R.mipmap.tab_special_p);
@@ -394,8 +397,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (my_fragment == null) {
                     my_fragment = new My_Fragment();
                     transaction.add(R.id.perfect_continer, my_fragment);
-                }
-                else {
+                } else {
                     transaction.show(my_fragment);
                 }
                 ivMy.setImageResource(R.mipmap.tab_me_p);
@@ -404,30 +406,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         transaction.commit();
     }
-    private void hideFragment(FragmentTransaction transaction)
-    {
-        if (start_fragment!= null)
-        {
+
+    private void hideFragment(FragmentTransaction transaction) {
+        if (start_fragment != null) {
             transaction.hide(start_fragment);
         }
-        if (group_fragment != null)
-        {
+        if (group_fragment != null) {
             transaction.hide(group_fragment);
         }
-        if (special_fragment != null)
-        {
+        if (special_fragment != null) {
             transaction.hide(special_fragment);
         }
-        if (my_fragment != null)
-        {
+        if (my_fragment != null) {
             transaction.hide(my_fragment);
         }
     }
-    private void resetBottom()
-    {
+
+    private void resetBottom() {
         ivMain.setImageResource(R.mipmap.tab_main_n);
         ivGroup.setImageResource(R.mipmap.tab_group_n);
         ivSpecial.setImageResource(R.mipmap.tab_special_n);
         ivMy.setImageResource(R.mipmap.tab_me_n);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

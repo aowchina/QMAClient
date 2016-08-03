@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="250dp"
-              android:layout_marginLeft="20dp"
-              android:layout_marginRight="20dp"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <Button
         android:layout_width="match_parent"
@@ -28,6 +28,17 @@
         android:layout_weight="1"
         android:gravity="left|center_vertical"
         android:text="收藏"
+        android:background="@null"
+        android:textSize="18sp"
+        android:textColor="@color/tv_forget_pwd"
+        android:layout_marginLeft="10dp"/>
+    <Button
+        android:id="@+id/btn_uncollect"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:text="取消收藏"
         android:background="@null"
         android:textSize="18sp"
         android:textColor="@color/tv_forget_pwd"

@@ -19,7 +19,7 @@
                 android:id="@+id/grouptype_img_icon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@mipmap/ad_doctor_3" />
+                android:src="@mipmap/default_pic" />
 
             <View
                 android:layout_width="5dp"

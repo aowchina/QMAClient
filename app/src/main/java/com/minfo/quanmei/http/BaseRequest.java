@@ -1,15 +1,12 @@
 
 package com.minfo.quanmei.http;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.minfo.quanmei.BuildConfig;
 import com.minfo.quanmei.jni.JniClient;
 
 import org.json.JSONObject;
@@ -48,9 +45,6 @@ public class BaseRequest extends Request<BaseResponse> {
             String jsonString  = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers));
 
-            Log.d(TAG,"respone:"+jsonString);
-            if (BuildConfig.DEBUG)
-                Log.d(TAG,"respone:"+jsonString);
             BaseResponse baseResponse = parseJson(jsonString);
             return Response.success(baseResponse,HttpHeaderParser.parseCacheHeaders(response));
 

@@ -39,6 +39,15 @@ public class ProductDetail implements Serializable {
     private String himg;
     private List<String> users;
     private String name;
+    private String val_desc;
+
+    public String getVal_desc() {
+        return val_desc;
+    }
+
+    public void setVal_desc(String val_desc) {
+        this.val_desc = val_desc;
+    }
 
     public String getName() {
         return name;
@@ -168,6 +177,8 @@ public class ProductDetail implements Serializable {
                 ", hname='" + hname + '\'' +
                 ", himg='" + himg + '\'' +
                 ", users=" + users +
+                ", name='" + name + '\'' +
+                ", val_desc='" + val_desc + '\'' +
                 '}';
     }
 }

@@ -80,7 +80,7 @@
             android:layout_height="150dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@mipmap/ad_doctor_3"/>
+            android:src="@mipmap/default_pic"/>
 
         <ImageView
             android:id="@+id/img_group2"
@@ -88,7 +88,7 @@
             android:layout_height="150dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
-            android:src="@mipmap/ad_doctor_3"/>
+            android:src="@mipmap/default_pic"/>
     </LinearLayout>
 
     <View

@@ -454,6 +454,12 @@
         <activity android:name=".activity.OrderDetailActivity">
 
         </activity>
+        <receiver android:name=".activity.JumpProductDetailReceiver">
+            <intent-filter>
+                <action android:name="com.minfo.quanmei.JUMP_PRODUCT"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

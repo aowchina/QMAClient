@@ -33,14 +33,14 @@
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            android:src="@mipmap/ad_doctor_3" />
+            android:src="@mipmap/default_pic" />
 
         <ImageView
             android:id="@+id/iv_note_img2"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            android:src="@mipmap/ad_doctor_3" />
+            android:src="@mipmap/default_pic" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"

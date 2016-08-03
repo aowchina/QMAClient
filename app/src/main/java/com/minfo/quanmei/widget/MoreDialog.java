@@ -3,6 +3,7 @@ package com.minfo.quanmei.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,13 +17,16 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
     private MoreDialogClickListener listener;
 
     private Button btnCollect;
+    private Button btnUnCollect;
     private Button btnShare;
     private Button btnCancel;
+    private String is_sc;
 
-    public MoreDialog(Context context, MoreDialogClickListener listener) {
+    public MoreDialog(Context context, MoreDialogClickListener listener,String is_sc) {
         super(context, R.style.dialog);
         this.context = context;
         this.listener = listener;
+        this.is_sc=is_sc;
     }
 
     @Override
@@ -32,8 +36,24 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         btnCollect = (Button) findViewById(R.id.btn_collect);
+        btnUnCollect = (Button) findViewById(R.id.btn_uncollect);
         btnShare = (Button) findViewById(R.id.btn_share);
         btnCancel = (Button) findViewById(R.id.btn_cancel);
+        Log.e("",is_sc);
+        if (is_sc!=null){
+            if (is_sc.equals("0")){
+                btnCollect.setVisibility(View.VISIBLE);
+                btnUnCollect.setVisibility(View.GONE);
+            }
+            if (is_sc.equals("1")){
+                btnCollect.setVisibility(View.GONE);
+                btnUnCollect.setVisibility(View.VISIBLE);
+            }
+        }else {
+            btnCollect.setVisibility(View.VISIBLE);
+            btnUnCollect.setVisibility(View.GONE);
+        }
+        btnUnCollect.setOnClickListener(this);
         btnCollect.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
@@ -44,6 +64,9 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()){
             case R.id.btn_collect:
                 listener.moreClick(Type.COLLECT);
+                break;
+            case R.id.btn_uncollect:
+                listener.moreClick(Type.UNCOLLECT);
                 break;
             case R.id.btn_share:
                 listener.moreClick(Type.SHARE);
@@ -63,6 +86,6 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
      * 区分按钮点击的枚举类，收藏，分享，举报，取消
      */
     public enum Type{
-       COLLECT,SHARE,REPORT,CANCEL
+        COLLECT,UNCOLLECT,SHARE,CANCEL
     }
 }

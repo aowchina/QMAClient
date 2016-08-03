@@ -1,8 +1,10 @@
 package com.minfo.quanmei.activity;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,6 +67,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout rlConsult;
 
     private ImageView ivBig;
+    private TextView fName, name;
     private TextView tvNewPrice;
     private TextView tvOldPrice;
     private TextView tvIntro;
@@ -81,38 +85,47 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     private IWXAPI iwxapi;
     private static Tencent mTencent;
+    //价格说明部分
+    private RelativeLayout rlNote;
+    private LinearLayout llNote;
+    private TextView tvNote;
+    private TextView tvOpen;
+    private boolean isOpen;
 
     /**
      * 底部在线咨询是否需要闪烁
      */
-    private boolean isNeedSplash = true;
-    private int clo = 0;
-    private MyHandler handler = new MyHandler(this);
-    private ConsultDialog consultDialog;
-    private Timer timer = new Timer();
-    private TimerTask task = new TimerTask() {
-        public void run() {
-            /*runOnUiThread(new Runnable() {
-                public void run() {
-                    if (clo == 0) {
-                        clo = 1;
-                        tvConsult.setTextColor(getResources().getColor(R.color.basic_color));
-                    } else {
-                        clo = 0;
-                        tvConsult.setTextColor(Color.WHITE);
-                    }
-                }
-            });*/
-        }
-    };
+//    private boolean isNeedSplash = true;
+//    private int clo = 0;
+//    private MyHandler handler = new MyHandler(this);
+//    private ConsultDialog consultDialog;
+//    private Timer timer = new Timer();
+//    private TimerTask task = new TimerTask() {
+//        public void run() {
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    if (clo == 0) {
+//                        clo = 1;
+//                        tvConsult.setTextColor(getResources().getColor(R.color.basic_color));
+//                    } else {
+//                        clo = 0;
+//                        tvConsult.setTextColor(Color.WHITE);
+//                    }
+//                }
+//            });
+//        }
+//    };
     private Button appoint;
     private int id;
     private IUiListener listener;
+//    private NotificationManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+//        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        manager.cancel(MyReceiver.notifactionId);
     }
 
     @Override
@@ -129,6 +142,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
 
         ivBig = (ImageView) findViewById(R.id.iv_big);
+        fName = (TextView) findViewById(R.id.tv_fname);
+        name = (TextView) findViewById(R.id.tv_name);
         tvNewPrice = (TextView) findViewById(R.id.tv_new_price);
         tvOldPrice = (TextView) findViewById(R.id.tv_old_price);
         ivOrder = (ImageView) findViewById(R.id.iv_order);
@@ -145,15 +160,28 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         appoint = ((Button) findViewById(R.id.btn_to_appiont));
         rlConsult.setVisibility(View.INVISIBLE);
 
+        //价格备注
+        rlNote = (RelativeLayout) findViewById(R.id.rl_note);
+        llNote = (LinearLayout) findViewById(R.id.ll_note);
+        tvNote = (TextView) findViewById(R.id.tv_note);
+        tvOpen = (TextView) findViewById(R.id.tv_open);
+        rlNote.setOnClickListener(this);
 
-        consultDialog = new ConsultDialog(this);
-        /*handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                handler.sendEmptyMessage(1);
-            }
-        }, 1000 * 5);*/
+
+//        consultDialog = new ConsultDialog(this);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                handler.sendEmptyMessage(1);
+//            }
+//        }, 1000 * 5);
     }
+
+    private void bindData() {
+        fName.setText("【" + product.getFname() + "】");
+        name.setText(product.getName());
+    }
+
 
     @Override
     protected void initViews() {
@@ -162,10 +190,9 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         if (bundle != null) {
             product = (Product) bundle.getSerializable("product");
             if (product != null) {
+                bindData();
                 id = product.getId();
                 reqProductdeiailData();
-
-
             }
         }
         ivLeft.setOnClickListener(this);
@@ -189,26 +216,26 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         };
     }
 
-    private class MyHandler extends Handler {
-        private WeakReference<ProductDetailActivity> mActivity;
-
-        public MyHandler(ProductDetailActivity activity) {
-            this.mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mActivity != null) {
-                if (msg.what == 1) {
-                    if (!consultDialog.isShowing()) {
-                        spark();
-                        rlConsult.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        }
-    }
+//    private class MyHandler extends Handler {
+//        private WeakReference<ProductDetailActivity> mActivity;
+//
+//        public MyHandler(ProductDetailActivity activity) {
+//            this.mActivity = new WeakReference<>(activity);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            if (mActivity != null) {
+//                if (msg.what == 1) {
+//                    if (!consultDialog.isShowing()) {
+//                        spark();
+//                        rlConsult.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 请求产品详情数据
@@ -227,7 +254,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             public void onRequestSuccess(BaseResponse response) {
                 productDetail = response.getObj(ProductDetail.class);
 
-                Log.e(TAG,productDetail.toString());
+                Log.e(TAG, productDetail.toString());
                 if (productDetail != null) {
                     setDetailData();
                 }
@@ -237,10 +264,10 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
-                if(errorcode==11){
-                    ToastUtils.show(ProductDetailActivity.this,"特惠不存在或已被删除");
-                }else{
-                    ToastUtils.show(ProductDetailActivity.this,"服务器繁忙");
+                if (errorcode == 11) {
+                    ToastUtils.show(ProductDetailActivity.this, "特惠不存在或已被删除");
+                } else {
+                    ToastUtils.show(ProductDetailActivity.this, "服务器繁忙");
                 }
             }
 
@@ -253,13 +280,17 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     public void setDetailData() {
-        UniversalImageUtils.displayImageUseDefOptions(productDetail.getBimg(), ivBig);
-
+        UniversalImageUtils.displayImageUseBigOptions(productDetail.getBimg(), ivBig);
 
 
         tvNewPrice.setText(productDetail.getNewval() + "");
         tvOldPrice.setText("¥" + productDetail.getOldval() + "");
         tvOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        if (productDetail.getVal_desc().equals("")) {
+            tvNote.setText("暂无对价格说明");
+        } else {
+            tvNote.setText(productDetail.getVal_desc());
+        }
         appoint.setText("预约(定金" + productDetail.getDj() + ")");
         tvOrder.setText("预约(定金" + productDetail.getDj() + ")");
         tvIntro.setText(productDetail.getIntro());
@@ -272,12 +303,12 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         UniversalImageUtils.loadDefImage(productDetail.getDetail(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
-                tvDetail.setImageResource(R.mipmap.default_pic);
+                tvDetail.setImageResource(R.mipmap.default_big_pic);
             }
 
             @Override
             public void onLoadingFailed(String s, View view, FailReason failReason) {
-                tvDetail.setImageResource(R.mipmap.default_pic);
+                tvDetail.setImageResource(R.mipmap.default_big_pic);
             }
 
             @Override
@@ -299,15 +330,15 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_bottom_consult:
-            case R.id.btn_consult:
-                /*if (!consultDialog.isShowing()) {
-                    consultDialog.show();
-                    rlConsult.setVisibility(View.INVISIBLE);
-                    timer.cancel();
-                }
-                handler.removeMessages(1);*/
-                break;
+//            case R.id.rl_bottom_consult:
+//            case R.id.btn_consult:
+//                if (!consultDialog.isShowing()) {
+//                    consultDialog.show();
+//                    rlConsult.setVisibility(View.INVISIBLE);
+//                    timer.cancel();
+//                }
+//                handler.removeMessages(1);
+//                break;
             case R.id.btn_order:
                 if (productDetail != null) {
                     reqMyServer();
@@ -330,15 +361,26 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 ShareDialog shareDialog = new ShareDialog(this, shareListener);
                 shareDialog.show();
                 break;
+            case R.id.rl_note:
+                if (isOpen) {
+                    llNote.setVisibility(View.GONE);
+                    tvOpen.setText("展开");
+                    isOpen = false;
+                } else {
+                    llNote.setVisibility(View.VISIBLE);
+                    tvOpen.setText("收起");
+                    isOpen = true;
+                }
+                break;
         }
     }
 
-    /**
-     * 底部字体闪烁
-     */
-    private void spark() {
-        timer.schedule(task, 1, 500);
-    }
+//    /**
+//     * 底部字体闪烁
+//     */
+//    private void spark() {
+//        timer.schedule(task, 1, 500);
+//    }
 
 
     private void reqMyServer() {
@@ -392,15 +434,15 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
      */
     private void jumpCompleteOrder(String responseStr) {
         try {
-            Log.e(TAG,responseStr);
+            Log.e(TAG, responseStr);
             JSONObject jsonObject = new JSONObject(responseStr);
             String orderid = jsonObject.getString("orderid");
 
             Bundle bundle = new Bundle();
 
             bundle.putString("orderid", orderid);
-            bundle.putInt("payType",1);
-            bundle.putString("from","ProductDetail");
+            bundle.putInt("payType", 1);
+            bundle.putString("from", "ProductDetail");
 
             utils.jumpAty(ProductDetailActivity.this, OrderPayActivity.class, bundle);
         } catch (JSONException e) {
@@ -411,8 +453,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_QQ_SHARE) {
-            Tencent.onActivityResultData(requestCode,resultCode,data,listener);
-            Log.e(TAG,"qq分享");
+            Tencent.onActivityResultData(requestCode, resultCode, data, listener);
+            Log.e(TAG, "qq分享");
         }
         switch (requestCode) {
             case 1:
@@ -464,7 +506,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                     msg.title = getString(R.string.qm_share_title);
                     msg.mediaObject = webpage;
 
-                    msg.description = productDetail.getHname()+productDetail.getName();
+                    msg.description = productDetail.getHname() + productDetail.getName();
 //                    msg.description = "全美App下载";
                     Bitmap thumbBmp = Bitmap.createScaledBitmap(img, 150, 150, true);
 
@@ -501,7 +543,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, getString(R.string.qm_share_title));
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, productDetail.getHname()+productDetail.getName());
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, productDetail.getHname() + productDetail.getName());
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, getString(R.string.qm_share_url));
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, getString(R.string.qq_img_share_url));
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, getString(R.string.app_name));

@@ -1,9 +1,13 @@
 package com.minfo.quanmei.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.activity.NoteDetailActivity;
 import com.minfo.quanmei.adapter.ReplyMeAdapter;
 import com.minfo.quanmei.entity.GroupArticle;
 import com.minfo.quanmei.http.BaseResponse;
@@ -58,7 +62,7 @@ public class RepliedMeFragment extends BaseFragment {
 
 
     public void initData() {
-        replyMeAdapter = new ReplyMeAdapter(mActivity,dataList);
+        replyMeAdapter = new ReplyMeAdapter(mActivity, dataList);
         rflReplyMe.setIsCanRefresh(true);
         rflReplyMe.setIsCanLoad(true);
         rflReplyMe.setRefreshListener(new RefreshListView.IrefreshListener() {
@@ -78,13 +82,25 @@ public class RepliedMeFragment extends BaseFragment {
             }
         });
         rflReplyMe.setAdapter(replyMeAdapter);
+        rflReplyMe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intentToDiaryDetail = new Intent(getActivity(), NoteDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("group", dataList.get(position-1));
+                intentToDiaryDetail.putExtra("info", bundle);
+                startActivity(intentToDiaryDetail);
+
+            }
+        });
     }
 
 
     private void reqServer() {
 
-        String url = getString(R.string.api_baseurl)+"user/BhfList.php";
-        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+ Constant.user.getUserid()+"*"+page);
+        String url = getString(R.string.api_baseurl) + "user/BhfList.php";
+        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + page);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -96,18 +112,18 @@ public class RepliedMeFragment extends BaseFragment {
 
                 rflReplyMe.refreshComplete();
                 rflReplyMe.loadComplete();
-                if(isRefreshing){
+                if (isRefreshing) {
                     dataList.clear();
                 }
 
-
+                Log.e("", response.getData());
                 tempList = response.getList(GroupArticle.class);
                 if (dataList != null) {
                     if (tempList != null && tempList.size() > 0) {
                         dataList.addAll(tempList);//当页码增加时，需要在之前的数据基础上加上现在请求的数据
                     } else {
-                        if(page!=1&&isLoading){
-                            ToastUtils.show(mActivity,"数据加载完毕");
+                        if (page != 1 && isLoading) {
+                            ToastUtils.show(mActivity, "数据加载完毕");
                         }
                         if (page == 1 && dataList.size() <= 0) {
                             ToastUtils.show(mActivity, "没有相关数据");
@@ -136,7 +152,7 @@ public class RepliedMeFragment extends BaseFragment {
                 rflReplyMe.loadComplete();
                 isRefreshing = false;
                 isLoading = false;
-                ToastUtils.show(mActivity,msg);
+                ToastUtils.show(mActivity, msg);
             }
         });
 

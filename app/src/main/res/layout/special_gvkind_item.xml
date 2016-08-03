@@ -12,6 +12,8 @@
         android:background="@drawable/shape_special_circle"
         android:gravity="center"
         android:text="脸部"
+        android:maxLength="4"
+        android:ellipsize="end"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/basic_color"/>
 </RelativeLayout>

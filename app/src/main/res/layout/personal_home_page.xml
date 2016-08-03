@@ -28,7 +28,7 @@
                     android:layout_height="match_parent"
                     android:onClick="onClick"
                     android:scaleType="fitXY"
-                    android:src="@mipmap/ad_doctor_3"/>
+                    android:src="@mipmap/ad_doctor"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

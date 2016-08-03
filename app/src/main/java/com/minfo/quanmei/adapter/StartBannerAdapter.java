@@ -86,7 +86,7 @@ public class StartBannerAdapter extends PagerAdapter {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,utils.dip2px(206));
             imageView.setLayoutParams(params);
 
-            UniversalImageUtils.displayImageUseDefOptions(lunbo.get(i).getImg(), imageView);
+            UniversalImageUtils.displayImageUseBigOptions(lunbo.get(i).getImg(), imageView);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageViews.add(imageView);
         }

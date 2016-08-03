@@ -1,12 +1,11 @@
 package com.minfo.quanmei.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,8 +23,6 @@ import com.minfo.quanmei.utils.UniversalImageUtils;
 import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.PayMethodDialog;
 import com.minfo.quanmei.wxapi.WXPayEntryActivity;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -145,6 +142,7 @@ public class CourseActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
+                Log.e(TAG,response.toString());
                 loadingDialog.dismiss();
                 courseDetail = response.getObj(CourseDetail.class);
                 if (courseDetail != null) {
@@ -184,30 +182,7 @@ public class CourseActivity extends BaseActivity implements View.OnClickListener
         }
         tvTeacherName.setText(courseDetail.getTeacher_name());
         tvCoursePrice.setText(courseDetail.getCourse_price());
-        UniversalImageUtils.loadDefImage(courseDetail.getCourse_banner(), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-                ivCourse.setImageResource(R.mipmap.default_pic);
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-                ivCourse.setImageResource(R.mipmap.default_pic);
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Matrix matrix = new Matrix();
-                matrix.postScale(utils.getScreenWidth() / (bitmap.getWidth() * 1.0f), utils.getScreenWidth() / (bitmap.getWidth() * 1.0f)); //长和宽放大缩小的比例
-                Bitmap resizeBmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                ivCourse.setImageBitmap(resizeBmp);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-                ivCourse.setImageResource(R.mipmap.default_pic);
-            }
-        });
+        UniversalImageUtils.displayImageUseBigOptions(courseDetail.getCourse_banner(),ivCourse);
         tvTeacherDetail.setText(courseDetail.getTeacher_intro());
         tvCourseDetail.setText(courseDetail.getCourse_intro());
 

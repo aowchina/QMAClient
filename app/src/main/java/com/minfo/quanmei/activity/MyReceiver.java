@@ -11,14 +11,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.entity.Product;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.http.VolleyHttpClient;
 import com.minfo.quanmei.utils.Utils;
 import com.minfo.quanmei.widget.ForceExitDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -35,9 +40,13 @@ import cn.jpush.android.api.JPushInterface;
 public class MyReceiver extends BroadcastReceiver {
     private static final String TAG = "JPush";
     private Context context;
+    private NotificationManager notificationManager;
+    public static int notifactionId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+
         Bundle bundle = intent.getExtras();
 
         Utils utils = new Utils(context);
@@ -92,23 +101,60 @@ public class MyReceiver extends BroadcastReceiver {
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.e(TAG, "[MyReceiver] 接收到推送下来的通知");
-            int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
+            notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+            String msg = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            String type = "";
+            String id = "";
+            try {
+                JSONObject jsonObject = new JSONObject(msg);
+                type = jsonObject.getString("type");
+                id = jsonObject.getString("id");
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             if(utils.isAppAlive("com.minfo.quanmei")){
+                if(!TextUtils.isEmpty(type)&&type.equals("tehui")) {
 
+                    if(MyApplication.count>0) {
+                        Product product = new Product();
+                        product.setId(Integer.parseInt(id));
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("product", product);
+                        Intent intent1 = new Intent("com.minfo.quanmei.JUMP_PRODUCT");
+                        intent1.putExtra("info", bundle1);
+
+//                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//                    context.startActivity(intent1);
+
+                        context.sendBroadcast(intent1);
+                    }else {
+                        Intent intent2 = new Intent(context, InitActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                        context.startActivity(intent2);
+                    }
+                }else{
+                    Intent launchIntent = context.getPackageManager().
+                            getLaunchIntentForPackage("com.minfo.quanmei");
+                    launchIntent.setFlags(
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    context.startActivity(launchIntent);
+                }
+
+            }else{
                 Intent launchIntent = context.getPackageManager().
                         getLaunchIntentForPackage("com.minfo.quanmei");
                 launchIntent.setFlags(
                         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 context.startActivity(launchIntent);
-            }else{
-
             }
+
 
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));

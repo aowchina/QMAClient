@@ -29,6 +29,7 @@ public class User implements Serializable {
     private String city;
     private List<Group> group;
     private String bgimg;
+    private String wxCode;
     private int point;
 
 
@@ -121,19 +122,28 @@ public class User implements Serializable {
         this.point = point;
     }
 
+    public String getWxCode() {
+        return wxCode;
+    }
+
+    public void setWxCode(String wxCode) {
+        this.wxCode = wxCode;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "age='" + age + '\'' +
-                ", sex='" + sex + '\'' +
+                "sex='" + sex + '\'' +
                 ", username='" + username + '\'' +
                 ", level=" + level +
                 ", userimg='" + userimg + '\'' +
+                ", age='" + age + '\'' +
                 ", star=" + star +
                 ", userid=" + userid +
                 ", city='" + city + '\'' +
                 ", group=" + group +
                 ", bgimg='" + bgimg + '\'' +
+                ", wxCode='" + wxCode + '\'' +
                 ", point=" + point +
                 '}';
     }

@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 
+/**
+ * 消息
+ */
 public class MessageActivity extends BaseActivity implements View.OnClickListener {
 
     //top
@@ -40,7 +43,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         tvTitle.setText("消息");
 
         tvMessage = (TextView) findViewById(R.id.tv_message);
-        tvMessageNum  = (TextView) findViewById(R.id.tv_message_num);
+        tvMessageNum = (TextView) findViewById(R.id.tv_message_num);
         tvMessageTime = (TextView) findViewById(R.id.tv_last_message_time);
 
 
@@ -48,7 +51,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         llGroupNotify.setOnClickListener(this);
         ivLeft.setOnClickListener(this);
     }
-
 
 
     @Override
@@ -64,19 +66,19 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         reproveNum = utils.getReceiveNum("receiveReprove");
         tvMessageTime.setText(utils.getLastMessageTime());
         tvMessage.setText("你收到" + replyNum + "个回复" + reproveNum + "个有用");
-        if((replyNum+reproveNum)!=0){
+        if ((replyNum + reproveNum) != 0) {
             tvMessageNum.setVisibility(View.VISIBLE);
-            tvMessageNum.setText((replyNum+reproveNum)+"");
-        }else{
+            tvMessageNum.setText((replyNum + reproveNum) + "");
+        } else {
             tvMessageNum.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_group_notify:
-                utils.jumpAty(this,GroupNotifyActivity.class,null);
+                utils.jumpAty(this, GroupNotifyActivity.class, null);
                 break;
             case R.id.iv_left:
                 finish();

@@ -38,6 +38,15 @@ public class GroupArticle implements Serializable{
     private String gname;
 
     private String username;
+    private String isSc;
+
+    public String getIsSc() {
+        return isSc;
+    }
+
+    public void setIsSc(String isSc) {
+        this.isSc = isSc;
+    }
 
     public String getUsername2() {
         return username2;
@@ -252,8 +261,7 @@ public class GroupArticle implements Serializable{
     @Override
     public String toString() {
         return "GroupArticle{" +
-                "ctime='" + ctime + '\'' +
-                ", text='" + text + '\'' +
+                "text='" + text + '\'' +
                 ", text2='" + text2 + '\'' +
                 ", pluserid='" + pluserid + '\'' +
                 ", pluser=" + pluser +
@@ -263,6 +271,7 @@ public class GroupArticle implements Serializable{
                 ", isjing=" + isjing +
                 ", userimg='" + userimg + '\'' +
                 ", type='" + type + '\'' +
+                ", ctime='" + ctime + '\'' +
                 ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", zan='" + zan + '\'' +
@@ -277,6 +286,7 @@ public class GroupArticle implements Serializable{
                 ", pltime='" + pltime + '\'' +
                 ", gname='" + gname + '\'' +
                 ", username='" + username + '\'' +
+                ", isSc='" + isSc + '\'' +
                 ", iszan=" + iszan +
                 '}';
     }

@@ -16,8 +16,8 @@
         android:textColor="#ffffff"
         android:background="@null"
         android:onClick="onClick"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
     <View
         android:layout_width="0dp"
         android:layout_weight="0.03"

@@ -1,5 +1,6 @@
 package com.minfo.quanmei.activity;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,8 @@ public class InitActivity extends AppCompatActivity {
     private VolleyHttpClient httpClient;
     private Utils utils;
 
+    private NotificationManager manager;
+
     static {
         System.loadLibrary("QUANMEI");
     }
@@ -50,6 +53,9 @@ public class InitActivity extends AppCompatActivity {
         utils = new Utils(this);
 
         JPushInterface.init(this);
+
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.cancel(MyReceiver.notifactionId);
 
 
         handler = new Handler() {

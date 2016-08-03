@@ -74,7 +74,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private int th_amount = 0;
     private SearchData searchData = new SearchData();
     private boolean initAdapter;
-    private String content  = "";
+    private String content = "";
 
 
     @Override
@@ -168,7 +168,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                 helper.setText(R.id.hosgrid_np, item.getNewval() + "");
                 helper.setText(R.id.hosgrid_op, item.getOldval() + "");
-                helper.setText(R.id.hg_content, "【"+item.getFname()+"】"+item.getName());
+                helper.setText(R.id.hg_content, "【" + item.getFname() + "】" + item.getName());
                 helper.setText(R.id.hg_hos, item.getHname());
                 TextView tvOld = helper.getView(R.id.hosgrid_op);
                 tvOld.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
@@ -271,7 +271,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             llMoreNote.setVisibility(View.GONE);
         }
 
-        tieZiAdapter = new CommonAdapter<GroupArticle>(this, tieZis.size() > 5 ? tieZis.subList(0,5) : tieZis, R.layout.start_diary_item) {
+        tieZiAdapter = new CommonAdapter<GroupArticle>(this, tieZis.size() > 5 ? tieZis.subList(0, 5) : tieZis, R.layout.start_diary_item) {
             @Override
             public void convert(BaseViewHolder helper, GroupArticle item, int position) {
                 helper.setText(R.id.tv_contentdia_start0, item.getTitle());
@@ -281,9 +281,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 helper.setText(R.id.tv_hand_start0, item.getZan() + "");
                 helper.setText(R.id.tv_share_start0, item.getPl() + "");
 
-                ImageView img1 =  helper.getView(R.id.img_group1);
-                ImageView img2 =  helper.getView(R.id.img_group2);
-                ImageView useIcon =  helper.getView(R.id.iv_useicon_start0);
+                ImageView img1 = helper.getView(R.id.img_group1);
+                ImageView img2 = helper.getView(R.id.img_group2);
+                ImageView useIcon = helper.getView(R.id.iv_useicon_start0);
                 img1.setVisibility(View.GONE);
                 img2.setVisibility(View.GONE);
                 UniversalImageUtils.disCircleImage(item.getUserimg(), useIcon);
@@ -335,7 +335,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void reqSearchList(String bytes) {
         String url = getResources().getString(R.string.api_baseurl) + "public/Choice.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + bytes);
-        Log.e(TAG, bytes);
+        Log.e(TAG, params + "");
 
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
 
@@ -348,6 +348,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onRequestSuccess(BaseResponse response) {
                 searchData = response.getObj(SearchData.class);
+                Log.e(TAG, response + "");
                 if (searchData != null) {
                     diarys = searchData.getRj();
                     projectList = searchData.getTh();
@@ -374,8 +375,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 int errorcode = response.getErrorcode();
                 if (errorcode == 10) {
                     ToastUtils.show(SearchActivity.this, "搜索条件为空");
-                }else{
-                    ToastUtils.show(SearchActivity.this,"服务器繁忙");
+                } else {
+                    ToastUtils.show(SearchActivity.this, "服务器繁忙");
                 }
 
             }

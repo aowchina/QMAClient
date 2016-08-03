@@ -48,8 +48,12 @@ public class UniversalImageUtils {
 
     public static void displayImageUseDefOptions(String url, ImageView imageView) {
 
-
         getInstance().getImgLoader().displayImage(url, imageView, getDisplayOptions());
+    }
+
+    public static void displayImageUseBigOptions(String url, ImageView imageView) {
+
+        getInstance().getImgLoader().displayImage(url, imageView, getBigDislayOptions());
     }
 
     public static void disCircleImage(String url, ImageView imageView) {
@@ -70,6 +74,23 @@ public class UniversalImageUtils {
                 .showImageOnLoading(R.mipmap.default_pic) //设置图片在下载期间显示的图片
                 .showImageForEmptyUri(R.mipmap.default_pic)//设置图片Uri为空或是错误的时候显示的图片
                 .showImageOnFail(R.mipmap.default_pic)  //设置图片加载/解码过程中错误时候显示的图片
+                .cacheInMemory(true)//设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
+                .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
+                .imageScaleType(ImageScaleType.EXACTLY)//设置图片以如何的编码方式显示
+                .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型//
+                .resetViewBeforeLoading(true)//设置图片在下载前是否重置，复位
+                .displayer(new FadeInBitmapDisplayer(500))
+                .build();//构建完成
+
+        return options;
+    }
+
+    public static DisplayImageOptions getBigDislayOptions(){
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.default_big_pic) //设置图片在下载期间显示的图片
+                .showImageForEmptyUri(R.mipmap.default_big_pic)//设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.default_big_pic)  //设置图片加载/解码过程中错误时候显示的图片
                 .cacheInMemory(true)//设置下载的图片是否缓存在内存中
                 .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
                 .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）

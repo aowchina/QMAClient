@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -108,6 +109,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
     private boolean isResetPage;//为true表示下拉刷新请求数据为第一页
     private IWXAPI iwxapi;
     private Tencent mTencent;
+    private String is_sc="";
 
 
     @Override
@@ -160,7 +162,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
         iconComment = ((LinearLayout) view.findViewById(R.id.ll_followers));
         isVisible = ((TextView) view.findViewById(R.id.tv_comment_note));
 
-        moreDialog = new MoreDialog(this, this);
+
         shareDialog = new ShareDialog(this,shareListener);
         loadingDialog = new LoadingDialog(this);
     }
@@ -213,6 +215,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
     private void reqContentDetail() {
         String noteDetailUrl = getResources().getString(R.string.api_baseurl) + "wenzhang/Detail.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + ctime + "*" + utils.getUserid());
+        Log.e("errorcode详情", ctime + " " + utils.getUserid() + " " + params);
         httpClient.post(noteDetailUrl, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -223,11 +226,13 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             public void onRequestSuccess(BaseResponse response) {
 
                 if (response.getErrorcode() == 0) {
-
+                    Log.e("errorcode详情", response.getData() + " ");
                     groupArticleDetail = response.getObj(GroupArticle.class);
                     showImg(groupArticleDetail);
                     showPlUser();
                     if (groupArticleDetail != null) {
+                        is_sc = groupArticleDetail.getIsSc();
+                        Log.e("errorcode详情", is_sc + " "+groupArticleDetail.getIsSc());
                         tvNoteContent.setText(groupArticleDetail.getText());
                         iszan = groupArticleDetail.getIszan() == 0 ? false : true;
                         refreshReproveBtn(iszan);
@@ -238,6 +243,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
+                Log.e("errorcode详情", errorcode + " ");
                 if (errorcode == 13) {
                     ToastUtils.show(NoteDetailActivity.this, "文章不存在！");
                 } else {
@@ -341,7 +347,10 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
 
             refreshReproveBtn(iszan);
             ctime = groupArticle.getCtime();
+
         }
+
+        Log.e("id",id+" "+ctime);
         reqCommentArticle(id, page);
 
     }
@@ -374,9 +383,9 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                     llvFirstReply.refreshComplete();
                 }
                 firstReplyAdapter.notifyDataSetChanged();
-                if(page==1&&(tempList==null||tempList.size()==0)){
+                if (page == 1 && (tempList == null || tempList.size() == 0)) {
                     llEmptyView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     llEmptyView.setVisibility(View.GONE);
                 }
 
@@ -389,11 +398,13 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                     isUpLoad = false;
                     llvFirstReply.refreshComplete();
                 }
+
                 int errorcode = response.getErrorcode();
-                if(errorcode==14){
-                    ToastUtils.show(NoteDetailActivity.this,"文章不存在或已被删除");
-                }else{
-                    ToastUtils.show(NoteDetailActivity.this,"服务器繁忙");
+                Log.e("errorcode评论", errorcode + " ");
+                if (errorcode == 14) {
+                    ToastUtils.show(NoteDetailActivity.this, "文章不存在或已被删除");
+                } else {
+                    ToastUtils.show(NoteDetailActivity.this, "服务器繁忙");
                 }
             }
 
@@ -418,7 +429,12 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.tv_right:
-                moreDialog.show();
+                if (is_sc!=null){
+                    Log.e("errorcode详情", is_sc + " ");
+                    moreDialog = new MoreDialog(this, this,is_sc);
+                    moreDialog.show();
+                }
+
                 break;
             case R.id.btn_reply:
                 if (Constant.user != null) {
@@ -474,6 +490,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
+
                 if (errorcode == 14) {
                     ToastUtils.show(NoteDetailActivity.this, "您处于未登录状态，请先登录");
                     LoginActivity.isJumpLogin = true;
@@ -570,7 +587,9 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 moreDialog.dismiss();
                 shareDialog.show();
                 break;
-            case REPORT:
+            case UNCOLLECT:
+                moreDialog.dismiss();
+                reqUnCollect();
                 break;
             case CANCEL:
                 moreDialog.dismiss();
@@ -592,7 +611,8 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onRequestSuccess(BaseResponse response) {
                 loadingDialog.dismiss();
-                ToastUtils.show(NoteDetailActivity.this,"收藏成功!");
+                ToastUtils.show(NoteDetailActivity.this, "收藏成功!");
+                reqContentDetail();
             }
 
             @Override
@@ -621,7 +641,48 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
         });
 
     }
+    /**
+     * 请求取消收藏的接口
+     */
+    private void reqUnCollect() {
+        String url = getString(R.string.api_baseurl)+"user/CancelSC.php";
+        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+Constant.user.getUserid()+"*"+groupArticle.getId());
+        httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
+            @Override
+            public void onPreRequest() {
+                loadingDialog.show();
+            }
 
+            @Override
+            public void onRequestSuccess(BaseResponse response) {
+                loadingDialog.dismiss();
+                ToastUtils.show(NoteDetailActivity.this,"取消收藏成功!");
+                reqContentDetail();
+            }
+
+            @Override
+            public void onRequestNoData(BaseResponse response) {
+                loadingDialog.dismiss();
+                int errorcode = response.getErrorcode();
+                Log.e("errorcode",+errorcode+"");
+                if(errorcode==12){
+                    ToastUtils.show(NoteDetailActivity.this, "用户未登录");
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(NoteDetailActivity.this,LoginActivity.class,null);
+                }else{
+                    ToastUtils.show(NoteDetailActivity.this,"服务器繁忙");
+                }
+
+            }
+
+            @Override
+            public void onRequestError(int code, String msg) {
+                loadingDialog.dismiss();
+                ToastUtils.show(NoteDetailActivity.this,msg);
+            }
+        });
+
+    }
     @Override
     public void click(NoteReply reply, int type) {
         Bundle bundle = new Bundle();
