@@ -15,9 +15,6 @@ import com.minfo.quanmei.fragment.OrderMyFragment;
 import com.minfo.quanmei.fragment.OrderPayFragment;
 import com.minfo.quanmei.fragment.OrderServiceFragment;
 
-/**
- * 订单列表
- */
 public class OrderListActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView ivBack;
@@ -91,7 +88,7 @@ public class OrderListActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void setSelect(int i) {
+    private void setSelect(int i){
         resetTab();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
@@ -147,19 +144,23 @@ public class OrderListActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void hideFragment(FragmentTransaction transaction) {
-        if (orderPayFragment != null) {
+        if (orderPayFragment!= null)
+        {
             transaction.hide(orderPayFragment);
         }
-        if (orderServiceFragment != null) {
+        if (orderServiceFragment != null)
+        {
             transaction.hide(orderServiceFragment);
         }
-        if (orderEvaluteFragment != null) {
+        if (orderEvaluteFragment != null)
+        {
             transaction.hide(orderEvaluteFragment);
         }
-        if (orderCancelFragment != null) {
+        if (orderCancelFragment != null)
+        {
             transaction.hide(orderCancelFragment);
         }
-        if (orderMyFragment != null) {
+        if(orderMyFragment!=null){
             transaction.hide(orderMyFragment);
         }
     }

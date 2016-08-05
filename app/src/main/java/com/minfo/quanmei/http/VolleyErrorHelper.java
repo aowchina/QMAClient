@@ -38,13 +38,10 @@ public class VolleyErrorHelper {
      */
     public static String getMessage(Context context,VolleyError error) {
         if (error instanceof TimeoutError) {
-            Log.e("连接错误","超时");
             return context.getResources().getString(R.string.server_error);
         } else if (isServerProblem(error)) {
-            Log.e("连接错误","服务器");
             return handleServerError(context,error);
         } else if (isNetworkProblem(error)) {
-            Log.e("连接错误","网络");
             return context.getResources().getString(R.string.no_internet);
         }
         return context.getResources().getString(R.string.network_error);

@@ -20,14 +20,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
+                android:layout_height="150dp">
 
                 <ImageView
                     android:id="@+id/iv_info_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:onClick="onClick"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:src="@mipmap/ad_doctor"/>
 
                 <LinearLayout

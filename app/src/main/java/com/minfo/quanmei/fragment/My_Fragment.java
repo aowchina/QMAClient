@@ -2,10 +2,7 @@ package com.minfo.quanmei.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,7 +38,6 @@ import com.minfo.quanmei.widget.DownLoadingDialog;
 import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.SelectPicDialog;
 import com.minfo.quanmei.widget.UpdateDialog;
-import com.sina.weibo.sdk.utils.ImageUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,9 +65,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-/**
- * 我的
- */
+
 public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rldiary;
     private RelativeLayout rlnote;
@@ -111,9 +106,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private File file;
     private File imgFile;
     private Bitmap resizeBmp;
-
-    private static final String IMAGE_FILE_LOCATION = "file:///sdcard/temp.jpg";
-    private Uri imageUri;//to store the big bitmap
 
     @Override
     protected View initViews() {
@@ -158,10 +150,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         selectPicDialog = new SelectPicDialog(mActivity, selectListener);
         reqMyInfo();
 
-
-        //instantiate
-        imageUri = Uri.parse(IMAGE_FILE_LOCATION);
-
     }
 
     @Override
@@ -175,16 +163,15 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 //            UniversalImageUtils.disCircleImage(myinfo.getUserimg(), myHeadImage);
             myAge.setText(myinfo.getAge() + "");
             myCity.setText(myinfo.getCity());
-
-            utils.sendMsg(MainActivity.myHandler, 1, myinfo);
+            utils.sendMsg(MainActivity.myHandler,1,myinfo);
 
             if (myinfo.getBgimg() != null && !"".equals(myinfo.getBgimg())) {
                 UniversalImageUtils.displayImageUseDefOptions(myinfo.getBgimg(), ivInfoBg);
             }
             String gender = myinfo.getSex();
-            if (gender != null && (gender.equals("暂未设置") || gender.equals("女"))) {
+            if(gender!=null&&(gender.equals("暂未设置")||gender.equals("女"))){
                 ivGender.setImageResource(R.mipmap.sex_female);
-            } else {
+            }else{
                 ivGender.setImageResource(R.mipmap.sex_male);
             }
         }
@@ -299,6 +286,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onRequestNoData(BaseResponse response) {
+                Log.e(TAG,response.getErrorcode()+"");
                 updateDialog.setMessage("目前已经是最新版本：" + utils.getVersionName());
                 updateDialog.show();
                 loadingDialog.dismiss();
@@ -458,17 +446,21 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case PHOTO_CLIP:
-                if (imageUri != null) {
-                    photo = decodeUriAsBitmap(imageUri);
-                    String info_bg_path = mActivity.getFilesDir().getAbsolutePath() + "info_bg.jpg";
-                    boolean isScuccess = saveBitmap2file(photo, info_bg_path);
-                    if (isScuccess) {
-                        imgFile = new File(info_bg_path);
-                        Matrix matrix = new Matrix();
-                        matrix.postScale(utils.getScreenWidth() / (photo.getWidth() * 1.0f), utils.getScreenWidth() / (photo.getWidth() * 1.0f)); //长和宽放大缩小的比例
-                        resizeBmp = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
-                        ivInfoBg.setImageBitmap(resizeBmp);
-                        reqEditHeadImg();
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        photo = extras.getParcelable("data");
+                        String info_bg_path = mActivity.getFilesDir().getAbsolutePath() + "info_bg.jpg";
+                        boolean isScuccess = saveBitmap2file(photo, info_bg_path);
+                        if (isScuccess) {
+                            imgFile = new File(info_bg_path);
+                            Matrix matrix = new Matrix();
+                            matrix.postScale(utils.getScreenWidth() / (photo.getWidth() * 1.0f), utils.getScreenWidth() / (photo.getWidth() * 1.0f)); //长和宽放大缩小的比例
+                            resizeBmp = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
+                            ivInfoBg.setImageBitmap(resizeBmp);
+                            reqEditHeadImg();
+                        }
+
                     }
                 }
                 break;
@@ -476,18 +468,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 break;
         }
 
-    }
-
-    //解析uri返回bitmap
-    private Bitmap decodeUriAsBitmap(Uri uri) {
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeStream(mActivity.getContentResolver().openInputStream(uri));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return bitmap;
     }
 
     /**
@@ -527,8 +507,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
 
     private void photoClip(Uri uri) {
-
-
         // 调用系统中自带的图片剪裁
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -540,11 +518,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         // outputX outputY 是裁剪图片宽高
         intent.putExtra("outputX", 500);
         intent.putExtra("outputY", 250);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", false); // no face detection没有人脸检测
+        intent.putExtra("return-data", true);
         startActivityForResult(intent, PHOTO_CLIP);
     }
 
@@ -645,7 +619,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * xml解析
-     *
      * @param data
      */
     private void parseXml(String data) {

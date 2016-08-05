@@ -24,6 +24,27 @@
             android:orientation="horizontal">
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_visual"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:background="#99efe3e3">
+            <TextView
+                android:id="@+id/tv_security_deposit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/basic_color"
+                android:text="@string/medicine_"/>
+            <TextView
+                android:id="@+id/tv_deposit_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/basic_color"/>
+        </LinearLayout>
     </FrameLayout>
 
     <LinearLayout

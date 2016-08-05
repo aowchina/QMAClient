@@ -224,7 +224,8 @@
             android:name=".activity.AlbumActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.PhotoViewActivity">
+        <activity android:name=".activity.PhotoViewActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.MyGrageActivity"
@@ -436,22 +437,28 @@
             android:windowSoftInputMode="adjustPan|stateUnspecified">
              
         </activity>
-        <activity android:name=".activity.MyCourseActivity">
+        <activity android:name=".activity.MyCourseActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.SpecialDiaryActivity">
+        <activity android:name=".activity.SpecialDiaryActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.SecureActivity">
+        <activity android:name=".activity.SecureActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.PocketActivity">
+        <activity android:name=".activity.PocketActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".activity.OrderListActivity">
 
         </activity>
         <activity
-            android:name=".activity.OrderPayActivity">
+            android:name=".activity.OrderPayActivity"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".activity.OrderDetailActivity">
+        <activity android:name=".activity.OrderDetailActivity"
+            android:screenOrientation="portrait">
 
         </activity>
         <receiver android:name=".activity.JumpProductDetailReceiver">

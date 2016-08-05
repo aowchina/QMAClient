@@ -1,13 +1,9 @@
 package com.minfo.quanmei.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.minfo.quanmei.R;
-import com.minfo.quanmei.activity.NoteDetailActivity;
 import com.minfo.quanmei.adapter.ReproveMeAdapter;
 import com.minfo.quanmei.entity.GroupArticle;
 import com.minfo.quanmei.http.BaseResponse;
@@ -82,18 +78,6 @@ public class ReproveMeFragment extends BaseFragment {
             }
         });
         lvReplyMeList.setAdapter(reproveMeAdapter);
-        lvReplyMeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intentToDiaryDetail = new Intent(getActivity(), NoteDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("group", dataList.get(position-1));
-                intentToDiaryDetail.putExtra("info", bundle);
-                startActivity(intentToDiaryDetail);
-
-            }
-        });
     }
 
 
@@ -115,7 +99,7 @@ public class ReproveMeFragment extends BaseFragment {
                     dataList.clear();
                 }
 
-                Log.e("", response.getData());
+
                 tempList = response.getList(GroupArticle.class);
                 if (dataList != null) {
                     if (tempList != null && tempList.size() > 0) {

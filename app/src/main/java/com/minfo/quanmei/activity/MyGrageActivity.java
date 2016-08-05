@@ -1,6 +1,7 @@
 package com.minfo.quanmei.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,6 +55,7 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
             user = Constant.user;
             UniversalImageUtils.disCircleImage(user.getUserimg(), icon);
             nickname.setText(user.getUsername());
+            Log.e(TAG,user.toString());
             tv_grade.setText("LV" + user.getLevel() + "");
             tvActivePoint.setText(user.getPoint()+"");
         }

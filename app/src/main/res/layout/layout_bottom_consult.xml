@@ -5,8 +5,7 @@
     android:background="#88ff0000"
     android:clickable="true"
     android:onClick="onClick"
-    android:padding="10dp"
-    android:visibility="gone">
+    android:padding="10dp">
 
     <com.minfo.quanmei.widget.CircleImageView
         android:id="@+id/civ_doctor"

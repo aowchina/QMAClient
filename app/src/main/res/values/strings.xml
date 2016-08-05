@@ -29,9 +29,11 @@
 
 
     <!--<string name="api_baseurl">http://service.min-fo.com/quanmei/api/one/</string>-->
-    <string name="api_baseurl">http://139.196.172.208/qm/api/</string>
+    <!--<string name="api_baseurl">http://139.196.172.208/qm/api/</string>-->
+    <string name="api_baseurl">http://quanmei.boyiyx.com/qm/api/</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="medicine_">医疗美容保障金</string>
 
 </resources>

@@ -36,8 +36,7 @@ public class PhotoGridAdapter extends CommonAdapter<String> {
     }
 
     @Override
-    public void convert(final BaseViewHolder helper, final String item,int position)
-    {
+    public void convert(final BaseViewHolder helper, final String item,int position) {
         //设置no_selected
         helper.setImageResource(R.id.id_item_select,
                 R.mipmap.album_photo_select_normal);

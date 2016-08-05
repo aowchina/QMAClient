@@ -31,23 +31,21 @@ import java.util.Map;
  * Created by liujing on 15/8/20.
  */
 public class Utils {
-    private static long lastClickTime;
     private Context context;
     private SharedPreferences sp;
 
-    public Utils(Context context) {
+    public  Utils(Context context){
         this.context = context;
         this.sp = context.getSharedPreferences("SpQm", Activity.MODE_PRIVATE);
     }
 
     /**
      * 获取 基本信息 字符串
-     *
      * @return appid+deviceid+version+ostype+厂家+机型+SDK+phonenum(或者imsi)
      * author wangrui@min-fo.com
      * date 2014-05-21
      */
-    public String getBasePostStr() {
+    public String getBasePostStr(){
         SIMCardInfo cardInfo = new SIMCardInfo(context);
         String phoneNum = null;
         if (cardInfo.getPhoneNumber().length() == 0 || cardInfo.getPhoneNumber() == null) {
@@ -56,7 +54,7 @@ public class Utils {
             phoneNum = cardInfo.getPhoneNumber();
         }
 
-        if (phoneNum == null || phoneNum.equals("")) {
+        if(phoneNum == null || phoneNum.equals("")){
             phoneNum = "000000000000000";
         }
 
@@ -72,7 +70,6 @@ public class Utils {
 
     /**
      * 判断是否连网,3G or Wifi
-     *
      * @param mAct:调用此方法的Activity
      * @author wangrui
      * @date 2014-05-21
@@ -88,21 +85,20 @@ public class Utils {
     }
 
 
+
     /**
      * 向指定的Handler send massage
-     *
      * @param handler: 监听线程的handler对象
-     * @param msgtag:  发送的message
-     *                 author wangrui
-     *                 date 2015-03-13
+     * @param msgtag: 发送的message
+     * author wangrui
+     * date 2015-03-13
      */
-    public void sendMsg(Handler handler, int msgtag) {
+    public void sendMsg(Handler handler, int msgtag){
         Message m = new Message();
         m.what = msgtag;
         handler.sendMessage(m);
     }
-
-    public void sendMsg(Handler handler, int msgtag, Object object) {
+    public void sendMsg(Handler handler, int msgtag,Object object){
         Message m = new Message();
         m.what = msgtag;
         m.obj = object;
@@ -110,48 +106,45 @@ public class Utils {
     }
 
 
-    public int getUserid() {
+
+    public int getUserid(){
         return sp.getInt("userid", 0);
     }
-
-    public void setUserid(int userid) {
-        sp.edit().putInt("userid", userid).commit();
+    public void setUserid(int userid){
+        sp.edit().putInt("userid",userid).commit();
     }
 
-    public void setReceiveNum(String receiveType, int replyNum) {
-        sp.edit().putInt(receiveType, replyNum).commit();
+    public void setReceiveNum(String receiveType,int replyNum){
+        sp.edit().putInt(receiveType,replyNum).commit();
     }
-
-    public int getReceiveNum(String receiveType) {
+    public int getReceiveNum(String receiveType){
         return sp.getInt(receiveType, 0);
     }
 
-    public void setLastMessageTime(String lastMessageTime) {
+    public void setLastMessageTime(String lastMessageTime){
         sp.edit().putString("lastMessageTime", lastMessageTime).commit();
     }
-
-    public String getLastMessageTime() {
-        return sp.getString("lastMessageTime", "");
+    public String getLastMessageTime(){
+       return  sp.getString("lastMessageTime","");
     }
 
 
-    public String getCUserid() {
+    public String getCUserid(){
         return sp.getString("cuserid", "");
     }
-
-    public void setCUserid(String cuserid) {
+    public void setCUserid(String cuserid){
         sp.edit().putString("cuserid", cuserid).commit();
     }
 
-    public void jumpAty(Context mContext, Class clazz, Bundle bundle) {
-        Intent intent = new Intent(mContext, clazz);
-        if (bundle != null) {
+    public void jumpAty(Context mContext,Class clazz,Bundle bundle){
+        Intent intent = new Intent(mContext,clazz);
+        if(bundle!=null) {
             intent.putExtra("info", bundle);
         }
         context.startActivity(intent);
     }
 
-    public String convertNickname(String nickname) {
+    public String convertNickname(String nickname){
         String temp = "";
         try {
             byte[] strTemp = nickname.getBytes("utf-8");
@@ -165,7 +158,7 @@ public class Utils {
         }
     }
 
-    public String convertChinese(String str) {
+    public String convertChinese(String str){
         String temp = "";
         try {
             byte[] strTemp = str.getBytes("utf-8");
@@ -181,33 +174,30 @@ public class Utils {
 
     /**
      * 返回应用版本名
-     *
      * @return
      */
-    public String getVersionName() {
+    public String getVersionName(){
         PackageManager packageManager = context.getPackageManager();
         String version = "";
         PackageInfo packInfo = null;
         try {
-            packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            packInfo = packageManager.getPackageInfo(context.getPackageName(),0);
             version = packInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return version;
     }
-
     /**
      * 返回应用版本号
-     *
      * @return
      */
-    public int getVersionCode() {
+    public int getVersionCode(){
         PackageManager packageManager = context.getPackageManager();
-        int versionCode = 1;
+        int  versionCode = 1;
         PackageInfo packInfo = null;
         try {
-            packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            packInfo = packageManager.getPackageInfo(context.getPackageName(),0);
             versionCode = packInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -215,21 +205,22 @@ public class Utils {
         return versionCode;
     }
 
-    public Map<String, String> getParams(String mPostStr) {
+    public Map<String,String> getParams(String mPostStr){
         int str_counter = (mPostStr.length() / 60);
-        if ((mPostStr.length() % 60) > 0) {
+        if((mPostStr.length() % 60) > 0){
             str_counter = str_counter + 1;
         }
 
-        Map<String, String> params = new HashMap<>();
+        Map<String,String> params = new HashMap<>();
         params.put("p0", String.valueOf(str_counter + 3));
         params.put("p1", context.getResources().getString(R.string.appid));
         params.put("p2", "2");
 
-        for (int i = 3; i <= (str_counter + 2); i++) {
-            if (mPostStr.length() < 60) {
+        for(int i = 3; i <= (str_counter + 2); i++){
+            if(mPostStr.length() < 60){
                 params.put("p" + i, JniClient.GetEncodeStr(mPostStr.substring(0, mPostStr.length())));
-            } else {
+            }
+            else{
                 params.put("p" + i, JniClient.GetEncodeStr(mPostStr.substring(0, 60)));
                 mPostStr = mPostStr.substring(60);
             }
@@ -237,10 +228,10 @@ public class Utils {
         return params;
     }
 
-    public void jumpPage(Class<?> mClass, Bundle bundle, Activity act) {
+    public void jumpPage(Class<?> mClass, Bundle bundle, Activity act){
         Intent it = new Intent(Settings.ACTION_ADD_ACCOUNT);
         it.setClass(context, mClass);
-        if (bundle != null) {
+        if(bundle != null){
             it.putExtras(bundle);
         }
         context.startActivity(it);
@@ -249,24 +240,23 @@ public class Utils {
 
     /**
      * 判断app是否启动
-     *
      * @param packageName
      * @return
      */
-    public boolean isAppAlive(String packageName) {
+    public  boolean isAppAlive(String packageName){
         ActivityManager activityManager =
-                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> processInfos
                 = activityManager.getRunningAppProcesses();
-        for (int i = 0; i < processInfos.size(); i++) {
-            if (processInfos.get(i).processName.equals(packageName)) {
+        for(int i = 0; i < processInfos.size(); i++){
+            if(processInfos.get(i).processName.equals(packageName)){
                 return true;
             }
         }
         return false;
     }
 
-    public int dip2px(float dpValue) {
+    public  int dip2px( float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -278,10 +268,9 @@ public class Utils {
 
     /**
      * 获取屏幕宽
-     *
      * @return
      */
-    public int getScreenWidth() {
+    public int getScreenWidth(){
         Activity activity = (Activity) context;
         DisplayMetrics dm = new DisplayMetrics();
         dm = activity.getResources().getDisplayMetrics();
@@ -290,10 +279,9 @@ public class Utils {
 
     /**
      * 获取屏幕高
-     *
      * @return
      */
-    public int getScreenHeight() {
+    public int getScreenHeight(){
         Activity activity = (Activity) context;
         DisplayMetrics dm = new DisplayMetrics();
         dm = activity.getResources().getDisplayMetrics();
@@ -301,7 +289,7 @@ public class Utils {
     }
 
     //保存字符串到文件中
-    public void saveAsFileWriter(String content, String fielName) {
+    public void saveAsFileWriter(String content,String fielName) {
 
         FileWriter fwriter = null;
         try {
@@ -334,17 +322,5 @@ public class Utils {
         }
 
         return result;
-    }
-
-    /**
-     * 防止按钮重复点击
-     */
-    public synchronized static boolean isFastClick() {
-        long time = System.currentTimeMillis();
-        if (time - lastClickTime < 2000) {
-            return true;
-        }
-        lastClickTime = time;
-        return false;
     }
 }

@@ -26,7 +26,6 @@ import com.minfo.quanmei.entity.GroupTag;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
-import com.minfo.quanmei.utils.Utils;
 import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.SelectPicDialog;
 
@@ -45,7 +44,7 @@ import java.util.Map;
 /**
  * 写日记界面
  */
-public class WriteDiaryActivity extends BaseActivity implements View.OnClickListener, SelectPicDialog.SelectPicDialogClickListener, InvitationDetailGRAdapter.SelectTagListener {
+public class WriteDiaryActivity extends BaseActivity implements View.OnClickListener,SelectPicDialog.SelectPicDialogClickListener, InvitationDetailGRAdapter.SelectTagListener {
 
     //top
     private ImageView ivLeft;
@@ -84,24 +83,22 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     private String cameraSavePath;
     private String takephotoname;
 
-    private String hosName = "";
+    private String hosName="";
 
 
-    private String[] prices = {"3000元以下", "3000-6000元", "6000-1万元", "1-2万元", "2-5万", "5万元以上"};
+    private String[] prices = {"3000元以下","3000-6000元","6000-1万元","1-2万元","2-5万","5万元以上"};
     private int priceId = 6;
     private boolean isExit = false;
 
-    private List<Map<String, File>> files = new ArrayList<>();
+    private List<Map<String,File>> files = new ArrayList<>();
 
 
     private ArrayList<String> imgPaths = new ArrayList<>();
     private String strTitle;
     private String strContent;
     private Handler handler;
-    private String dorn = "";
+    private String dorn="";
     private LoadingDialog loadingDialog;
-
-    private boolean isFastClick = true;
 
 
     @Override
@@ -150,12 +147,12 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void initViews() {
 
-        selectPicDialog = new SelectPicDialog(this, this);
+        selectPicDialog = new SelectPicDialog(this,this);
         loadingDialog = new LoadingDialog(this);
         Bundle bundle = getIntent().getBundleExtra("info");
-        if (bundle != null) {
+        if(bundle!=null){
             imgPaths = bundle.getStringArrayList("imgUrls");
-            if (bundle.getString("dorn") != null && !bundle.getString("dorn").equals("")) {
+            if (bundle.getString("dorn") != null&&!bundle.getString("dorn").equals("")) {
                 dorn = bundle.getString("dorn");
             }
             showImgs();
@@ -169,10 +166,10 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
             groupTags = Constant.groupDetail.getTag();
             refreshTag();
         }
-        if (Constant.noteTitle != null) {
+        if(Constant.noteTitle!=null){
             etTitle.setText(Constant.noteTitle);
         }
-        if (Constant.noteContent != null) {
+        if(Constant.noteContent!=null){
             etContent.setText(Constant.noteContent);
         }
     }
@@ -185,7 +182,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
                 super.handleMessage(msg);
                 loadingDialog.dismiss();
                 if (msg.what == 1) {
-                    if (msg.obj != null) {
+                    if(msg.obj!=null) {
                         try {
                             JSONObject jsonObject = new JSONObject(msg.obj.toString());
                             int errorcode = jsonObject.getInt("errorcode");
@@ -218,7 +215,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
                             ToastUtils.show(WriteDiaryActivity.this, "服务器繁忙");
                             e.printStackTrace();
                         }
-                    } else {
+                    }else{
                         ToastUtils.show(WriteDiaryActivity.this, "服务器繁忙");
                     }
 
@@ -236,7 +233,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
             for (int i = 0; i < groupTags.size(); i++) {
                 list.add(groupTags.get(i));
             }
-            invitationDetailGRAdapter = new InvitationDetailGRAdapter(this, list, this);
+            invitationDetailGRAdapter = new InvitationDetailGRAdapter(this, list,this);
             gridViewLable.setAdapter(invitationDetailGRAdapter);
         }
         lableTag = true;
@@ -256,27 +253,20 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.tv_right://提交
-                if (Utils.isFastClick()) {
-                    return;
-                }
-                if (isFastClick) {
-                    isFastClick = false;
-                    if (checkInput()) {
-                        if (utils.isOnLine(this)) {
-                            reqServer();
-                        } else {
-                            ToastUtils.show(this, "暂时无网络，请检查设置");
-                            isFastClick = true;
-                        }
+                if(checkInput()){
+                    if(utils.isOnLine(this)) {
+                        reqServer();
+                    }else{
+                        ToastUtils.show(this,"暂时无网络，请检查设置");
                     }
                 }
                 break;
             case R.id.iv_upload_invitation://相册相机选择对话框
             case R.id.iv_upload_invitation2:
-                if (imgPaths.size() < 9) {
+                if(imgPaths.size()<9){
                     showSelectDialg();
-                } else {
-                    ToastUtils.show(this, "图片最多只能上传9张");
+                }else{
+                    ToastUtils.show(this,"图片最多只能上传9张");
                 }
                 break;
             case R.id.iv_lable_invitation://标签
@@ -297,7 +287,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     private void showPriceList() {
         llBottom.setVisibility(View.INVISIBLE);
         llvPrice.setVisibility(View.VISIBLE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_note_price, prices);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.item_note_price,prices);
         llvPrice.setAdapter(adapter);
         llvPrice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -316,22 +306,22 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     private boolean checkInput() {
         strTitle = etTitle.getText().toString();
         strContent = etContent.getText().toString();
-        if (!TextUtils.isEmpty(etHosName.getText())) {
+        if(!TextUtils.isEmpty(etHosName.getText())){
             hosName = utils.convertChinese(etHosName.getText().toString());
         }
         Constant.noteTitle = strTitle;
         Constant.noteContent = strContent;
-        if (TextUtils.isEmpty(strTitle)) {
-            ToastUtils.show(WriteDiaryActivity.this, "帖子标题不能为空");
+        if(TextUtils.isEmpty(strTitle)){
+            ToastUtils.show(WriteDiaryActivity.this,"帖子标题不能为空");
             return false;
         }
-        if (TextUtils.isEmpty(strContent)) {
-            ToastUtils.show(WriteDiaryActivity.this, "帖子内容不能为空");
+        if(TextUtils.isEmpty(strContent)){
+            ToastUtils.show(WriteDiaryActivity.this,"帖子内容不能为空");
             return false;
         }
 
-        if (!(imgPaths != null && imgPaths.size() != 0)) {
-            ToastUtils.show(WriteDiaryActivity.this, "写日记必须添加图片");
+        if(!(imgPaths!=null&&imgPaths.size()!=0)){
+            ToastUtils.show(WriteDiaryActivity.this,"写日记必须添加图片");
             return false;
         }
 
@@ -343,12 +333,12 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
      */
     private void reqServer() {
         loadingDialog.show();
-        for (int i = 0; i < imgPaths.size(); i++) {
-            Map<String, File> map = new HashMap<>();
+        for(int i = 0;i<imgPaths.size();i++){
+            Map<String,File> map = new HashMap<>();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imgName = getFilesDir() + File.separator + "IMG_" + timeStamp + i + 1 + ".jpg";
-            imgUtils.createNewFile(imgName, imgPaths.get(i));
-            map.put(imgName, new File(imgName));
+            String imgName = getFilesDir()+File.separator+"IMG_"+timeStamp + i+1+".jpg";
+            imgUtils.createNewFile(imgName,imgPaths.get(i));
+            map.put(imgName,new File(imgName));
             files.add(map);
         }
 
@@ -357,14 +347,14 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
             tagIds += selectedTags.get(i).getId();
             tagIds += ",";
         }
-        if (tagIds.length() > 0) {
+        if(tagIds.length()>0) {
             tagIds = tagIds.substring(0, tagIds.length() - 1);
         }
 
         final String url = getResources().getString(R.string.api_baseurl) + "wenzhang/AddRj.php";
         String title = utils.convertChinese(strTitle);
         String content = utils.convertChinese(strContent);
-        if (Constant.groupDetail != null) {
+        if(Constant.groupDetail!=null) {
             String str = utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + Constant.groupDetail.getId() + "*" + tagIds + "*" + title + "*" + content + "*" + hosName + "*" + priceId;
 
             final Map<String, String> params = utils.getParams(str);
@@ -392,7 +382,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     /**
      * 保存临时的帖子标题和内容
      */
-    private void saveTempContent() {
+    private void saveTempContent(){
         strTitle = etTitle.getText().toString();
         strContent = etContent.getText().toString();
         Constant.noteTitle = strTitle;
@@ -405,7 +395,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        if (!isExit) {
+        if(!isExit) {
             saveTempContent();
         }
     }
@@ -420,7 +410,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
             ivFace.setImageResource(R.mipmap.btn_insert_face_sel);
             ivLabel.setImageResource(R.mipmap.btn_insert_tag_nor);
             isFace = true;
-            isLabel = false;
+            isLabel=false;
         } else {
             faceTV.setVisibility(View.GONE);
             ivFace.setImageResource(R.mipmap.btn_insert_face_nor);
@@ -476,15 +466,15 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
     /**
      * 显示从相册中选择的照片,并加入监听事件
      */
-    public void showImgs() {
+    public void showImgs(){
         llImgContainer.removeAllViews();
-        for (int i = 0; i < imgPaths.size(); i++) {
+        for (int i = 0;i<imgPaths.size();i++){
             final int j = i;
-            final View view = LayoutInflater.from(this).inflate(R.layout.item_container_img, null);
+            final View view = LayoutInflater.from(this).inflate(R.layout.item_container_img,null);
             ImageView ivDelete = (ImageView) view.findViewById(R.id.iv_delete);
             ImageView ivSelectItem = (ImageView) view.findViewById(R.id.iv_select_item);
-            ivSelectItem.setImageBitmap(imgUtils.decodeSampledBitmapFromResource(imgPaths.get(i), utils.dip2px(45), utils.dip2px(45)));
-            llImgContainer.addView(view, i);
+            ivSelectItem.setImageBitmap(imgUtils.decodeSampledBitmapFromResource(imgPaths.get(i),utils.dip2px(45),utils.dip2px(45)));
+            llImgContainer.addView(view,i);
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -502,7 +492,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                imgPaths.add(cameraSavePath + File.separator + takephotoname);
+                imgPaths.add(cameraSavePath+File.separator+takephotoname);
                 showImgs();
             }
         } else {
@@ -510,7 +500,6 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
 
         }
     }
-
     /**
      * 创建照片保存路径
      */
@@ -528,17 +517,17 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void selectClick(SelectPicDialog.Type type) {
-        switch (type) {
+        switch (type){
             case CAMERA:
                 callCamera();
                 break;
             case ALBUM:
                 //跳转到相册
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("isWriteDiary", isWriteDiary);
+                bundle.putBoolean("isWriteDiary",isWriteDiary);
                 bundle.putStringArrayList("imgPaths", imgPaths);
-                bundle.putString("dorn", dorn);
-                utils.jumpAty(this, AlbumActivity.class, bundle);
+                bundle.putString("dorn",dorn);
+                utils.jumpAty(this,AlbumActivity.class,bundle);
                 appManager.finishActivity();
                 break;
         }
@@ -564,7 +553,7 @@ public class WriteDiaryActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void selectTags(List<GroupTag> tags) {
-        if (tags != null) {
+        if(tags!=null) {
             this.selectedTags = tags;
         }
     }

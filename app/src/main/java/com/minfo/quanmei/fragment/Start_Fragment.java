@@ -1,5 +1,6 @@
 package com.minfo.quanmei.fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +53,14 @@ import com.minfo.quanmei.widget.LimitListView;
 import com.minfo.quanmei.widget.PullScrollView;
 import com.minfo.quanmei.widget.SignDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 首页面
@@ -108,6 +115,31 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
     private SignDialog signDialog;
 
+    private LinearLayout llVisual;
+    private TextView tvDepositMoney;
+
+    private int visualIndex = 0;
+    private Timer time = new Timer();
+    private TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            mActivity.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    if(visualIndex%2==0){
+                        llVisual.animate().alpha(1).setDuration(1000);
+                    }else{
+                        llVisual.animate().alpha(0).setDuration(1000);
+                        if(Start_Fragment.this.isAdded()) {
+                            reqSecurityDeposit();
+                        }
+                    }
+                    visualIndex++;
+                }
+            });
+        }
+    };
+
     /**
      * 是否已签到，默认为false
      */
@@ -135,6 +167,8 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
         supportFragmentManager = getFragmentManager();
 
 
+
+
     }
 
 
@@ -157,6 +191,9 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
          */
         v = LayoutInflater.from(getActivity()).inflate(R.layout.start_headview, null);
         vpstartpage = (AutoScrollViewPager)v.findViewById(R.id.vp_startpage);
+        llVisual = (LinearLayout) v.findViewById(R.id.ll_visual);
+        tvDepositMoney = (TextView) v.findViewById(R.id.tv_deposit_money);
+
         setViewPager();
         pullToListView = ((LimitListView) v.findViewById(R.id.lv_startfragment));
         tvConsult = (TextView) v.findViewById(R.id.tv_consult);
@@ -194,6 +231,7 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
         reqSignState();
         reqStartList();
+        reqSecurityDeposit();
         if(!isSigned){
             reqSign();
         }
@@ -248,6 +286,9 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
                 startActivity(intentToDiaryDetail);
             }
         });
+
+
+        time.schedule(timerTask,1,3000);
 
 
     }
@@ -389,6 +430,41 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
      */
     public interface JumpFragmentListener {
         void jumpFragment(int i);
+    }
+
+    /**
+     * 请求保证金接口
+     */
+    private void reqSecurityDeposit(){
+        String url = getResources().getString(R.string.api_baseurl) +"public/getSecurityDeposit.php";
+        Map<String,String> params = utils.getParams(utils.getBasePostStr());
+
+        httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
+            @Override
+            public void onPreRequest() {
+
+            }
+
+            @Override
+            public void onRequestSuccess(BaseResponse response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    tvDepositMoney.setText(" ￥"+jsonObject.getString("securityDeposit"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onRequestNoData(BaseResponse response) {
+                ToastUtils.show(mActivity,"no data"+response.toString()+response.getErrorcode());
+            }
+
+            @Override
+            public void onRequestError(int code, String msg) {
+                ToastUtils.show(mActivity,msg);
+            }
+        });
     }
 
 

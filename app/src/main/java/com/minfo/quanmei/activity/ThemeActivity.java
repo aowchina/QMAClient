@@ -79,7 +79,7 @@ public class ThemeActivity extends BaseActivity implements View.OnClickListener 
             hid = bundle.getString("hid");
             pid = bundle.getString("pid");
             bimg = bundle.getString("bimg");
-            UniversalImageUtils.displayImageUseDefOptions(bimg, ivTheme);
+            UniversalImageUtils.displayImageUseBigOptions(bimg, ivTheme);
             reqServerInfo();
         }
 

@@ -53,9 +53,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 个人资料
- */
 public class PersonInfoActivity extends BaseActivity implements View.OnClickListener, ModifyPersonInfo.ModifyClickListener, SelectPicDialogClickListener {
     //top
     private TextView tvTitle;
@@ -119,6 +116,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         });
 
 
+
         if (Constant.user != null) {
             user = Constant.user;
             UniversalImageUtils.disCircleImage(user.getUserimg(), civHeadImage);
@@ -127,10 +125,10 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             tvLevel.setText("LV" + user.getLevel());
             tvPosition.setText(user.getCity());
             tvGender.setText(user.getSex());
-            if (user.getSex() != null && !user.getSex().equals("暂未设置")) {
-                if (user.getSex().equals("男")) {
+            if(user.getSex()!=null&&!user.getSex().equals("暂未设置")){
+                if(user.getSex().equals("男")){
                     modifyGender.setType(1);
-                } else {
+                }else{
                     modifyGender.setType(2);
                 }
             }
@@ -143,12 +141,11 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     /**
      * 请求性别设置接口
-     *
      * @param type
      */
     private void reqEditGender(final int type) {
         String url = getResources().getString(R.string.api_baseurl) + "user/EditSex.php";
-        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + type);
+        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+Constant.user.getUserid()+"*"+type);
 
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
@@ -168,11 +165,11 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void onRequestNoData(BaseResponse response) {
                 loadingDialog.dismiss();
                 int errorcode = response.getErrorcode();
-                if (errorcode == 10 || errorcode == 11 || errorcode == 13) {
+                if(errorcode==10||errorcode==11||errorcode==13){
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(PersonInfoActivity.this, LoginActivity.class, null);
-                } else {
-                    ToastUtils.show(PersonInfoActivity.this, "服务器繁忙");
+                    utils.jumpAty(PersonInfoActivity.this,LoginActivity.class,null);
+                }else{
+                    ToastUtils.show(PersonInfoActivity.this,"服务器繁忙");
                 }
 
             }
@@ -180,7 +177,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onRequestError(int code, String msg) {
                 loadingDialog.dismiss();
-                ToastUtils.show(PersonInfoActivity.this, msg);
+                ToastUtils.show(PersonInfoActivity.this,msg);
 
             }
         });
@@ -213,17 +210,16 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         myHandler = new MyHandler(this);
     }
 
-    public static class MyHandler extends Handler {
+    public static class MyHandler extends Handler{
         private WeakReference<PersonInfoActivity> activityWeakReference;
-
-        public MyHandler(PersonInfoActivity activity) {
+        public MyHandler(PersonInfoActivity activity){
             activityWeakReference = new WeakReference<>(activity);
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(Message msg){
             PersonInfoActivity activity = activityWeakReference.get();
-            if (activity != null) {
+            if(activity!=null){
                 if (msg.what == 1) {
                     try {
                         JSONObject jsonObject = new JSONObject(msg.obj.toString());
@@ -245,7 +241,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                                 activity.utils.jumpAty(activity, LoginActivity.class, null);
                                 break;
                             default:
-                                ToastUtils.show(activity, "服务器繁忙");
+                                ToastUtils.show(activity,"服务器繁忙");
                                 break;
                         }
                     } catch (JSONException e) {
@@ -313,9 +309,12 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         qrCode.show();
         qrCode.getWindow().setContentView(R.layout.layout_bar_code);
         ImageView ivCode = (ImageView) qrCode.getWindow().findViewById(R.id.iv_bar_code);
-        ImageView WXCode = (ImageView) qrCode.findViewById(R.id.iv_wexin_code);
-        UniversalImageUtils.displayImageUseDefOptions(Constant.user.getWxCode(), WXCode);
+        TextView tvDialogTitle = (TextView) qrCode.getWindow().findViewById(R.id.tv_title);
+        tvDialogTitle.setText("我的二维码");
         ivCode.setImageBitmap(mBitmap);
+
+        ImageView WXCode = (ImageView) qrCode.findViewById(R.id.iv_bar_code_service);
+        UniversalImageUtils.displayImageUseDefOptions(Constant.user.getWxCode(), WXCode);
     }
 
     /**
@@ -327,7 +326,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void run() {
                 super.run();
                 try {
-                    mBitmap = Create2DCode("http://a.app.qq.com/o/simple.jsp?pkgname=com.minfo.quanmei&userid=" + Constant.user.getUserid());
+                    mBitmap = Create2DCode("http://a.app.qq.com/o/simple.jsp?pkgname=com.minfo.quanmei&userid="+Constant.user.getUserid());
                     utils.sendMsg(myHandler, 111);
                 } catch (WriterException e) {
                     e.printStackTrace();
@@ -341,7 +340,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         //生成二维矩阵,编码时指定大小,不要生成了图片以后再进行缩放,这样会模糊导致识别失败
         Hashtable hints = new Hashtable();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-        BitMatrix matrix = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, utils.dip2px(160), utils.dip2px(160), hints);
+        BitMatrix matrix = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, utils.dip2px(300), utils.dip2px(300), hints);
         int width = matrix.getWidth();
 
 
@@ -533,11 +532,10 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onRequestError(int code, String msg) {
-                ToastUtils.show(PersonInfoActivity.this, msg);
+                ToastUtils.show(PersonInfoActivity.this,msg);
             }
         });
     }
-
     /**
      * 更改头像接口
      */
@@ -675,6 +673,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         }
         return bmp.compress(format, quality, stream);
     }
+
 
 
     /**

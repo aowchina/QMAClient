@@ -29,7 +29,6 @@ import com.minfo.quanmei.utils.MinfoImg;
 import com.minfo.quanmei.utils.MinfoUtils;
 import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
-import com.minfo.quanmei.utils.Utils;
 import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.SelectPicDialog;
 
@@ -103,7 +102,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     private int sw, sh;// 屏幕宽高
 
     private boolean isExit = false;
-    private boolean isFastClick = true;
 
     private Group group;
 
@@ -166,8 +164,8 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         Bundle bundle = getIntent().getBundleExtra("info");
         if (bundle != null) {
             imgPaths = bundle.getStringArrayList("imgUrls");
-            isWriteDiary = bundle.getBoolean("isWriteDiary");
-            if (isWriteDiary) {
+            isWriteDiary=bundle.getBoolean("isWriteDiary");
+            if (isWriteDiary){
                 refreshTitleLabel(R.id.tv_write_diary);
             }
             if (imgPaths != null) {
@@ -209,8 +207,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 super.handleMessage(msg);
                 if (msg.what == 1) {
                     loadingDialog.dismiss();
-                    isFastClick = true;
-                    if (msg.obj != null) {
+                    if(msg.obj!=null) {
                         try {
                             JSONObject jsonObject = new JSONObject(msg.obj.toString());
                             int errorcode = jsonObject.getInt("errorcode");
@@ -244,7 +241,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                             ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
                             e.printStackTrace();
                         }
-                    } else {
+                    }else{
                         ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
                     }
 
@@ -272,7 +269,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      */
     public void showImgs() {
         llImgContainer.removeAllViews();
-        for (int i = 0; imgPaths != null && i < imgPaths.size(); i++) {
+        for (int i = 0; imgPaths!=null&&i < imgPaths.size(); i++) {
             final int j = i;
             final View view = LayoutInflater.from(this).inflate(R.layout.item_container_img, null);
             ImageView ivDelete = (ImageView) view.findViewById(R.id.iv_delete);
@@ -324,19 +321,12 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 refreshTitleLabel(R.id.tv_write_diary);
                 break;
             case R.id.tv_release_invitation://点击发布
-                if (Utils.isFastClick()) {
-                    return;
-                }
-                if (isFastClick) {
-                    isFastClick = false;
-                    loadingDialog.show();
-                    if (checkInput()) {
-                        if (utils.isOnLine(this)) {
-                            reqServer();
-                        } else {
-                            ToastUtils.show(this, "暂时无网络，请检查设置");
-                            isFastClick = true;
-                        }
+                if (checkInput()) {
+                    if(utils.isOnLine(this)) {
+                        loadingDialog.show();
+                        reqServer();
+                    }else{
+                        ToastUtils.show(this,"暂时无网络，请检查设置");
                     }
                 }
                 break;
@@ -404,7 +394,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      * 发帖请求接口
      */
     private void reqServer() {
-        for (int i = 0; imgPaths != null && i < imgPaths.size(); i++) {
+        for (int i = 0; imgPaths!=null&&i < imgPaths.size(); i++) {
             Map<String, File> map = new HashMap<>();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String imgName = getFilesDir() + File.separator + "IMG_" + timeStamp + i + ".jpg";
@@ -591,7 +581,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isWriteDiary", isWriteDiary);
                 bundle.putStringArrayList("imgPaths", imgPaths);
-                bundle.putString("dorn", "");
+                bundle.putString("dorn","");
                 utils.jumpAty(this, AlbumActivity.class, bundle);
                 appManager.finishActivity();
                 break;

@@ -69,20 +69,20 @@ public class GroupNotifyActivity extends BaseActivity implements View.OnClickLis
         switchFragment(1);
         replyNum = utils.getReceiveNum("receiveReply");
         reproveNum = utils.getReceiveNum("receiveReprove");
-        if (replyNum != 0) {
+        if(replyNum!=0){
             tvReplyNum.setVisibility(View.VISIBLE);
-            tvReplyNum.setText(replyNum + "");
+            tvReplyNum.setText(replyNum+"");
         }
-        if (reproveNum != 0) {
+        if(reproveNum!=0){
             tvReproveNum.setVisibility(View.VISIBLE);
-            tvReproveNum.setText(reproveNum + "");
+            tvReproveNum.setText(reproveNum+"");
         }
 
     }
 
 
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View v){
+        switch (v.getId()){
             case R.id.ll_reply:
             case R.id.tv_reply:
                 tvReply.setTextColor(Color.BLACK);
@@ -92,7 +92,7 @@ public class GroupNotifyActivity extends BaseActivity implements View.OnClickLis
                 tvReprove.setBackgroundColor(getResources().getColor(R.color.tab_top_bg));
                 llReprove.setBackgroundColor(getResources().getColor(R.color.tab_top_bg));
                 replyNum = 0;
-                utils.setReceiveNum("receiveReply", 0);
+                utils.setReceiveNum("receiveReply",0);
                 tvReplyNum.setVisibility(View.GONE);
                 switchFragment(1);
                 break;
@@ -105,7 +105,7 @@ public class GroupNotifyActivity extends BaseActivity implements View.OnClickLis
                 tvReprove.setBackgroundColor(Color.WHITE);
                 llReprove.setBackgroundColor(Color.WHITE);
                 reproveNum = 0;
-                utils.setReceiveNum("receiveReprove", 0);
+                utils.setReceiveNum("receiveReprove",0);
                 tvReproveNum.setVisibility(View.GONE);
                 switchFragment(2);
                 break;
@@ -117,16 +117,15 @@ public class GroupNotifyActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 切换fragment
-     *
      * @param flag 1代表回复我的 2代表赞我的
      */
-    private void switchFragment(int flag) {
-        if (flag == 1) {
+    private void switchFragment(int flag){
+        if(flag==1){
             RepliedMeFragment repliedMeFragment = new RepliedMeFragment();
             Bundle bundle = new Bundle();
             repliedMeFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, repliedMeFragment).commit();
-        } else {
+        }else{
 
             ReproveMeFragment reproveMeFragment = new ReproveMeFragment();
             Bundle bundle = new Bundle();

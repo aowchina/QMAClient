@@ -58,7 +58,7 @@ public class MyGradeAdapter extends BaseAdapter {
         viewHolder.numerical.setText(myGrade.getNumerical());
         if (type == 0&&position== Constant.user.getStar()) {
             viewHolder.grade.setBackgroundResource(R.color.basic_color);
-        }else if(type==1&&position==Constant.user.getLevel()){
+        }else if(type==1&&position==(Constant.user.getLevel()-1)){
             viewHolder.grade.setBackgroundResource(R.color.basic_color);
         }else{
             viewHolder.grade.setBackgroundColor(Color.parseColor("#eeeeee"));

@@ -42,15 +42,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-//        requestWindowFeature(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.setContentView(layoutResID);
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
-            tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(R.color.start_title_color);//通知栏所需颜色
 
-        }*/
         findViews();
         initViews();
     }

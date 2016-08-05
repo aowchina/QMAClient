@@ -72,7 +72,7 @@ public class StartActionLVAdapter extends BaseAdapter {
         }
 
 
-        UniversalImageUtils.displayImageUseDefOptions(theme.getBimg(), viewHolder.icon);
+        UniversalImageUtils.displayImageUseBigOptions(theme.getBimg(), viewHolder.icon);
 
         int count = theme.getAmount()==null?0:Integer.parseInt(theme.getAmount().toString());
 
