@@ -36,7 +36,7 @@ public class Utils {
 
     public  Utils(Context context){
         this.context = context;
-        this.sp = context.getSharedPreferences("SpQm", Activity.MODE_PRIVATE);
+        this.sp = context.getSharedPreferences("SpQm", context.MODE_PRIVATE);
     }
 
     /**
@@ -129,12 +129,21 @@ public class Utils {
     }
 
 
-    public String getCUserid(){
-        return sp.getString("cuserid", "");
+    public boolean isLogin(){
+        return sp.getBoolean("isLogin",false);
     }
-    public void setCUserid(String cuserid){
-        sp.edit().putString("cuserid", cuserid).commit();
+    public void setLogin(boolean flag){
+        sp.edit().putBoolean("isLogin",flag).commit();
     }
+
+    public void setUserimg(String headUrl){
+        sp.edit().putString("headimg",headUrl).commit();
+    }
+
+    public String getUserimg(){
+        return sp.getString("headimg","");
+    }
+
 
     public void jumpAty(Context mContext,Class clazz,Bundle bundle){
         Intent intent = new Intent(mContext,clazz);

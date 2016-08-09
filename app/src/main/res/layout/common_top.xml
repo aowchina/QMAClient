@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="登录"
+        android:layout_marginLeft="18dp"
         android:textColor="@color/basic_color"
         android:textSize="15sp"
         android:visibility="gone"/>

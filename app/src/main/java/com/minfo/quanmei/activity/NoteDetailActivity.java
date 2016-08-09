@@ -1,5 +1,6 @@
 package com.minfo.quanmei.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -188,6 +189,12 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 isCanScroll = true;
                 page = 1;
                 firstReplies.clear();
+
+                llImgs.removeAllViews();//帖子图片列表view
+                clearPlUser();//评论用户头像view列表
+
+                reqContentDetail();
+
                 reqCommentArticle(id, page);
 
             }
@@ -294,6 +301,10 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    private void clearPlUser(){
+        iconComment.removeAllViews();
+    }
+
     private void showImg(GroupArticle groupArticleDetail) {
         if (groupArticleDetail.getImgs() != null) {
             for (int i = 0; i < groupArticleDetail.getImgs().size(); i++) {
@@ -358,7 +369,6 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
     private void reqCommentArticle(String id, final int page) {
         String url = getResources().getString(R.string.api_baseurl) + "wenzhang/PlList.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + id + "*" + page);
-
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
 
             @Override
@@ -514,7 +524,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void reqReprove(final int type, String desId) {
         String url = getResources().getString(R.string.api_baseurl) + "wenzhang/AddZan.php";
-        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + type + "*" + desId);
+        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + type + "*" + desId);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -536,11 +546,11 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onRequestNoData(BaseResponse response) {
+                Log.e(TAG,response.getErrorcode()+"");
                 int errorcode = response.getErrorcode();
-                if (errorcode == 14) {
-                    ToastUtils.show(NoteDetailActivity.this, "您处于未登录状态，请先登录");
+                if (errorcode == 10||errorcode==14) {
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(NoteDetailActivity.this, LoginActivity.class, null);
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
                 } else if (errorcode == 16) {
                     ToastUtils.show(NoteDetailActivity.this, "您已赞过，请勿重复操作");
                 } else {
@@ -554,6 +564,22 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        isUpLoad = true;
+        isCanScroll = true;
+        page = 1;
+        firstReplies.clear();
+
+        llImgs.removeAllViews();//帖子图片列表view
+        clearPlUser();//评论用户头像view列表
+
+        reqContentDetail();
+
+        reqCommentArticle(id, page);
     }
 
     /**
@@ -599,7 +625,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void reqCollect() {
         String url = getString(R.string.api_baseurl)+"user/AddSc.php";
-        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+Constant.user.getUserid()+"*"+"1"+"*"+groupArticle.getId());
+        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+utils.getUserid()+"*"+"1"+"*"+groupArticle.getId());
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -646,7 +672,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void reqUnCollect(){
         String url = getString(R.string.api_baseurl)+"user/CancelSC.php";
-        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+Constant.user.getUserid()+"*"+groupArticle.getId());
+        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+utils.getUserid()+"*"+groupArticle.getId());
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -688,7 +714,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
      */
     private void reqReport(){
         String url = getString(R.string.api_baseurl)+"wenzhang/ReportWz.php";
-        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+Constant.user.getUserid()+"*"+groupArticle.getId());
+        Map<String,String> params = utils.getParams(utils.getBasePostStr()+"*"+utils.getUserid()+"*"+groupArticle.getId());
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {

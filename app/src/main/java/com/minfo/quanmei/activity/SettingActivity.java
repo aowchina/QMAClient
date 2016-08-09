@@ -98,7 +98,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void onRequestSuccess(BaseResponse response) {
                     Constant.user = null;
-                    utils.setCUserid("");
                     utils.setUserid(0);
                     utils.jumpAty(SettingActivity.this, InitActivity.class, null);
                     appManager.finishAllActivity();

@@ -22,6 +22,8 @@ import com.minfo.quanmei.R;
 import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
+import com.minfo.quanmei.receiver.LoginSuccessReceiver;
+import com.minfo.quanmei.service.LoginSuccessService;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.MyCheck;
 import com.minfo.quanmei.utils.ToastUtils;
@@ -92,11 +94,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     public static Handler liujing;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+
         url = getResources().getString(R.string.api_baseurl) + "public/Login.php";
 
         liujing = new Handler(){
@@ -205,10 +209,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 loadingDialog.dismiss();
                 User user = response.getObj(User.class);
                 utils.setUserid(user.getUserid());
+                utils.setLogin(true);
+                utils.setUserimg(user.getUserimg());
+
                 Constant.user = user;
                 if(!isJumpLogin) {
                     utils.jumpAty(LoginActivity.this, MainActivity.class, null);
+                }else{
+                    sendBroadcast(new Intent("com.minfo.quanmei.load.head.image"));
+                    setResult(1);
                 }
+
                 LoginActivity.this.finish();
 
             }

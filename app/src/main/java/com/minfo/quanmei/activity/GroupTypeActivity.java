@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -184,7 +185,18 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
         type = 1;
         GAdataList.clear();
         initViews();
-}
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        gid = 0;
+        page = 1;
+        tid = 0;
+        type = 1;
+        GAdataList.clear();
+        initViews();
+    }
 
     /**
      * 显示小组详情内容
@@ -203,14 +215,12 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.tv_join_group://加入或退出小组
-                if (utils.getUserid() == 0) {
+                if (!utils.isLogin()&&utils.getUserid() == 0) {
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(this, LoginActivity.class, null);
+                    startActivityForResult(new Intent(GroupTypeActivity.this,LoginActivity.class),1);
                 } else {
                     if (!temp) {
                         reqJoinGroup();
-
-
                     } else {
                         getPopupWindow(recent);
                     }
@@ -246,7 +256,7 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_send_gtype://发帖
                 if (Constant.user != null && utils.getUserid() != 0) {
-                    Intent intent = new Intent(this,InvitationDetailActivity.class);
+                    Intent intent = new Intent(this, InvitationDetailActivity.class);
                     Constant.groupDetail = groupDetail;
                     currentListViewIndex = listViewB.getFirstVisiblePosition();
                     startActivity(intent);
@@ -364,14 +374,14 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
                         utils.jumpAty(GroupTypeActivity.this, LoginActivity.class, null);
                     } else if (errorcode == 16) {
                         ToastUtils.show(GroupTypeActivity.this, "您已退出小组,请勿重复操作！");
-                    }else{
-                        ToastUtils.show(GroupTypeActivity.this,"服务器繁忙");
+                    } else {
+                        ToastUtils.show(GroupTypeActivity.this, "服务器繁忙");
                     }
                 }
 
                 @Override
                 public void onRequestError(int code, String msg) {
-                   ToastUtils.show(GroupTypeActivity.this,msg);
+                    ToastUtils.show(GroupTypeActivity.this, msg);
                 }
             });
         }
@@ -383,6 +393,9 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
 
         String articleInfoUrl = this.getResources().getString(R.string.api_baseurl) + "group/Detail.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + gid + "*" + userid);
+
+        Log.e(TAG, params.toString());
+
         httpClient.post(articleInfoUrl, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {

@@ -1,6 +1,9 @@
 package com.minfo.quanmei.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.util.Log;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.entity.User;
@@ -103,6 +108,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void findViews() {
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.minfo.quanmei.load.head.image");
+        registerReceiver(loadHeadReceiver,intentFilter);
+        Log.e(TAG,"aaa");
     }
 
     @Override
@@ -189,15 +198,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    private BroadcastReceiver loadHeadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(utils.isLogin()){
+                tvLeft.setVisibility(View.GONE);
+                rlUserAvatar.setVisibility(View.VISIBLE);
+                UniversalImageUtils.disCircleImage(utils.getUserimg(), civAvatar);
+            }
+        }
+    };
+
     /**
      * 切换fragmen时改变标题栏状态 2015-09-01
      */
     private void refreshTop(Fragment fragment) {
-        if(Constant.user!=null){
+        if(utils.isLogin()&&Constant.user!=null){
             tvLeft.setVisibility(View.GONE);
             rlUserAvatar.setVisibility(View.VISIBLE);
-           // Log.e(TAG,Constant.user.getImg());
-            if(Constant.user.getUserimg()!=null&&!Constant.user.getUserimg().equals("")) {
+            if(!TextUtils.isEmpty(utils.getUserimg())) {
                 UniversalImageUtils.disCircleImage(Constant.user.getUserimg(), civAvatar);
             }
         }else{
@@ -214,10 +233,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             tvTitle.setVisibility(View.GONE);
             edSearch.setInputType(InputType.TYPE_NULL);
             topLine.setVisibility(View.GONE);
-            
+
             refreshMsg();
             llMyNickname.setVisibility(View.INVISIBLE);
-            
+
 
         } else if (fragment instanceof Group_Fragment) {
             rlSearch.setVisibility(View.GONE);
@@ -284,22 +303,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         return true;
     }
 
-    public void setCurrentItemt() {
-        FragmentTransaction transaction3 = supportFragmentManager.beginTransaction();
-        if (!special_fragment.isAdded()) {
-            transaction3.replace(R.id.perfect_continer, special_fragment);
-        } else {
-            transaction3.show(special_fragment);
-        }
-        transaction3.commit();
-        resetBottom();
-        ivSpecial.setImageResource(R.mipmap.tab_special_p);
-    }
-
-
-
-
-
     @Override
     public void jumpFragment(int i) {
         if (i == 4) {
@@ -315,7 +318,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_left:
-                startActivity(new Intent(this,LoginActivity.class));
+                LoginActivity.isJumpLogin = true;
+                utils.jumpAty(this,LoginActivity.class,null);
                 break;
             case R.id.btn_right:
                 break;
@@ -335,8 +339,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 setSelect(2);
                 break;
             case R.id.ll_my:
-                currentIndex = 3;
-                setSelect(3);
+                if(Constant.user!=null) {
+                    currentIndex = 3;
+                    setSelect(3);
+                }else{
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(this,LoginActivity.class,null);
+                }
                 break;
             case R.id.rl_search:
 
@@ -350,7 +359,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 break;
             case R.id.ll_scanner:
-                utils.jumpAty(this,MessageActivity.class,null);
+                if(Constant.user!=null) {
+                    utils.jumpAty(this, MessageActivity.class, null);
+                }else{
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(this,LoginActivity.class,null);
+                }
                 break;
         }
     }
@@ -440,5 +454,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(loadHeadReceiver);
     }
 }

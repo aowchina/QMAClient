@@ -365,10 +365,11 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onRequestSuccess(BaseResponse response) {
                 Constant.user = null;
-                utils.setCUserid("");
                 utils.setUserid(0);
-                utils.jumpAty(mActivity, InitActivity.class, null);
+                utils.setLogin(false);
+                utils.setUserimg("");
                 appManager.finishAllActivity();
+                utils.jumpAty(mActivity, MainActivity.class, null);
             }
 
             @Override

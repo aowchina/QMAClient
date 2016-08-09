@@ -229,11 +229,11 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
         //日记精选
         listViewDiary = ((ListView) v.findViewById(R.id.lv_diary));
 
-        reqSignState();
+//        reqSignState();
         reqStartList();
         reqSecurityDeposit();
         if(!isSigned){
-            reqSign();
+//            reqSign();
         }
         HorizontalScrollView scrollView = ((HorizontalScrollView) v.findViewById(R.id.hs_start));
         scroll.setOnRefreshListener(new PullScrollView.OnRefreshListener() {
@@ -344,7 +344,7 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.tv_sign:
                 if(!isSigned){
-                    reqSign();
+//                    reqSign();
                 }
                 break;
             case R.id.tv_special_diary://日记精选

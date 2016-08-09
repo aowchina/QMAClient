@@ -59,14 +59,11 @@ public class InitActivity extends AppCompatActivity {
                     case 1:
                         userid = utils.getUserid();
                         if (userid == 0) {
-                            Intent intent = new Intent(InitActivity.this, LoginActivity.class);
+                            Intent intent = new Intent(InitActivity.this, MainActivity.class);
                             startActivity(intent);
                             InitActivity.this.finish();
                         } else {
                             reqServer();
-                            /*Intent intent = new Intent(InitActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            InitActivity.this.finish();*/
                         }
                         break;
                 }
@@ -101,7 +98,6 @@ public class InitActivity extends AppCompatActivity {
      * 请求api
      */
     private void reqServer() {
-        final long start = System.currentTimeMillis();
         String url = getResources().getString(R.string.api_baseurl) + "public/Init.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + userid);
 
@@ -122,11 +118,14 @@ public class InitActivity extends AppCompatActivity {
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
-                if (errorcode == 12) {
+                if (errorcode == 12) {//userid不合法,视为未登录
+
+                    utils.setUserid(0);
+
                     LoginActivity.isJumpLogin = false;
-                    utils.jumpAty(InitActivity.this, LoginActivity.class, null);
+                    utils.jumpAty(InitActivity.this, MainActivity.class, null);
                     InitActivity.this.finish();
-                } else {
+                } else {//其他
                     ToastUtils.show(InitActivity.this, "服务器繁忙");
                 }
             }

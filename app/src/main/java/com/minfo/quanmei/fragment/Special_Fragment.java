@@ -218,7 +218,7 @@ public class Special_Fragment extends BaseFragment implements View.OnClickListen
             }
         });
         bindUser();
-        UniversalImageUtils.displayImageUseDefOptions(themeFirst.getBimg(), ivAct1);
+        UniversalImageUtils.displayImageUseBigOptions(themeFirst.getBimg(), ivAct1);
     }
 
     /**
