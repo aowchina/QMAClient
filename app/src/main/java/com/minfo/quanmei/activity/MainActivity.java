@@ -111,7 +111,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.minfo.quanmei.load.head.image");
         registerReceiver(loadHeadReceiver,intentFilter);
-        Log.e(TAG,"aaa");
     }
 
     @Override

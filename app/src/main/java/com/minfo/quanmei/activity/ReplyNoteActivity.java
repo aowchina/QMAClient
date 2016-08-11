@@ -73,7 +73,7 @@ public class ReplyNoteActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void initViews() {
-        publishUserid = Constant.user.getUserid()+"";
+        publishUserid = utils.getUserid()+"";
         Bundle bundle = getIntent().getBundleExtra("info");
         if(bundle!=null) {
             groupArticle = (GroupArticle) bundle.getSerializable("group");
@@ -153,8 +153,10 @@ public class ReplyNoteActivity extends BaseActivity implements View.OnClickListe
                             bundle.putString("firstReplyId", noteFirstReply.getId());
                             bundle.putString("wid",noteFirstReply.getWid());
                         }
+                        SecondAllReplyActivity.instance.finish();
                         utils.jumpAty(ReplyNoteActivity.this, SecondAllReplyActivity.class, bundle);
                     }else {
+                        NoteDetailActivity.instance.finish();
                         utils.jumpAty(ReplyNoteActivity.this, NoteDetailActivity.class, bundle);
                     }
                 }
@@ -197,7 +199,7 @@ public class ReplyNoteActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Bundle bundle = new Bundle();
+       /* Bundle bundle = new Bundle();
         bundle.putSerializable("group", groupArticle);
         bundle.putInt("ID", 1);
         if (hoscom==10){
@@ -212,6 +214,6 @@ public class ReplyNoteActivity extends BaseActivity implements View.OnClickListe
                 utils.jumpAty(ReplyNoteActivity.this, NoteDetailActivity.class, bundle);
             }
         }
-        finish();
+        finish();*/
     }
 }

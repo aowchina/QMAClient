@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/black"
-            android:text="还在抗痘进行时的无比痛苦中挣扎着、呐喊着、呻吟着"/>
+            android:text=""/>
         <LinearLayout
             android:id="@+id/ll_comment"
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="5dp"
                 android:singleLine="true"
-                android:text="[白瓷娃娃]弧度流畅 皮下埋线更显自然"
+                android:text=""
                 android:textSize="13sp" />
         </LinearLayout>
         <RelativeLayout
@@ -130,8 +130,6 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:background="@drawable/group_post_top_arrow_left"/>
-
-
     </LinearLayout>
 
 </LinearLayout>

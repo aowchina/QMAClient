@@ -114,11 +114,14 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
 
     private String isCollect = "0";
 
+    public static NoteDetailActivity instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_detail);
+        instance = this;
     }
 
 
@@ -442,16 +445,15 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.btn_reply:
-                if (Constant.user != null) {
+                if (utils.isLogin()&&Constant.user != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("group", groupArticle);
                     bundle.putInt("replyType", 1);
                     bundle.putInt("notecom", 8);
                     utils.jumpAty(this, ReplyNoteActivity.class, bundle);
-                    finish();
                 } else {
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(this, LoginActivity.class, null);
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
                 }
                 break;
             case R.id.btn_reprove:
@@ -734,7 +736,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 if(errorcode==10||errorcode==11||errorcode==14){
                     ToastUtils.show(NoteDetailActivity.this, "用户未登录");
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(NoteDetailActivity.this,LoginActivity.class,null);
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
                 }else if(errorcode==15){
                     ToastUtils.show(NoteDetailActivity.this,"帖子不存在");
                 }else if(errorcode==16){
@@ -757,13 +759,22 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
             if (type == 1) {//查看全部回复
                 bundle.putString("firstReplyId", ((NoteFirstReply) reply).getId());
                 bundle.putString("wid",((NoteFirstReply) reply).getWid());
-                utils.jumpAty(this, SecondAllReplyActivity.class, bundle);
+//                utils.jumpAty(this, SecondAllReplyActivity.class, bundle);
+                Intent intent = new Intent(this,SecondAllReplyActivity.class);
+                intent.putExtra("info",bundle);
+                startActivityForResult(intent,1);
             } else if (type == 2) {//点击回复按钮回复
-                bundle.putInt("replyType", 2);
-                bundle.putSerializable("reply", reply);
-                bundle.putInt("notecom", 8);
-                utils.jumpAty(this, ReplyNoteActivity.class, bundle);
-                finish();
+
+                if(utils.isLogin()) {
+                    bundle.putInt("replyType", 2);
+                    bundle.putSerializable("reply", reply);
+                    bundle.putInt("notecom", 8);
+                    utils.jumpAty(this, ReplyNoteActivity.class, bundle);
+                }else{
+                    LoginActivity.isJumpLogin = true;
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
+                }
+
             } else if (type == 4) {//点赞或取消点赞
 
                 if (((NoteFirstReply) reply).getStatus() == 0) {
@@ -774,11 +785,16 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 }
             }
         } else if (reply instanceof SecondReply) {//点击二级评论列表item回复
-            bundle.putInt("replyType", 3);
-            bundle.putSerializable("reply", reply);
-            bundle.putInt("notecom", 8);
-            utils.jumpAty(this, ReplyNoteActivity.class, bundle);
-            finish();
+
+            if(utils.isLogin()) {
+                bundle.putInt("replyType", 3);
+                bundle.putSerializable("reply", reply);
+                bundle.putInt("notecom", 8);
+                utils.jumpAty(this, ReplyNoteActivity.class, bundle);
+            }else{
+                LoginActivity.isJumpLogin = true;
+                startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
+            }
         }
     }
 

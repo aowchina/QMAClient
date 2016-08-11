@@ -1,9 +1,11 @@
 package com.minfo.quanmei.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
@@ -34,7 +36,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
     private LLUserTitle llUserTitle;
     private TextView tvFirstReplyContent;
 
-    private RefreshListView llvAllReply;
+    private ListView llvAllReply;
 
     private NoteFirstReply noteFirstReply;
     private NoteSecondReplyAdapter secondReplyAdapter;
@@ -48,8 +50,8 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
     private boolean isUpLoad;
     private boolean iszan;
 
-    private boolean isCanScroll = true;//能否上拉加载
-    private int page = 1;
+    public static SecondAllReplyActivity instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
         tvTitle.setText("全部回复");
         ivLeft.setVisibility(View.VISIBLE);
         tvTitle.setVisibility(View.VISIBLE);
-        llvAllReply = (RefreshListView) findViewById(R.id.llv_all_reply);
+        llvAllReply = (ListView) findViewById(R.id.llv_all_reply);
         view = LayoutInflater.from(this).inflate(R.layout.layout_secondreply_headview, null);
         ivReprove = (ImageView) view.findViewById(R.id.iv_praise);
         ivReply = (ImageView) view.findViewById(R.id.iv_reply);
@@ -76,6 +78,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
         llUserTitle = (LLUserTitle) view.findViewById(R.id.ll_user_title);
         tvFirstReplyContent = (TextView) view.findViewById(R.id.tv_first_content);
 
+        instance = this;
 
     }
 
@@ -93,32 +96,6 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
 
         secondReplyAdapter = new NoteSecondReplyAdapter(this, secondReplies, this);
         llvAllReply.setAdapter(secondReplyAdapter);
-        llvAllReply.setRefreshListener(new RefreshListView.IrefreshListener() {
-            @Override
-            public void onRefresh() {
-                isUpLoad = true;
-                page = 1;
-                secondReplies.clear();
-                reqAllReply();
-            }
-        });
-//        llvAllReply.setIsCanLoad(isCanScroll);
-//        llvAllReply.setLoadListener(new RefreshListView.ILoadListener() {
-//            @Override
-//            public void onLoad() {
-//                if (isCanScroll) {
-//                    page++;
-//                    reqAllReply();
-//                    llvAllReply.loadComplete();
-//                } else {
-//                    llvAllReply.loadComplete();
-//                }
-//
-//            }
-//        });
-//
-
-
     }
 
     /**
@@ -126,7 +103,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
      */
     private void reqAllReply() {
         String url = getResources().getString(R.string.api_baseurl) + "wenzhang/MorePlList.php";
-        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + firstReplyId);
+        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + firstReplyId);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -135,6 +112,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
+                secondReplies.clear();
                 noteFirstReply = response.getObj(NoteFirstReply.class);
                 noteFirstReply.setWid(wid);
                 bindData();
@@ -142,13 +120,6 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
                 secondReplies.addAll(noteFirstReply.getSon());
                 for(SecondReply secondReply:secondReplies){
                     secondReply.setParentId(firstReplyId);
-                }
-
-                if (isUpLoad) {
-                    isUpLoad = false;
-                    llvAllReply.refreshComplete();
-
-                    ToastUtils.show(SecondAllReplyActivity.this, "数据刷新完毕");
                 }
                 secondReplyAdapter.notifyDataSetChanged();
 
@@ -160,11 +131,6 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
                     ToastUtils.show(SecondAllReplyActivity.this, "记录不存在或已被删除");
                 }else{
                     ToastUtils.show(SecondAllReplyActivity.this,"服务器繁忙");
-                }
-                if (isUpLoad) {
-                    isUpLoad = false;
-                    llvAllReply.refreshComplete();
-
                 }
             }
 
@@ -183,7 +149,7 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
      */
     private void reqReprove(final int type, String desId) {
         String url = getResources().getString(R.string.api_baseurl) + "wenzhang/AddZan.php";
-        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + type + "*" + desId);
+        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + type + "*" + desId);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -286,35 +252,54 @@ public class SecondAllReplyActivity extends BaseActivity implements View.OnClick
                 onBackPressed();
                 break;
             case R.id.iv_praise:
-                if (noteFirstReply.getStatus() == 0) {
-                    reqReprove(2, noteFirstReply.getId());
-                } else {
-                    reqUnReprove(2, noteFirstReply.getId());
+                if(utils.isLogin()) {
+                    if (noteFirstReply.getStatus() == 0) {
+                        reqReprove(2, noteFirstReply.getId());
+                    } else {
+                        reqUnReprove(2, noteFirstReply.getId());
+                    }
+                }else{
+                    LoginActivity.isJumpLogin = true;
+                    startActivityForResult(new Intent(SecondAllReplyActivity.this,LoginActivity.class),1);
                 }
                 break;
             case R.id.iv_reply:
-                Bundle bundle = new Bundle();
-                bundle.putInt("replyType", 2);
-                bundle.putSerializable("reply", noteFirstReply);
-                bundle.putInt("allReply",1);
-                bundle.putInt("notecom", 8);
-                utils.jumpAty(this, ReplyNoteActivity.class, bundle);
-                finish();
+                if(utils.isLogin()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("replyType", 2);
+                    bundle.putSerializable("reply", noteFirstReply);
+                    bundle.putInt("allReply", 1);
+                    bundle.putInt("notecom", 8);
+                    utils.jumpAty(this, ReplyNoteActivity.class, bundle);
+                }else{
+                    LoginActivity.isJumpLogin = true;
+                    startActivityForResult(new Intent(SecondAllReplyActivity.this,LoginActivity.class),1);
+                }
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        reqAllReply();
     }
 
     @Override
     public void click(NoteReply reply, int type) {
         Bundle bundle = new Bundle();
         if (reply instanceof SecondReply) {//点击二级评论列表item回复
-            bundle.putInt("allReply",1);
-            bundle.putInt("replyType", 3);
-            bundle.putSerializable("reply", reply);
-            bundle.putInt("notecom", 8);
 
-            utils.jumpAty(this, ReplyNoteActivity.class, bundle);
-            finish();
+            if(utils.isLogin()) {
+                bundle.putInt("allReply", 1);
+                bundle.putInt("replyType", 3);
+                bundle.putSerializable("reply", reply);
+                bundle.putInt("notecom", 8);
+                utils.jumpAty(this, ReplyNoteActivity.class, bundle);
+            }else{
+                LoginActivity.isJumpLogin = true;
+                startActivityForResult(new Intent(SecondAllReplyActivity.this,LoginActivity.class),1);
+            }
 
         }
     }

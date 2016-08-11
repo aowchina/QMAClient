@@ -243,10 +243,10 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
-                if(errorcode==11){
-                    ToastUtils.show(ProductDetailActivity.this,"特惠不存在或已被删除");
-                }else{
-                    ToastUtils.show(ProductDetailActivity.this,"服务器繁忙");
+                if (errorcode == 11) {
+                    ToastUtils.show(ProductDetailActivity.this, "特惠不存在或已被删除");
+                } else {
+                    ToastUtils.show(ProductDetailActivity.this, "服务器繁忙");
                 }
             }
 
@@ -260,7 +260,6 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     public void setDetailData() {
         UniversalImageUtils.displayImageUseBigOptions(productDetail.getBimg(), ivBig);
-
 
 
         tvNewPrice.setText(productDetail.getNewval() + "");
@@ -299,9 +298,9 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                 tvDetail.setImageResource(R.mipmap.default_pic);
             }
         });
-        if(TextUtils.isEmpty(productDetail.getVal_desc())){
+        if (TextUtils.isEmpty(productDetail.getVal_desc())) {
             tvPriceIntro.setText("暂无价格说明");
-        }else {
+        } else {
             tvPriceIntro.setText(productDetail.getVal_desc());
         }
 
@@ -376,8 +375,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
             public void onRequestNoData(BaseResponse response) {
                 loadingDialog.dismiss();
                 int errorcode = response.getErrorcode();
-                if (errorcode == 15) {
-                    ToastUtils.show(ProductDetailActivity.this, "您处于未登录状态");
+                if (errorcode == 13 || errorcode == 14 || errorcode == 15) {
                     LoginActivity.isJumpLogin = true;
                     utils.jumpAty(ProductDetailActivity.this, LoginActivity.class, null);
                 } else if (errorcode == 17) {
@@ -403,15 +401,15 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
      */
     private void jumpCompleteOrder(String responseStr) {
         try {
-            Log.e(TAG,responseStr);
+            Log.e(TAG, responseStr);
             JSONObject jsonObject = new JSONObject(responseStr);
             String orderid = jsonObject.getString("orderid");
 
             Bundle bundle = new Bundle();
 
             bundle.putString("orderid", orderid);
-            bundle.putInt("payType",1);
-            bundle.putString("from","ProductDetail");
+            bundle.putInt("payType", 1);
+            bundle.putString("from", "ProductDetail");
 
             utils.jumpAty(ProductDetailActivity.this, OrderPayActivity.class, bundle);
         } catch (JSONException e) {
@@ -422,8 +420,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_QQ_SHARE) {
-            Tencent.onActivityResultData(requestCode,resultCode,data,listener);
-            Log.e(TAG,"qq分享");
+            Tencent.onActivityResultData(requestCode, resultCode, data, listener);
+            Log.e(TAG, "qq分享");
         }
         switch (requestCode) {
             case 1:
@@ -475,7 +473,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
                     msg.title = getString(R.string.qm_share_title);
                     msg.mediaObject = webpage;
 
-                    msg.description = productDetail.getHname()+productDetail.getName();
+                    msg.description = productDetail.getHname() + productDetail.getName();
 //                    msg.description = "全美App下载";
                     Bitmap thumbBmp = Bitmap.createScaledBitmap(img, 150, 150, true);
 
@@ -512,7 +510,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, getString(R.string.qm_share_title));
-        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, productDetail.getHname()+productDetail.getName());
+        params.putString(QQShare.SHARE_TO_QQ_SUMMARY, productDetail.getHname() + productDetail.getName());
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, getString(R.string.qm_share_url));
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, getString(R.string.qq_img_share_url));
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, getString(R.string.app_name));

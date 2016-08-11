@@ -367,7 +367,6 @@ public class RelativeSearchActivity extends BaseActivity implements View.OnClick
     private void reqTeHui(final int page) {
         String url = getResources().getString(R.string.api_baseurl) + "tehui/ChoiceTh.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + searchData + "*" + page);
-        Log.e("首页数据", params + "");
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
 
             @Override

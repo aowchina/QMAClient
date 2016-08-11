@@ -1,6 +1,7 @@
 package com.minfo.quanmei.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.LoginActivity;
+import com.minfo.quanmei.activity.NoteDetailActivity;
 import com.minfo.quanmei.entity.NoteFirstReply;
 import com.minfo.quanmei.entity.NoteReply;
 import com.minfo.quanmei.entity.SecondReply;
@@ -209,7 +211,7 @@ public class NoteFirstReplyAdapter extends BaseAdapter {
         String url = context.getResources().getString(R.string.api_baseurl) + "wenzhang/AddZan.php";
 
 
-        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + type + "*" + desId);
+        Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + type + "*" + desId);
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
@@ -229,10 +231,10 @@ public class NoteFirstReplyAdapter extends BaseAdapter {
             @Override
             public void onRequestNoData(BaseResponse response) {
                 int errorcode = response.getErrorcode();
-                if (errorcode == 14) {
-                    ToastUtils.show(context, "您处于未登录状态，请先登录");
+                if (errorcode == 10||errorcode==14) {
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(context, LoginActivity.class, null);
+                    NoteDetailActivity activity = (NoteDetailActivity) context;
+                    activity.startActivityForResult(new Intent(activity,LoginActivity.class),1);
                 } else if (errorcode == 16) {
                     ToastUtils.show(context, "您已赞过，请勿重复操作");
                 } else {

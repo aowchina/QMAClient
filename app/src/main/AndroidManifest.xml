@@ -168,7 +168,7 @@
         </activity>
         <activity
             android:name=".activity.NoteDetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
         <activity
