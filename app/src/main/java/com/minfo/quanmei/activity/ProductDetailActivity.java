@@ -232,6 +232,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
+                Log.e(TAG,response.toString());
                 productDetail = response.getObj(ProductDetail.class);
 
                 if (productDetail != null) {

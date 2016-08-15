@@ -116,6 +116,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <LinearLayout
@@ -136,7 +138,6 @@
                 android:paddingLeft="10.0dip"
                 android:paddingRight="10.0dip"
                 android:text="其他方式登录"
-                android:visibility="gone"
                 android:textColor="@color/tv_forget_pwd"
                 android:textSize="14sp"/>
 
@@ -177,6 +178,39 @@
                 android:onClick="onClick"
                 android:visibility="gone"
                 android:background="@mipmap/login_sina_b"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="“登录/注册” 表示您同意"
+                android:textSize="11sp"/>
+            <TextView
+                android:id="@+id/tv_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全美用户许可协议 "
+                android:textSize="11sp"
+                android:textColor="@color/basic_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" &amp; "
+                android:textSize="11sp"/>
+            <TextView
+                android:id="@+id/tv_security"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 隐私条款"
+                android:textSize="11sp"
+                android:textColor="@color/basic_color"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -41,6 +41,8 @@ public class GroupArticle implements Serializable{
 
     private String username;
 
+    private int wid;
+
     public String getUsername2() {
         return username2;
     }
@@ -259,6 +261,14 @@ public class GroupArticle implements Serializable{
         this.isSc = isSc;
     }
 
+    public int getWid() {
+        return wid;
+    }
+
+    public void setWid(int wid) {
+        this.wid = wid;
+    }
+
     @Override
     public String toString() {
         return "GroupArticle{" +
@@ -288,6 +298,7 @@ public class GroupArticle implements Serializable{
                 ", gname='" + gname + '\'' +
                 ", isSc='" + isSc + '\'' +
                 ", username='" + username + '\'' +
+                ", wid=" + wid +
                 ", iszan=" + iszan +
                 '}';
     }

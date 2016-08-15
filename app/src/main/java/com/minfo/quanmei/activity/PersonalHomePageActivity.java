@@ -2,6 +2,7 @@ package com.minfo.quanmei.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -278,6 +279,8 @@ public class PersonalHomePageActivity extends BaseActivity implements View.OnCli
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
+
+                Log.e(TAG,response.toString());
                 reply = response.getList(GroupArticle.class);
                 if (reply.size() == 0) {
                     tvreply.setVisibility(View.GONE);
@@ -290,6 +293,7 @@ public class PersonalHomePageActivity extends BaseActivity implements View.OnCli
                         Intent intentToNoteDetail = new Intent(PersonalHomePageActivity.this, NoteDetailActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("group", reply.get(position));
+
                         intentToNoteDetail.putExtra("ID", 1);
                         intentToNoteDetail.putExtra("info", bundle);
                         startActivity(intentToNoteDetail);

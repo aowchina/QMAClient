@@ -4,7 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="phone_msg">请保证手机处于正常接收短信状态</string>
-    <string name="loading_msg">loading...</string>
+    <string name="loading_msg">加载中...</string>
     <string name="wxappid">wx719c1e4eebfb3fb7</string>
     <string name="wxkey">qazwsxedcrfvtgbyhnujmikolp123456</string>
     <string name="wxmchid">1311715801</string>
@@ -31,6 +31,8 @@
     <!--<string name="api_baseurl">http://service.min-fo.com/quanmei/api/one/</string>-->
     <!--<string name="api_baseurl">http://139.196.172.208/qm/api/</string>-->
     <string name="api_baseurl">http://quanmei.boyiyx.com/qm/api/</string>
+    <string name="user_policy_url">http://quanmei.boyiyx.com/quanmei/upload/user_policy.html</string>
+    <string name="user_security_url">http://quanmei.boyiyx.com/quanmei/upload/user_security.html</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

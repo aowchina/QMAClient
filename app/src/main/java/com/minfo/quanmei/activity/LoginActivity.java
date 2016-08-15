@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +54,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ImageView ivLeft;
     private TextView tvRight;
     private TextView tvTitle;
+
+    private TextView tvPolicy;
+    private TextView tvSecurity;
 
 
     private TextView tvForgetPwd;
@@ -137,6 +141,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         tvForgetPwd = (TextView) findViewById(R.id.tv_forget_password);
         tvForgetPwd.setOnClickListener(this);
+
+        tvPolicy = (TextView) findViewById(R.id.tv_policy);
+        tvSecurity = (TextView) findViewById(R.id.tv_security);
+
+        tvPolicy.setText(Html.fromHtml("<u>"+"全美用户许可协议"+"</u>"));
+        tvSecurity.setText(Html.fromHtml("<u>"+"隐私条款"+"</u>"));
+
+        tvPolicy.setOnClickListener(this);
+        tvSecurity.setOnClickListener(this);
+
+
     }
 
     @Override
@@ -170,6 +185,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.btn_wechat_login:
                 wechatLogin();
+                break;
+            case R.id.tv_policy:
+                PolicyActivity.CATEGORY_TAG = 0;
+                utils.jumpAty(this,PolicyActivity.class,null);
+                break;
+            case R.id.tv_security:
+                PolicyActivity.CATEGORY_TAG = 1;
+                utils.jumpAty(this,PolicyActivity.class,null);
                 break;
         }
     }
