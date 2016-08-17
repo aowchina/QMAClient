@@ -55,7 +55,6 @@ public class MyReceiver extends BroadcastReceiver {
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
 
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-            Log.e(TAG,regId);
             MyApplication.getInstance().registrationId = regId;
             reqSetPushID(regId);
 

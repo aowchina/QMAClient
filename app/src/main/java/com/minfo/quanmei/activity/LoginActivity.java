@@ -112,11 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 if(msg.what==0) {
-                    if(!isJumpLogin) {
-                        utils.jumpPage(MainActivity.class, null, LoginActivity.this);
-                    }else{
-                        finish();
-                    }
+                    loginSuccess((User) msg.obj);
                 }
             }
         };
@@ -231,19 +227,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onRequestSuccess(BaseResponse response) {
                 loadingDialog.dismiss();
                 User user = response.getObj(User.class);
-                utils.setUserid(user.getUserid());
-                utils.setLogin(true);
-                utils.setUserimg(user.getUserimg());
-
-                Constant.user = user;
-                if(!isJumpLogin) {
-                    utils.jumpAty(LoginActivity.this, MainActivity.class, null);
-                }else{
-                    sendBroadcast(new Intent("com.minfo.quanmei.load.head.image"));
-                    setResult(1);
-                }
-
-                LoginActivity.this.finish();
+                loginSuccess(user);
 
             }
 
@@ -272,6 +256,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 ToastUtils.show(LoginActivity.this,msg);
             }
         });
+    }
+
+
+    private void loginSuccess(User user){
+        utils.setUserid(user.getUserid());
+        utils.setLogin(true);
+        utils.setUserimg(user.getUserimg());
+
+        Constant.user = user;
+        if(!isJumpLogin) {
+            utils.jumpAty(LoginActivity.this, MainActivity.class, null);
+        }else{
+            sendBroadcast(new Intent("com.minfo.quanmei.load.head.image"));
+            setResult(1);
+        }
+
+        LoginActivity.this.finish();
     }
 
     /**
@@ -369,15 +370,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG,response.toString());
                 loadingDialog.dismiss();
                 User user = response.getObj(User.class);
-                utils.setUserid(user.getUserid());
-                Constant.user = user;
-                if(!isJumpLogin) {
-                    utils.jumpAty(LoginActivity.this, MainActivity.class, null);
-                }
-                LoginActivity.this.finish();
+                loginSuccess(user);
             }
 
             @Override

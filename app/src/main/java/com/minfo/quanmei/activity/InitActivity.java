@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -110,7 +109,6 @@ public class InitActivity extends AppCompatActivity {
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e("Init","success");
                 User user = response.getObj(User.class);
                 Constant.user = user;
                 utils.jumpAty(InitActivity.this, MainActivity.class, null);

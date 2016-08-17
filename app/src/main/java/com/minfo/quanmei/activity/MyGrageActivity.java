@@ -55,7 +55,6 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
             user = Constant.user;
             UniversalImageUtils.disCircleImage(user.getUserimg(), icon);
             nickname.setText(user.getUsername());
-            Log.e(TAG,user.toString());
             tv_grade.setText("LV" + user.getLevel() + "");
             tvActivePoint.setText(user.getPoint()+"");
         }

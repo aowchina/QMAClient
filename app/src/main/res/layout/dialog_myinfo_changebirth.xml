@@ -70,6 +70,7 @@
                     android:layout_marginRight="15dip"
                     android:text="确认"
                     android:gravity="center"
+					android:textColor="@color/basic_color"
                     android:textSize="16sp" />
 
 
@@ -80,6 +81,7 @@
                     android:layout_toLeftOf="@+id/btn_myinfo_sure"
                     android:text="取消"
                     android:gravity="center"
+					android:textColor="@color/basic_color"
                     android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>

@@ -336,8 +336,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         String url = getResources().getString(R.string.api_baseurl) + "public/Choice.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + utils.getUserid() + "*" + bytes);
 
-        Log.e(TAG,params.toString());
-
         httpClient.post(url, params, R.string.loading_msg, new RequestListener() {
 
 

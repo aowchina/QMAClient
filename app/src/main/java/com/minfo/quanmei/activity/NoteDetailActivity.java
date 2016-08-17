@@ -648,11 +648,11 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 if(errorcode==12||errorcode==13||errorcode==15){
                     ToastUtils.show(NoteDetailActivity.this, "用户未登录");
                     LoginActivity.isJumpLogin = true;
-                    utils.jumpAty(NoteDetailActivity.this,LoginActivity.class,null);
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
                 }else if(errorcode==16){
                     ToastUtils.show(NoteDetailActivity.this,"内容不存在，可能已被删除");
                 }else if(errorcode==17){
-                    ToastUtils.show(NoteDetailActivity.this,"收藏失败，不能重复收藏");
+                    ToastUtils.show(NoteDetailActivity.this,"不能重复收藏");
                 }else{
                     ToastUtils.show(NoteDetailActivity.this,"服务器繁忙");
                 }
@@ -695,6 +695,7 @@ public class NoteDetailActivity extends BaseActivity implements View.OnClickList
                 if(errorcode==12){
                     ToastUtils.show(NoteDetailActivity.this, "用户未登录");
                     LoginActivity.isJumpLogin = true;
+                    startActivityForResult(new Intent(NoteDetailActivity.this,LoginActivity.class),1);
                     utils.jumpAty(NoteDetailActivity.this,LoginActivity.class,null);
                 }else if(errorcode==13){
                     ToastUtils.show(NoteDetailActivity.this,"内容不存在，可能已被删除");

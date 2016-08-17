@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -232,7 +231,6 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
-                Log.e(TAG,response.toString());
                 productDetail = response.getObj(ProductDetail.class);
 
                 if (productDetail != null) {
@@ -402,7 +400,6 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
      */
     private void jumpCompleteOrder(String responseStr) {
         try {
-            Log.e(TAG, responseStr);
             JSONObject jsonObject = new JSONObject(responseStr);
             String orderid = jsonObject.getString("orderid");
 
@@ -422,7 +419,6 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_QQ_SHARE) {
             Tencent.onActivityResultData(requestCode, resultCode, data, listener);
-            Log.e(TAG, "qq分享");
         }
         switch (requestCode) {
             case 1:

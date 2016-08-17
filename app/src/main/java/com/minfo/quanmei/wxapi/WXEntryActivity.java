@@ -73,9 +73,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             @Override
             public void onRequestSuccess(BaseResponse response) {
                 User user = response.getObj(User.class);
-                utils.setUserid(user.getUserid());
-                Constant.user = user;
-                utils.sendMsg(LoginActivity.liujing,0);
+
+                utils.sendMsg(LoginActivity.liujing,0,user);
                 WXEntryActivity.this.finish();
             }
 

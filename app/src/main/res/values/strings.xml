@@ -25,7 +25,7 @@
 
     <string name="qm_share_title">全美分享</string>
     <string name="qm_share_url">http://a.app.qq.com/o/simple.jsp?pkgname=com.minfo.quanmei</string>
-    <string name="qq_img_share_url">http://139.196.172.208/qm/images/ic_launcher.png</string>
+    <string name="qq_img_share_url">http://quanmei.boyiyx.com/qm/images/ic_launcher.png</string>
 
 
     <!--<string name="api_baseurl">http://service.min-fo.com/quanmei/api/one/</string>-->
