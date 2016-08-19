@@ -161,6 +161,8 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         if (Constant.noteContent != null) {
             content.setText(Constant.noteContent);
         }
+
+
         Bundle bundle = getIntent().getBundleExtra("info");
         if (bundle != null) {
             imgPaths = bundle.getStringArrayList("imgUrls");
@@ -303,7 +305,10 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             case R.id.iv_upload_invitation2:
             case R.id.ll_diary_release:
                 if (imgPaths.size() < 9) {
-                    showSelectDialg();
+                    Intent intent = new Intent(this,PhotoViewActivity.class);
+                    intent.putExtra("imgUrls",imgPaths);
+                    startActivityForResult(intent,1);
+//                    showSelectDialg();
                 } else {
                     ToastUtils.show(this, "图片最多只能上传9张");
                 }
@@ -544,10 +549,12 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
 
                 imgPaths.add(cameraSavePath + File.separator + takephotoname);
                 showImgs();
+            }else if(resultCode==PhotoViewActivity.SELECT_PHOTO){
+                imgPaths = data.getBundleExtra("info").getStringArrayList("imgUrls");
+                showImgs();
             }
         } else {
             ToastUtils.show(InvitationDetailActivity.this, "照相失败");
-
         }
     }
 

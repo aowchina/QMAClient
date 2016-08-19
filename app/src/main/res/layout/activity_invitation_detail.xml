@@ -108,6 +108,7 @@
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:scrollbars="none"
             android:layout_marginBottom="5dp">
 
             <LinearLayout

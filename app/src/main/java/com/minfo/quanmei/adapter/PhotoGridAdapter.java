@@ -36,12 +36,25 @@ public class PhotoGridAdapter extends CommonAdapter<String> {
     }
 
     @Override
+    public int getCount() {
+        return datas.size()+1;
+    }
+
+    @Override
     public void convert(final BaseViewHolder helper, final String item,int position) {
         //设置no_selected
-        helper.setImageResource(R.id.id_item_select,
-                R.mipmap.album_photo_select_normal);
-        //设置图片
-        helper.setImageByUrl(R.id.id_item_image, mDirPath + "/" + item);
+        if(position!=0) {
+            helper.getView(R.id.id_item_select).setVisibility(View.VISIBLE);
+            helper.getView(R.id.id_item_image).setVisibility(View.VISIBLE);
+            helper.getView(R.id.iv_take_photo).setVisibility(View.INVISIBLE);
+            helper.setImageResource(R.id.id_item_select, R.mipmap.album_photo_select_normal);
+            helper.setImageByUrl(R.id.id_item_image, mDirPath + "/" + item);
+        }else{
+            helper.getView(R.id.id_item_select).setVisibility(View.INVISIBLE);
+            helper.getView(R.id.id_item_image).setVisibility(View.INVISIBLE);
+            helper.getView(R.id.iv_take_photo).setVisibility(View.VISIBLE);
+            return;
+        }
 
         final ImageView mImageView = helper.getView(R.id.id_item_image);
         final ImageView mSelect = helper.getView(R.id.id_item_select);
@@ -86,6 +99,12 @@ public class PhotoGridAdapter extends CommonAdapter<String> {
         }
 
     }
+
+    @Override
+    public String getItem(int position) {
+        return super.getItem(position>=1?position-1:0);
+    }
+
     public interface ItemSelectedListener{
         void showSelected(List<String> selectImgUrls);
     }

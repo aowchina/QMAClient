@@ -394,8 +394,6 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
         String articleInfoUrl = this.getResources().getString(R.string.api_baseurl) + "group/Detail.php";
         Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + gid + "*" + userid);
 
-        Log.e(TAG, params.toString());
-
         httpClient.post(articleInfoUrl, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {

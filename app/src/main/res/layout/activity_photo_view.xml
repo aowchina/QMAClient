@@ -2,8 +2,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/rl_folder_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:onClick="onClick"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/action_bar_back"/>
+
+        <TextView
+            android:id="@+id/tv_folder_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="当前文件夹"/>
+        <View
+            android:id="@+id/top_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="#dddddd"/>
+    </RelativeLayout>
+
     <GridView
         android:id="@+id/gv_photo"
+        android:layout_below="@id/rl_folder_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
@@ -15,10 +51,12 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="3dip"
         android:paddingTop="5dp"
+        android:background="#eeeeee"
         android:paddingLeft="5dp"
         android:paddingBottom="50dp"
         android:paddingRight="5dp">
     </GridView>
+
 
     <RelativeLayout
         android:id="@+id/rl_bottom_ly"
