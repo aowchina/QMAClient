@@ -61,8 +61,7 @@ public class PhotoGridAdapter extends CommonAdapter<String> {
 
         mImageView.setColorFilter(null);
         //设置ImageView的点击事件
-        mSelect.setOnClickListener(new View.OnClickListener()
-        {
+        mSelect.setOnClickListener(new View.OnClickListener(){
             //选择，则将图片变暗，反之则反之
             @Override
             public void onClick(View v)

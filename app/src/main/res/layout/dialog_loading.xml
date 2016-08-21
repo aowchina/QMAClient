@@ -27,9 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="#fff"
-                android:text="loading..."
-                android:textSize="13sp"
-                />
+                android:text="@string/loading_msg"
+                android:textSize="13sp"/>
         </LinearLayout>
 
     </RelativeLayout>

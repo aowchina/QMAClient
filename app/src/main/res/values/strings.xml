@@ -4,7 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="phone_msg">请保证手机处于正常接收短信状态</string>
-    <string name="loading_msg">加载中...</string>
+    <string name="loading_msg">加载中</string>
     <string name="wxappid">wx719c1e4eebfb3fb7</string>
     <string name="wxkey">qazwsxedcrfvtgbyhnujmikolp123456</string>
     <string name="wxmchid">1311715801</string>

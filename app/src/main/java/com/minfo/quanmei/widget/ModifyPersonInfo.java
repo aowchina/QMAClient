@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.utils.Constant;
@@ -20,8 +21,8 @@ public class ModifyPersonInfo extends Dialog implements View.OnClickListener {
     private Context context;
     private ModifyClickListener listener;
 
-    private Button btnCancel;
-    private Button btnConfirm;
+    private TextView btnCancel;
+    private TextView btnConfirm;
     private EditText etNickname;
     private String nickname;
 
@@ -35,8 +36,8 @@ public class ModifyPersonInfo extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.dialog_modify_nickname);
-        btnCancel = (Button) findViewById(R.id.btn_cancel);
-        btnConfirm = (Button) findViewById(R.id.btn_confirm);
+        btnCancel = (TextView) findViewById(R.id.btn_cancel);
+        btnConfirm = (TextView) findViewById(R.id.btn_confirm);
         etNickname = (EditText) findViewById(R.id.et_nickname);
         nickname = Constant.user.getUsername();
 

@@ -1,5 +1,6 @@
 package com.minfo.quanmei.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -26,13 +27,18 @@ import com.minfo.quanmei.adapter.AlbumAdapter;
 import com.minfo.quanmei.adapter.BaseViewHolder;
 import com.minfo.quanmei.adapter.CommonAdapter;
 import com.minfo.quanmei.adapter.PhotoGridAdapter;
+import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.ImageFloder;
+import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.ToastUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,18 +46,18 @@ import java.util.List;
  * 相册图片展示列表 create by liujing 2015-10-07
  */
 public class PhotoViewActivity extends BaseActivity implements View.OnClickListener, PhotoGridAdapter.ItemSelectedListener {
+
+    private ImageSelConfig config;
+
     private GridView gvPhoto;
     private TextView tvCancel;
     private Button btnComplete;
-    private ImageFloder imageFloder;
+    private RelativeLayout rlBottom;
     //某个相册里所有图片的本地路径
     private List<String> currentDirImgPaths = new ArrayList<>();
 
-    private ImageFloder currentFolder;
 
     private ArrayList<String> selectedPaths = new ArrayList<>();//当前已选照片的路径
-    private ArrayList<String> tempList = new ArrayList<>();
-
 
     private PhotoGridAdapter photoGridAdapter;
 
@@ -63,7 +69,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
      * 临时的辅助类，用于防止同一个文件夹的多次扫描
      */
     private HashSet<String> mDirPaths = new HashSet<>();
-    private ArrayList<String> imgPaths = new ArrayList<>();
     /**
      * 存储文件夹中的图片数量
      */
@@ -77,8 +82,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     private TextView tvFolderName;
     private ImageView ivLeft;
 
-    private boolean isWriteDiary;
-    private String dorn = "";
     public static String type = "";
     public static final int SELECT_PHOTO = 2;
 
@@ -89,6 +92,19 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         }
     };
     private File imageFolderDir;
+    private String cameraSavePath;
+    private String takephotoname;
+
+    private static final int LOADER_ALL = 0;
+    private static final int LOADER_CATEGORY = 1;
+    private static final int REQUEST_CAMERA = 5;
+
+
+    public static void startActivity(Activity activity, ImageSelConfig config, int requestCode) {
+        Intent intent = new Intent(activity, PhotoViewActivity.class);
+        Constant.imageSelConfig = config;
+        activity.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +124,8 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         tvCancel.setOnClickListener(this);
         btnComplete.setOnClickListener(this);
         tvFolderName.setOnClickListener(this);
+
+        rlBottom = (RelativeLayout) findViewById(R.id.rl_bottom_ly);
     }
 
     @Override
@@ -115,13 +133,79 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
 
         selectedPaths = getIntent().getStringArrayListExtra("imgUrls");
 
-        createPopupFolderList(utils.getScreenWidth(),800);
+        createPopupFolderList(utils.getScreenWidth(), 800);
+
+        gvPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position == 0) {
+                    callCamera();
+                }
+            }
+        });
         getImages();
     }
 
+
+
+    /**
+     * 调用拍照功能
+     */
+    public void callCamera() {
+
+        boolean IsSDcardExist = Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED);
+        if (IsSDcardExist) {
+            if (!makeImgPath()) {
+                ToastUtils.show(PhotoViewActivity.this, "请检查您的SD卡");
+                return;
+            }
+        } else {
+            ToastUtils.show(PhotoViewActivity.this, "请检查您的SD卡");
+            return;
+        }
+
+        Intent it_zx = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        takephotoname = "IMG_" + timeStamp + ".jpg";
+        File f = new File(cameraSavePath, takephotoname);
+        Uri u = Uri.fromFile(f);
+        it_zx.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
+        it_zx.putExtra(MediaStore.EXTRA_OUTPUT, u);
+        startActivityForResult(it_zx, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2){
+            if(resultCode== Activity.RESULT_OK){
+                selectedPaths.add(cameraSavePath + File.separator + takephotoname);
+                complete();
+            }
+        }
+    }
+
+    /**
+     * 创建照片保存路径
+     */
+    private boolean makeImgPath() {
+        cameraSavePath = Environment.getExternalStorageDirectory().getPath() + File.separator + "minfo_quanmei";
+        File filePath = new File(cameraSavePath);
+        if (!filePath.exists()) {
+            filePath.mkdirs();
+        }
+
+        if (!filePath.exists()) {
+            return false;
+        }
+        return true;
+    }
+
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_left:
                 onBackPressed();
                 break;
@@ -132,56 +216,18 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
                 onBackPressed();
                 break;
             case R.id.btn_complete:
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("imgUrls",selectedPaths);
-                intent.putExtra("info",bundle);
-                setResult(SELECT_PHOTO,intent);
-                finish();
+                complete();
                 break;
         }
+    }
 
-
-        /*switch (v.getId()) {
-            case R.id.tv_cancel:
-                onBackPressed();
-
-                break;
-            case R.id.btn_complete:
-                Bundle bundle = new Bundle();
-                if (!isWriteDiary) {
-                    Intent intent = new Intent();
-                    bundle.putSerializable("imgUrls", selectedPaths);
-
-                    if (dorn != null && !dorn.equals("")) {
-                        if (dorn.equals("note")) {
-                            bundle.putString("dorn", "note");
-                            intent.putExtra("info", bundle);
-                            intent.setClass(this, UpdateNoteActivity.class);
-                        }
-                    } else {
-                        //bundle.putString("dorn", "");
-                        intent.putExtra("info", bundle);
-                        intent.setClass(this, InvitationDetailActivity.class);
-                    }
-                    startActivity(intent);
-
-
-                } else {
-                    bundle.putStringArrayList("imgUrls", selectedPaths);
-                    if (dorn.equals("diary")) {
-                        bundle.putString("dorn", "diary");
-
-                        utils.jumpAty(this, WriteDiaryActivity.class, bundle);
-                    } else {
-                        bundle.putString("dorn", "");
-                        utils.jumpAty(this, WriteDiaryActivity.class, bundle);
-                    }
-                }
-                appManager.finishActivity();
-                appManager.finishActivity(AlbumActivity.class);
-                break;
-        }*/
+    private void complete(){
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("imgUrls", selectedPaths);
+        intent.putExtra("info", bundle);
+        setResult(SELECT_PHOTO, intent);
+        finish();
     }
 
     @Override
@@ -192,43 +238,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        /*appManager.finishActivity();
-        appManager.finishActivity(AlbumActivity.class);
-        Bundle bundle0 = new Bundle();
-        bundle0.putStringArrayList("imgUrls", tempList);
-        if (!isWriteDiary) {
-            if (dorn != null && !dorn.equals("")) {
-                if (dorn.equals("note")) {
-                    bundle0.putString("dorn", "note");
-                    utils.jumpAty(this, UpdateNoteActivity.class, bundle0);
-                }
-            } else {
-                bundle0.putString("dorn", "");
-                utils.jumpAty(PhotoViewActivity.this, InvitationDetailActivity.class, bundle0);
-            }
-        } else {
-            if (dorn != null) {
-                if (dorn.equals("diary")) {
-                    bundle0.putString("dorn", "diary");
-                    if (selectedPaths.size() > 0) {
-                        utils.jumpAty(PhotoViewActivity.this, WriteDiaryActivity.class, bundle0);
-                    } else {
-                        utils.jumpAty(this, UpdateNoteActivity.class, bundle0);
-                    }
-                }
-                if (dorn.equals("")) {
-                    bundle0.putString("dorn", "");
-                    if (selectedPaths.size() > 0) {
-                        bundle0.putStringArrayList("imgPaths", selectedPaths);
-
-                        utils.jumpAty(PhotoViewActivity.this, WriteDiaryActivity.class, bundle0);
-                    } else {
-                        bundle0.putBoolean("isWriteDiary", isWriteDiary);
-                        utils.jumpAty(this, InvitationDetailActivity.class, bundle0);
-                    }
-                }
-            }
-        }*/
     }
 
 
@@ -319,9 +328,10 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
 
     /**
      * 获取当前文件夹内的图片路径
+     *
      * @param currentFolder
      */
-    private void initCurrentFolderPaths(ImageFloder currentFolder){
+    private void initCurrentFolderPaths(ImageFloder currentFolder) {
 
         this.imageFolderDir = new File(currentFolder.getDir());
         currentDirImgPaths = Arrays.asList(imageFolderDir.list(new FilenameFilter() {
@@ -348,8 +358,7 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         tvFolderName.setText(mImageFloders.get(0).getName().substring(1));
 
 
-
-        albumAdapter = new AlbumAdapter(this,mImageFloders,R.layout.album_dir_item);
+        albumAdapter = new AlbumAdapter(this, mImageFloders, R.layout.album_dir_item);
 
         folderPopupWindow.setAdapter(albumAdapter);
 
@@ -364,7 +373,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     }
 
 
-
     private void createPopupFolderList(int width, int height) {
         folderPopupWindow = new ListPopupWindow(this);
         folderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
@@ -374,6 +382,15 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         folderPopupWindow.setHeight(height);
         folderPopupWindow.setAnchorView(rlFolder);
         folderPopupWindow.setModal(true);
+    }
+
+
+
+
+
+    public interface Callback extends Serializable {
+
+        void onSingleImageSelected(String path);
     }
 
 }

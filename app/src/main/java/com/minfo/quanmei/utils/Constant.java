@@ -1,5 +1,6 @@
 package com.minfo.quanmei.utils;
 
+import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.Group;
 import com.minfo.quanmei.entity.GroupTag;
 import com.minfo.quanmei.entity.Province;
@@ -22,6 +23,8 @@ public class Constant {
     public static boolean isUpdate = false;
 
     public static boolean isLogin = false;
+
+    public static ImageSelConfig imageSelConfig;
 
 
 

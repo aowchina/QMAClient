@@ -50,7 +50,7 @@ import java.util.Map;
  * zhang jiachang
  * 发帖写日记页面 2015-10-19 liujing
  */
-public class InvitationDetailActivity extends BaseActivity implements View.OnClickListener, SelectPicDialog.SelectPicDialogClickListener, InvitationDetailGRAdapter.SelectTagListener {
+public class InvitationDetailActivity extends BaseActivity implements View.OnClickListener, InvitationDetailGRAdapter.SelectTagListener {
 
     private ImageView back;
     private ImageView upLoad;
@@ -75,8 +75,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     private boolean t2;//lable开启或关闭的标志
 
     private boolean isWriteDiary;//表示是发帖还是写日记，默认为false,即写日记
-
-    private SelectPicDialog selectPicDialog;
 
     private List<GroupTag> list = new ArrayList<GroupTag>();
     private InvitationDetailGRAdapter invitationDetailGRAdapter;
@@ -137,7 +135,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         faceTV = ((TextView) findViewById(R.id.tv_face));
         llImgContainer = (LinearLayout) findViewById(R.id.ll_img_container);
 
-        selectPicDialog = new SelectPicDialog(this, this);
         loadingDialog = new LoadingDialog(this);
 
     }
@@ -175,30 +172,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             }
         }
 
-        showTempContent();
-
         initHandler();
-
-
-    }
-
-    /**
-     * 显示临时保存的数据，帖子标题，内容，已选择的小组标签
-     */
-    private void showTempContent() {
-        if (Constant.groupDetail != null) {
-            groupTags = Constant.groupDetail.getTag();
-            refreshTag();
-        }
-        if (Constant.noteTitle != null) {
-            title.setText(Constant.noteTitle);
-        }
-        if (Constant.noteContent != null) {
-            content.setText(Constant.noteContent);
-        }
-        if (Constant.selectGroupTags != null) {
-            selectedTags = Constant.selectGroupTags;
-        }
     }
 
     private void initHandler() {
@@ -233,7 +207,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                                     bundle.putSerializable("group", Constant.groupDetail);
                                     utils.jumpAty(InvitationDetailActivity.this, GroupTypeActivity.class, bundle);
                                     appManager.finishActivity(InvitationDetailActivity.this);
-                                    clearTemp();
                                     break;
                                 default:
                                     ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
@@ -305,10 +278,10 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             case R.id.iv_upload_invitation2:
             case R.id.ll_diary_release:
                 if (imgPaths.size() < 9) {
+                    PhotoViewActivity.multi_select = true;
                     Intent intent = new Intent(this,PhotoViewActivity.class);
                     intent.putExtra("imgUrls",imgPaths);
                     startActivityForResult(intent,1);
-//                    showSelectDialg();
                 } else {
                     ToastUtils.show(this, "图片最多只能上传9张");
                 }
@@ -374,28 +347,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     }
 
     /**
-     * 保存临时的帖子标题和内容
-     */
-    private void saveTempContent() {
-        strTitle = title.getText().toString();
-        strContent = content.getText().toString();
-        Constant.noteTitle = strTitle;
-        Constant.noteContent = strContent;
-        Constant.selectGroupTags = selectedTags;
-    }
-
-    /**
-     * 页面暂停时保存输入内容
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (!isExit) {
-            saveTempContent();
-        }
-    }
-
-    /**
      * 发帖请求接口
      */
     private void reqServer() {
@@ -455,8 +406,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     private boolean checkInput() {
         strTitle = title.getText().toString();
         strContent = content.getText().toString();
-        Constant.noteTitle = strTitle;
-        Constant.noteContent = strContent;
         if (TextUtils.isEmpty(strTitle)) {
             ToastUtils.show(InvitationDetailActivity.this, "帖子标题不能为空");
             return false;
@@ -465,18 +414,9 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             ToastUtils.show(InvitationDetailActivity.this, "帖子内容不能为空");
             return false;
         }
-       /* if (!MyCheck.isNoteTitle(strTitle)) {
-            ToastUtils.show(InvitationDetailActivity.this, "帖子标题不合法");
-            return false;
-        }*/
-
         return true;
     }
 
-    private void showSelectDialg() {
-
-        selectPicDialog.show();
-    }
 
     /**
      * 表情布局
@@ -514,33 +454,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    /**
-     * 调用拍照功能
-     */
-    public void callCamera() {
-
-        boolean IsSDcardExist = Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED);
-        if (IsSDcardExist) {
-            if (!makeImgPath()) {
-                ToastUtils.show(InvitationDetailActivity.this, "请检查您的SD卡");
-                return;
-            }
-        } else {
-            ToastUtils.show(InvitationDetailActivity.this, "请检查您的SD卡");
-            return;
-        }
-
-        Intent it_zx = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        takephotoname = "IMG_" + timeStamp + ".jpg";
-        File f = new File(cameraSavePath, takephotoname);
-        Uri u = Uri.fromFile(f);
-        it_zx.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-        it_zx.putExtra(MediaStore.EXTRA_OUTPUT, u);
-        startActivityForResult(it_zx, 1);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -575,42 +488,13 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         return true;
     }
 
-
-    @Override
-    public void selectClick(SelectPicDialog.Type type) {
-
-        switch (type) {
-            case CAMERA:
-                callCamera();
-                break;
-            case ALBUM:
-                //跳转到相册
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isWriteDiary", isWriteDiary);
-                bundle.putStringArrayList("imgPaths", imgPaths);
-                bundle.putString("dorn","");
-                utils.jumpAty(this, AlbumActivity.class, bundle);
-                appManager.finishActivity();
-                break;
-        }
-    }
-
     /**
      * 页面finish时清除临时保存的内容
      */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        clearTemp();
         appManager.finishActivity(InvitationDetailActivity.class);
-    }
-
-    private void clearTemp() {
-        imgPaths.clear();
-        isExit = true;
-        Constant.noteTitle = null;
-        Constant.noteContent = null;
-        Constant.selectGroupTags = null;
     }
 
     @Override
