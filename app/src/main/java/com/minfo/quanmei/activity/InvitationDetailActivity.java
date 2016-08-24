@@ -271,7 +271,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             case R.id.iv_upload_invitation2:
             case R.id.ll_diary_release:
                 if (imgPaths.size() < 9) {
-                    Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).build();
+                    Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).multiSelect(true).build();
                     Intent intent = new Intent(this,PhotoViewActivity.class);
                     intent.putExtra("imgUrls",imgPaths);
                     startActivityForResult(intent,1);

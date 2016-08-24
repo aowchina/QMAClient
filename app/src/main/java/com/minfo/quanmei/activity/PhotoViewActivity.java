@@ -112,7 +112,11 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
             rlBottom.setVisibility(View.GONE);
         }
 
+
         selectedPaths = getIntent().getStringArrayListExtra("imgUrls");
+        if(selectedPaths==null){
+            selectedPaths = new ArrayList<>();
+        }
 
         tvFolderName.setText("所有图片");
         albumAdapter = new AlbumAdapter(this, mImageFloders, R.layout.album_dir_item);
@@ -380,6 +384,5 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
             complete();
         }
     }
-
 
 }

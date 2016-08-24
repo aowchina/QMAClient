@@ -3,6 +3,7 @@ package com.minfo.quanmei.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +20,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.City;
 import com.minfo.quanmei.entity.Province;
 import com.minfo.quanmei.entity.User;
@@ -53,7 +55,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class PersonInfoActivity extends BaseActivity implements View.OnClickListener, ModifyPersonInfo.ModifyClickListener, SelectPicDialogClickListener {
+public class PersonInfoActivity extends BaseActivity implements View.OnClickListener, ModifyPersonInfo.ModifyClickListener{
     //top
     private TextView tvTitle;
     private ImageView ivLeft;
@@ -69,31 +71,24 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private String tempNickname = "";
     private ChangeAddressDialog addressDialog;
     private ChangeBirthDialog birthDialog;
-    private SelectPicDialog selectPicDialog;
-    private String cameraSavePath;
-    private String takephotoname;
 
     private Province province;
     private City city;
 
     private String birthday = "";
-    private String[] birthArray;
 
     private LoadingDialog loadingDialog;
 
-    private static final int PHOTO_REQUEST = 1;
-    private static final int CAMERA_REQUEST = 2;
-    private static final int PHOTO_CLIP = 3;
-    //上传头像变量
-    File file;
     private List<Map<String, File>> files = new ArrayList<>();
     private MyHandler myHandler;
-    private File imgFile;
-    private Bitmap photo;
     private Bitmap mBitmap;//个人二维码
 
     private AlertDialog qrCode;
     private ModifyGender modifyGender;
+
+    private String selectPhotoPath;
+
+    private static final int SELECT_PHOTO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +196,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void initViews() {
-        selectPicDialog = new SelectPicDialog(this, this);
         initHandler();
     }
 
@@ -226,7 +220,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                         int errorcode = jsonObject.getInt("errorcode");
                         switch (errorcode) {
                             case 0:
-                                activity.civHeadImage.setImageBitmap(activity.imgUtils.toRoundBitmap(activity.photo));
+                                activity.civHeadImage.setImageBitmap(activity.imgUtils.toRoundBitmap(BitmapFactory.decodeFile(activity.selectPhotoPath)));
                                 ToastUtils.show(activity, "头像修改成功");
                                 break;
                             case 12:
@@ -272,7 +266,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
                 break;
             case R.id.rl_head:
-
+                Constant.imageSelConfig = new ImageSelConfig.Builder().cropSize(1,1,150,150).needCrop(true).needCamera(true).multiSelect(false).build();
+                startActivityForResult(new Intent(this,PhotoViewActivity.class),SELECT_PHOTO);
                 break;
             case R.id.rl_nickname:
                 modifyNickname.show();
@@ -290,7 +285,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 startActivity(new Intent(PersonInfoActivity.this, MyGrageActivity.class));
                 break;
             case R.id.civ_head_image:
-                selectPicDialog.show();
+                //TODO
                 break;
             case R.id.rl_qrcode:
                 generateBarCode();
@@ -373,7 +368,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(String year, String month, String day) {
                 birthday = year + "-" + month + "-" + day;
-                birthArray = birthday.split("-");
                 reqEditBirth();
             }
         });
@@ -542,10 +536,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private void reqEditHeadImg() {
         files.clear();
         Map<String, File> map = new HashMap<>();
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imgName = getFilesDir() + File.separator + "IMG_" + timeStamp + "headimg" + ".jpg";
-        imgUtils.createNewFile(imgName, imgFile.getPath());
-        map.put(imgName, new File(imgName));
+        File file = new File(selectPhotoPath);
+        map.put(file.getName(), file);
         files.add(map);
 
         final String url = getResources().getString(R.string.api_baseurl) + "user/EditImg.php";
@@ -571,108 +563,26 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         }).start();
     }
 
-    @Override
-    public void selectClick(SelectPicDialog.Type type) {
-        switch (type) {
-            case CAMERA:
-                callCamera();
-                break;
-            case ALBUM:
-                getPicFromPhoto();
-                break;
-        }
-    }
-
-    /**
-     * 调用系统相册
-     */
-    private void getPicFromPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, PHOTO_REQUEST);
-    }
-
-    /**
-     * 调用拍照功能
-     */
-    public void callCamera() {
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "test.jpg")));
-        startActivityForResult(intent, CAMERA_REQUEST);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case CAMERA_REQUEST:
-                switch (resultCode) {
-                    case -1://-1表示拍照成功
-                        file = new File(Environment.getExternalStorageDirectory() + "/test.jpg");
-                        if (file.exists()) {
-                            photoClip(Uri.fromFile(file));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case PHOTO_REQUEST:
-                if (data != null) {
-                    photoClip(data.getData());
-                }
-                break;
-            case PHOTO_CLIP:
-                if (data != null) {
-                    Bundle extras = data.getExtras();
-                    if (extras != null) {
-                        photo = extras.getParcelable("data");
-                        String head_img_path = getFilesDir().getAbsolutePath() + "head_img.jpg";
-                        boolean isScuccess = saveBitmap2file(photo, head_img_path);
-                        if (isScuccess) {
-                            imgFile = new File(head_img_path);
-                            reqEditHeadImg();
-                        }
 
+        if(requestCode==SELECT_PHOTO&&resultCode==PhotoViewActivity.SELECT_PHOTO){
+            if(data!=null){
+                Bundle bundle = data.getBundleExtra("info");
+                if(bundle!=null){
+                    ArrayList<String> strArray =  bundle.getStringArrayList("imgUrls");
+                    if(strArray!=null&&strArray.size()!=0){
+                        selectPhotoPath = strArray.get(0);
+                        reqEditHeadImg();
                     }
                 }
-                break;
-            default:
-                break;
+            }
         }
 
     }
 
-    private void photoClip(Uri uri) {
-        // 调用系统中自带的图片剪裁
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, PHOTO_CLIP);
-    }
-
-    private static boolean saveBitmap2file(Bitmap bmp, String filename) {
-        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-        int quality = 100;
-        OutputStream stream = null;
-        try {
-            stream = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return bmp.compress(format, quality, stream);
-    }
 
 
 

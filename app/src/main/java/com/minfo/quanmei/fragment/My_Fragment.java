@@ -1,15 +1,12 @@
 package com.minfo.quanmei.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
-import com.minfo.quanmei.activity.InitActivity;
 import com.minfo.quanmei.activity.LoginActivity;
 import com.minfo.quanmei.activity.MainActivity;
 import com.minfo.quanmei.activity.MyCourseActivity;
@@ -26,7 +22,9 @@ import com.minfo.quanmei.activity.MyDiaryActivity;
 import com.minfo.quanmei.activity.MyNoteActivity;
 import com.minfo.quanmei.activity.MyReceiveActivity;
 import com.minfo.quanmei.activity.OrderListActivity;
+import com.minfo.quanmei.activity.PhotoViewActivity;
 import com.minfo.quanmei.activity.PocketActivity;
+import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
@@ -36,7 +34,6 @@ import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 import com.minfo.quanmei.widget.DownLoadingDialog;
 import com.minfo.quanmei.widget.LoadingDialog;
-import com.minfo.quanmei.widget.SelectPicDialog;
 import com.minfo.quanmei.widget.UpdateDialog;
 
 import org.json.JSONException;
@@ -48,16 +45,12 @@ import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,13 +68,10 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout rlCourse;
     private RelativeLayout rlsetting;
     private RelativeLayout rlUpdate;
-    private TextView myNickname;
-    private TextView myLevel;
     private TextView myAge;
     private TextView myCity;
     private Button btnExit;
     private ImageView ivInfoBg;
-    private SelectPicDialog selectPicDialog;
     private Handler handler;
 
     private ImageView ivGender;
@@ -94,18 +84,14 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private String downloadPath = "";
     private UpdateDialog updateDialog;
     private String apkName = "";
-    private static final int PHOTO_REQUEST = 1;
-    private static final int CAMERA_REQUEST = 2;
-    private static final int PHOTO_CLIP = 3;
-    private Bitmap photo;
     private List<Map<String, File>> files = new ArrayList<>();
 
     private LoadingDialog loadingDialog;
 
     private DownLoadingDialog downLoadingDialog;
-    private File file;
-    private File imgFile;
-    private Bitmap resizeBmp;
+
+    private static final int SELECT_PHOTO = 1;
+    private String selectPhotoPath;
 
     @Override
     protected View initViews() {
@@ -130,10 +116,8 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         rlsetting = (RelativeLayout) view.findViewById(R.id.rl_setting);
         rlUpdate = (RelativeLayout) view.findViewById(R.id.rl_update);
         rlPocket = (RelativeLayout) view.findViewById(R.id.rl_pocket);
-//        myNickname = (TextView) view.findViewById(R.id.personal_code);
         myAge = (TextView) view.findViewById(R.id.my_age);
         myCity = (TextView) view.findViewById(R.id.my_city);
-//        myLevel = (TextView) view.findViewById(R.id.my_level);
         btnExit = (Button) view.findViewById(R.id.btn_exit_login);
         ivInfoBg = (ImageView) view.findViewById(R.id.iv_info_bg);
         ivGender = (ImageView) view.findViewById(R.id.iv_gender);
@@ -147,7 +131,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         ivInfoBg.setOnClickListener(this);
         rlCourse.setOnClickListener(this);
         rlPocket.setOnClickListener(this);
-        selectPicDialog = new SelectPicDialog(mActivity, selectListener);
         reqMyInfo();
 
     }
@@ -155,23 +138,22 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        reqMyInfo();
+//        reqMyInfo();
     }
 
     private void initView() {
         if (myinfo != null) {
-//            UniversalImageUtils.disCircleImage(myinfo.getUserimg(), myHeadImage);
             myAge.setText(myinfo.getAge() + "");
             myCity.setText(myinfo.getCity());
-            utils.sendMsg(MainActivity.myHandler,1,myinfo);
+            utils.sendMsg(MainActivity.myHandler, 1, myinfo);
 
             if (myinfo.getBgimg() != null && !"".equals(myinfo.getBgimg())) {
                 UniversalImageUtils.displayImageUseDefOptions(myinfo.getBgimg(), ivInfoBg);
             }
             String gender = myinfo.getSex();
-            if(gender!=null&&(gender.equals("暂未设置")||gender.equals("女"))){
+            if (gender != null && (gender.equals("暂未设置") || gender.equals("女"))) {
                 ivGender.setImageResource(R.mipmap.sex_female);
-            }else{
+            } else {
                 ivGender.setImageResource(R.mipmap.sex_male);
             }
         }
@@ -191,7 +173,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                         int errorcode = jsonObject.getInt("errorcode");
                         switch (errorcode) {
                             case 0:
-                                ivInfoBg.setImageBitmap(resizeBmp);
+                                ivInfoBg.setImageURI(Uri.fromFile(new File(selectPhotoPath)));
                                 ToastUtils.show(mActivity, "修改成功");
                                 break;
                             case 12:
@@ -247,7 +229,10 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 reqExitLogin();
                 break;
             case R.id.iv_info_bg:
-                selectPicDialog.show();
+                Constant.imageSelConfig = new ImageSelConfig.Builder()
+                        .needCamera(true)
+                        .needCrop(true).multiSelect(false).cropSize(2, 1, 1440, 720).build();
+                startActivityForResult(new Intent(mActivity, PhotoViewActivity.class), SELECT_PHOTO);
                 break;
         }
     }
@@ -286,7 +271,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
             @Override
             public void onRequestNoData(BaseResponse response) {
-                Log.e(TAG,response.getErrorcode()+"");
+                Log.e(TAG, response.getErrorcode() + "");
                 updateDialog.setMessage("目前已经是最新版本：" + utils.getVersionName());
                 updateDialog.show();
                 loadingDialog.dismiss();
@@ -390,85 +375,22 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         });
     }
 
-    SelectPicDialog.SelectPicDialogClickListener selectListener = new SelectPicDialog.SelectPicDialogClickListener() {
-        @Override
-        public void selectClick(SelectPicDialog.Type type) {
-            switch (type) {
-                case CAMERA:
-                    callCamera();
-                    break;
-                case ALBUM:
-                    getPicFromPhoto();
-                    break;
-            }
-        }
-    };
-
-
-    /**
-     * 调用拍照功能
-     */
-    public void callCamera() {
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "info_bg.jpg")));
-        startActivityForResult(intent, CAMERA_REQUEST);
-    }
-
-    /**
-     * 调用系统相册
-     */
-    private void getPicFromPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, PHOTO_REQUEST);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case CAMERA_REQUEST:
-                switch (resultCode) {
-                    case -1://-1表示拍照成功
-                        file = new File(Environment.getExternalStorageDirectory() + "/info_bg.jpg");
-                        if (file.exists()) {
-                            photoClip(Uri.fromFile(file));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case PHOTO_REQUEST:
-                if (data != null) {
-                    photoClip(data.getData());
-                }
-                break;
-            case PHOTO_CLIP:
-                if (data != null) {
-                    Bundle extras = data.getExtras();
-                    if (extras != null) {
-                        photo = extras.getParcelable("data");
-                        String info_bg_path = mActivity.getFilesDir().getAbsolutePath() + "info_bg.jpg";
-                        boolean isScuccess = saveBitmap2file(photo, info_bg_path);
-                        if (isScuccess) {
-                            imgFile = new File(info_bg_path);
-                            Matrix matrix = new Matrix();
-                            matrix.postScale(utils.getScreenWidth() / (photo.getWidth() * 1.0f), utils.getScreenWidth() / (photo.getWidth() * 1.0f)); //长和宽放大缩小的比例
-                            resizeBmp = Bitmap.createBitmap(photo, 0, 0, photo.getWidth(), photo.getHeight(), matrix, true);
-                            ivInfoBg.setImageBitmap(resizeBmp);
-                            reqEditHeadImg();
-                        }
-
+        if (requestCode == SELECT_PHOTO && resultCode == PhotoViewActivity.SELECT_PHOTO) {
+            if(data!=null){
+                Bundle bundle = data.getBundleExtra("info");
+                if(bundle!=null){
+                    ArrayList<String> strArray =  bundle.getStringArrayList("imgUrls");
+                    if(strArray!=null&&strArray.size()!=0){
+                        selectPhotoPath = strArray.get(0);
+                        reqEditHeadImg();
                     }
                 }
-                break;
-            default:
-                break;
+            }
         }
-
     }
 
     /**
@@ -480,10 +402,8 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
         files.clear();
         Map<String, File> map = new HashMap<>();
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imgName = mActivity.getFilesDir() + File.separator + "IMG_" + timeStamp + "infobg" + ".jpg";
-        imgUtils.createNewFile(imgName, imgFile.getPath());
-        map.put(imgName, new File(imgName));
+        File file = new File(selectPhotoPath);
+        map.put(file.getName(), file);
         files.add(map);
 
 
@@ -504,36 +424,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
             }
         }).start();
 
-    }
-
-
-    private void photoClip(Uri uri) {
-        // 调用系统中自带的图片剪裁
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 2);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 500);
-        intent.putExtra("outputY", 250);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, PHOTO_CLIP);
-    }
-
-    private static boolean saveBitmap2file(Bitmap bmp, String filename) {
-        Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
-        int quality = 100;
-        OutputStream stream = null;
-        try {
-            stream = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return bmp.compress(format, quality, stream);
     }
 
 
@@ -620,6 +510,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * xml解析
+     *
      * @param data
      */
     private void parseXml(String data) {
