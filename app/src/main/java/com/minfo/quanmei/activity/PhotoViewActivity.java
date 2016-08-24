@@ -1,18 +1,16 @@
 package com.minfo.quanmei.activity;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.ListPopupWindow;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,22 +22,17 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.adapter.AlbumAdapter;
-import com.minfo.quanmei.adapter.BaseViewHolder;
-import com.minfo.quanmei.adapter.CommonAdapter;
 import com.minfo.quanmei.adapter.PhotoGridAdapter;
 import com.minfo.quanmei.config.ImageSelConfig;
+import com.minfo.quanmei.entity.Image;
 import com.minfo.quanmei.entity.ImageFloder;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.ToastUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -53,8 +46,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     private TextView tvCancel;
     private Button btnComplete;
     private RelativeLayout rlBottom;
-    //某个相册里所有图片的本地路径
-    private List<String> currentDirImgPaths = new ArrayList<>();
 
 
     private ArrayList<String> selectedPaths = new ArrayList<>();//当前已选照片的路径
@@ -63,20 +54,12 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
 
 
     private ListPopupWindow folderPopupWindow;
-    private ProgressDialog mProgressDialog;
     private RelativeLayout rlFolder;
-    /**
-     * 临时的辅助类，用于防止同一个文件夹的多次扫描
-     */
-    private HashSet<String> mDirPaths = new HashSet<>();
-    /**
-     * 存储文件夹中的图片数量
-     */
-    private int mPicsSize;
     /**
      * 扫描拿到所有的图片文件夹
      */
     private List<ImageFloder> mImageFloders = new ArrayList<>();
+    private List<Image> imageList = new ArrayList<>();
     private AlbumAdapter albumAdapter;
 
     private TextView tvFolderName;
@@ -85,26 +68,19 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     public static String type = "";
     public static final int SELECT_PHOTO = 2;
 
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            mProgressDialog.dismiss();
-            bindData();
-        }
-    };
-    private File imageFolderDir;
     private String cameraSavePath;
     private String takephotoname;
 
+    private String cropPath;
+
     private static final int LOADER_ALL = 0;
     private static final int LOADER_CATEGORY = 1;
-    private static final int REQUEST_CAMERA = 5;
 
+    private static final int REQUEST_CAMERA = 2;
+    private static final int REQUEST_CROP = 3;
 
-    public static void startActivity(Activity activity, ImageSelConfig config, int requestCode) {
-        Intent intent = new Intent(activity, PhotoViewActivity.class);
-        Constant.imageSelConfig = config;
-        activity.startActivityForResult(intent, requestCode);
-    }
+    private boolean hasFolderGened;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,22 +107,158 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void initViews() {
 
+        this.config = Constant.imageSelConfig;
+        if(!config.multiSelect){
+            rlBottom.setVisibility(View.GONE);
+        }
+
         selectedPaths = getIntent().getStringArrayListExtra("imgUrls");
 
+        tvFolderName.setText("所有图片");
+        albumAdapter = new AlbumAdapter(this, mImageFloders, R.layout.album_dir_item);
+
         createPopupFolderList(utils.getScreenWidth(), 800);
+        bindData();
+
+        getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
 
         gvPhoto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position == 0) {
+                if (config.needCamera && position == 0) {
                     callCamera();
+                } else {
+                    if (!config.multiSelect) {
+                        singleSelect(imageList.get(position).path);
+                    }
                 }
             }
         });
-        getImages();
+
+        photoGridAdapter = new PhotoGridAdapter(PhotoViewActivity.this, imageList, R.layout.photo_grid_item, PhotoViewActivity.this, selectedPaths);
+        gvPhoto.setAdapter(photoGridAdapter);
+    }
+
+    /**
+     * 获取所有图片，按文件夹分开
+     */
+    private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+        private final String[] IMAGE_PROJECTION = {
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media._ID};
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            if (id == LOADER_ALL) {
+                CursorLoader cursorLoader = new CursorLoader(PhotoViewActivity.this,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+                        null, null, IMAGE_PROJECTION[2] + " DESC");
+                return cursorLoader;
+            } else if (id == LOADER_CATEGORY) {
+                CursorLoader cursorLoader = new CursorLoader(PhotoViewActivity.this,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+                        IMAGE_PROJECTION[0] + " like '%" + args.getString("path") + "%'", null, IMAGE_PROJECTION[2] + " DESC");
+                return cursorLoader;
+            }
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (data != null) {
+                int count = data.getCount();
+                if (count > 0) {
+                    List<Image> tempImageList = new ArrayList<>();
+                    data.moveToFirst();
+                    do {
+                        String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
+                        String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+                        long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                        Image image = new Image(path, name, dateTime);
+                        if (!image.path.endsWith("gif"))
+                            tempImageList.add(image);
+                        if (!hasFolderGened) {
+                            File imageFile = new File(path);
+                            File folderFile = imageFile.getParentFile();
+                            ImageFloder folder = new ImageFloder();
+                            folder.setDir(folderFile.getAbsolutePath());
+                            folder.setFirstImagePath(imageFile.getAbsolutePath());
+                            if (!mImageFloders.contains(folder)) {
+                                List<Image> imageList = new ArrayList<>();
+                                imageList.add(image);
+                                folder.setImageList(imageList);
+                                mImageFloders.add(folder);
+                            } else {
+                                ImageFloder f = mImageFloders.get(mImageFloders.indexOf(folder));
+                                f.getImageList().add(image);
+                            }
+                        }
+
+                    } while (data.moveToNext());
+
+                    imageList.clear();
+                    if (config.needCamera)
+                        imageList.add(new Image());
+                    imageList.addAll(tempImageList);
+
+                    ImageFloder folder = new ImageFloder();
+                    folder.setImageList(imageList);
+                    mImageFloders.add(0, folder);
+                    albumAdapter.notifyDataSetChanged();
+                    photoGridAdapter.notifyDataSetChanged();
+
+                    hasFolderGened = true;
+                }
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    };
+
+    /**
+     * 相册列表文件夹
+     */
+    private void bindData() {
+
+        folderPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0) {
+                    tvFolderName.setText("所有图片");
+                    PhotoViewActivity.this.getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
+                } else {
+                    imageList.clear();
+                    tvFolderName.setText(mImageFloders.get(position).getName().substring(1));
+                    if (config.needCamera) {
+                        imageList.add(new Image());
+                    }
+                    imageList.addAll(mImageFloders.get(position).getImageList());
+                    photoGridAdapter.notifyDataSetChanged();
+
+                }
+                folderPopupWindow.dismiss();
+            }
+        });
     }
 
 
+    private void createPopupFolderList(int width, int height) {
+        folderPopupWindow = new ListPopupWindow(this);
+        folderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        folderPopupWindow.setAdapter(albumAdapter);
+        folderPopupWindow.setContentWidth(width);
+        folderPopupWindow.setWidth(width);
+        folderPopupWindow.setHeight(height);
+        folderPopupWindow.setAnchorView(rlFolder);
+        folderPopupWindow.setModal(true);
+    }
 
     /**
      * 调用拍照功能
@@ -172,18 +284,44 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         Uri u = Uri.fromFile(f);
         it_zx.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
         it_zx.putExtra(MediaStore.EXTRA_OUTPUT, u);
-        startActivityForResult(it_zx, 2);
+        startActivityForResult(it_zx, REQUEST_CAMERA);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==2){
-            if(resultCode== Activity.RESULT_OK){
+        if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {
+            if (config.needCrop) {
+                crop(cameraSavePath + File.separator + takephotoname);
+            } else {
                 selectedPaths.add(cameraSavePath + File.separator + takephotoname);
                 complete();
             }
+        } else if (requestCode == REQUEST_CROP && resultCode == RESULT_OK) {
+            selectedPaths.add(cropPath);
+            complete();
         }
+    }
+
+
+    private void crop(String path) {
+
+        makeImgPath();
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file = new File(cameraSavePath, "IMG_" + timeStamp + ".jpg");
+        cropPath = file.getAbsolutePath();
+
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(Uri.fromFile(new File(path)), "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", config.aspectX);
+        intent.putExtra("aspectY", config.aspectY);
+        intent.putExtra("outputX", config.outputX);
+        intent.putExtra("outputY", config.outputY);
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+        startActivityForResult(intent, REQUEST_CROP);
     }
 
     /**
@@ -195,7 +333,6 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         if (!filePath.exists()) {
             filePath.mkdirs();
         }
-
         if (!filePath.exists()) {
             return false;
         }
@@ -221,7 +358,7 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void complete(){
+    private void complete() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("imgUrls", selectedPaths);
@@ -235,162 +372,14 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         this.selectedPaths = (ArrayList<String>) selectImgUrls;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-
-    /**
-     * 获取所有图片，按文件夹分开
-     */
-    private void getImages() {
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            ToastUtils.show(this, "暂无外部存储");
-            return;
+    private void singleSelect(String path) {
+        if (config.needCrop) {
+            crop(path);
+        } else {
+            selectedPaths.add(path);
+            complete();
         }
-        // 显示进度条
-        mProgressDialog = ProgressDialog.show(this, null, "正在加载...");
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                String firstImage = null;
-
-                Uri mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                ContentResolver mContentResolver = PhotoViewActivity.this
-                        .getContentResolver();
-
-                // 只查询jpeg和png的图片
-                Cursor mCursor = mContentResolver.query(mImageUri, null,
-                        MediaStore.Images.Media.MIME_TYPE + "=? or "
-                                + MediaStore.Images.Media.MIME_TYPE + "=?",
-                        new String[]{"image/jpeg", "image/png"},
-                        MediaStore.Images.Media.DATE_MODIFIED);
-
-                while (mCursor.moveToNext()) {
-                    // 获取图片的路径
-                    String path = mCursor.getString(mCursor
-                            .getColumnIndex(MediaStore.Images.Media.DATA));
-
-                    // 拿到第一张图片的路径
-                    if (firstImage == null)
-                        firstImage = path;
-                    // 获取该图片的父路径名
-                    File parentFile = new File(path).getParentFile();
-                    if (parentFile == null)
-                        continue;
-                    String dirPath = parentFile.getAbsolutePath();
-                    ImageFloder imageFloder = null;
-                    // 利用一个HashSet防止多次扫描同一个文件夹
-                    if (mDirPaths.contains(dirPath)) {
-                        continue;
-                    } else {
-                        mDirPaths.add(dirPath);
-                        // 初始化imageFloder
-                        imageFloder = new ImageFloder();
-                        imageFloder.setDir(dirPath);
-                        imageFloder.setFirstImagePath(path);
-                    }
-
-                    int picSize = parentFile.list(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File dir, String filename) {
-                            if (filename.endsWith(".jpg")
-                                    || filename.endsWith(".png")
-                                    || filename.endsWith(".jpeg"))
-                                return true;
-                            return false;
-                        }
-                    }).length;
-
-                    imageFloder.setCount(picSize);
-                    mImageFloders.add(imageFloder);
-
-                    if (picSize > mPicsSize) {
-                        mPicsSize = picSize;
-                    }
-
-                }
-                mCursor.close();
-
-                // 扫描完成，辅助的HashSet也就可以释放内存了
-                mDirPaths = null;
-
-                // 通知Handler扫描图片完成
-                mHandler.sendEmptyMessage(0x110);
-
-            }
-        }).start();
     }
 
-    /**
-     * 获取当前文件夹内的图片路径
-     *
-     * @param currentFolder
-     */
-    private void initCurrentFolderPaths(ImageFloder currentFolder) {
-
-        this.imageFolderDir = new File(currentFolder.getDir());
-        currentDirImgPaths = Arrays.asList(imageFolderDir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                if (filename.endsWith(".jpg") || filename.endsWith(".png")
-                        || filename.endsWith(".jpeg"))
-                    return true;
-                return false;
-            }
-        }));
-
-        photoGridAdapter = new PhotoGridAdapter(PhotoViewActivity.this, currentDirImgPaths, R.layout.photo_grid_item, imageFolderDir.getAbsolutePath(), PhotoViewActivity.this, selectedPaths);
-        gvPhoto.setAdapter(photoGridAdapter);
-    }
-
-
-    /**
-     * 相册列表文件夹
-     */
-    private void bindData() {
-
-        initCurrentFolderPaths(mImageFloders.get(0));
-        tvFolderName.setText(mImageFloders.get(0).getName().substring(1));
-
-
-        albumAdapter = new AlbumAdapter(this, mImageFloders, R.layout.album_dir_item);
-
-        folderPopupWindow.setAdapter(albumAdapter);
-
-        folderPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                tvFolderName.setText(mImageFloders.get(position).getName().substring(1));
-                folderPopupWindow.dismiss();
-                initCurrentFolderPaths(mImageFloders.get(position));
-            }
-        });
-    }
-
-
-    private void createPopupFolderList(int width, int height) {
-        folderPopupWindow = new ListPopupWindow(this);
-        folderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        folderPopupWindow.setAdapter(albumAdapter);
-        folderPopupWindow.setContentWidth(width);
-        folderPopupWindow.setWidth(width);
-        folderPopupWindow.setHeight(height);
-        folderPopupWindow.setAnchorView(rlFolder);
-        folderPopupWindow.setModal(true);
-    }
-
-
-
-
-
-    public interface Callback extends Serializable {
-
-        void onSingleImageSelected(String path);
-    }
 
 }

@@ -4,7 +4,7 @@
     android:background="@color/white"
     android:layout_height="match_parent" >
 
-    <ImageView
+    <com.minfo.quanmei.widget.SquareImage
         android:id="@+id/id_item_image"
         android:layout_width="fill_parent"
         android:layout_height="100dp"

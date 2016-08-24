@@ -55,7 +55,6 @@ public class ImageSelConfig {
         this.maxNum = builder.maxNum;
         this.needCamera = builder.needCamera;
         this.filePath = builder.filePath;
-        this.loader = builder.loader;
         this.aspectX = builder.aspectX;
         this.aspectY = builder.aspectY;
         this.outputX = builder.outputX;
@@ -70,15 +69,13 @@ public class ImageSelConfig {
         private int maxNum = 9;
         private boolean needCamera = true;
         private String filePath;
-        private ImageLoader loader;
 
         private int aspectX = 1;
         private int aspectY = 1;
         private int outputX = 400;
         private int outputY = 400;
 
-        public Builder(ImageLoader loader) {
-            this.loader = loader;
+        public Builder() {
 
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
                 filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/minfo_quanmei";

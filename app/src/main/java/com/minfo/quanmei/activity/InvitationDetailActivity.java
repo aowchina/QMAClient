@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -22,6 +20,7 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.adapter.InvitationDetailGRAdapter;
+import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.Group;
 import com.minfo.quanmei.entity.GroupTag;
 import com.minfo.quanmei.utils.Constant;
@@ -30,7 +29,6 @@ import com.minfo.quanmei.utils.MinfoUtils;
 import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.widget.LoadingDialog;
-import com.minfo.quanmei.widget.SelectPicDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,13 +150,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         title.setOnClickListener(this);
         content.setOnClickListener(this);
         lLDiaryRelease.setOnClickListener(this);
-        if (Constant.noteTitle != null) {
-            title.setText(Constant.noteTitle);
-        }
-        if (Constant.noteContent != null) {
-            content.setText(Constant.noteContent);
-        }
-
 
         Bundle bundle = getIntent().getBundleExtra("info");
         if (bundle != null) {
@@ -172,6 +163,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             }
         }
 
+        refreshTag();
         initHandler();
     }
 
@@ -229,6 +221,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      * 绑定标签数据
      */
     private void refreshTag() {
+        groupTags = Constant.groupDetail.getTag();
         if (!lableTag) {
             for (int i = 0; i < groupTags.size(); i++) {
                 list.add(groupTags.get(i));
@@ -278,7 +271,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
             case R.id.iv_upload_invitation2:
             case R.id.ll_diary_release:
                 if (imgPaths.size() < 9) {
-                    PhotoViewActivity.multi_select = true;
+                    Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).build();
                     Intent intent = new Intent(this,PhotoViewActivity.class);
                     intent.putExtra("imgUrls",imgPaths);
                     startActivityForResult(intent,1);
