@@ -13,15 +13,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.jni.JniClient;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -188,7 +185,7 @@ public class Utils {
     public String getVersionName(){
         PackageManager packageManager = context.getPackageManager();
         String version = "";
-        PackageInfo packInfo = null;
+        PackageInfo packInfo;
         try {
             packInfo = packageManager.getPackageInfo(context.getPackageName(),0);
             version = packInfo.versionName;
@@ -204,7 +201,7 @@ public class Utils {
     public int getVersionCode(){
         PackageManager packageManager = context.getPackageManager();
         int  versionCode = 1;
-        PackageInfo packInfo = null;
+        PackageInfo packInfo;
         try {
             packInfo = packageManager.getPackageInfo(context.getPackageName(),0);
             versionCode = packInfo.versionCode;
@@ -237,15 +234,6 @@ public class Utils {
         return params;
     }
 
-    public void jumpPage(Class<?> mClass, Bundle bundle, Activity act){
-        Intent it = new Intent(Settings.ACTION_ADD_ACCOUNT);
-        it.setClass(context, mClass);
-        if(bundle != null){
-            it.putExtras(bundle);
-        }
-        context.startActivity(it);
-        act.finish();
-    }
 
     /**
      * 判断app是否启动
@@ -281,8 +269,7 @@ public class Utils {
      */
     public int getScreenWidth(){
         Activity activity = (Activity) context;
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = activity.getResources().getDisplayMetrics();
+        DisplayMetrics dm = activity.getResources().getDisplayMetrics();
         return dm.widthPixels;
     }
 
@@ -292,29 +279,10 @@ public class Utils {
      */
     public int getScreenHeight(){
         Activity activity = (Activity) context;
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = activity.getResources().getDisplayMetrics();
+        DisplayMetrics dm = activity.getResources().getDisplayMetrics();
         return dm.heightPixels;
     }
 
-    //保存字符串到文件中
-    public void saveAsFileWriter(String content,String fielName) {
-
-        FileWriter fwriter = null;
-        try {
-            fwriter = new FileWriter(fielName);
-            fwriter.write(content);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                fwriter.flush();
-                fwriter.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 
     public byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();

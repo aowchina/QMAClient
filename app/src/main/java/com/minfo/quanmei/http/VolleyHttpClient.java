@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.minfo.quanmei.widget.LoadingDialog;
 
+import java.io.File;
 import java.util.Map;
 
 
@@ -47,73 +48,38 @@ public class VolleyHttpClient {
             mDialig = new LoadingDialog(context);
     }
 
-    public void jsonReq(JsonObjectRequest request){
+    public void jsonReq(JsonObjectRequest request) {
         volleySingleton.addToRequestQueue(request);
     }
 
 
-    public void post(String url, Map<String, String> params,int loadingMsg,final RequestListener listener) {
+    public void post(String url, Map<String, String> params, int loadingMsg, final RequestListener listener) {
 
         request(Request.Method.POST, url, params, loadingMsg, listener);
     }
 
-
-    public void get(String url,int loadingMsg,final RequestListener listener) {
+    public void get(String url, int loadingMsg, final RequestListener listener) {
 
         request(Request.Method.GET, url, null, loadingMsg, listener);
     }
 
-    public void request(int method,String url,Map<String, String> params,int loadingMsg,final RequestListener listener) {
+    public void request(int method, String url, Map<String, String> params, int loadingMsg, final RequestListener listener) {
 
 
         if (listener != null)
             listener.onPreRequest();
 
-        BaseRequest request = new BaseRequest(method,url,params,new Response.Listener<BaseResponse>() {
+        BaseRequest request = new BaseRequest(method, url, params, new Response.Listener<BaseResponse>() {
 
-                    public void onResponse(BaseResponse response) {
-                        if (listener != null) {
-                            if (response.isSuccess()) {
-                                if(response.getEc()==0) {
-                                    listener.onRequestSuccess(response);
-                                }else{
-                                    int ec = response.getEc();
-                                    switch (ec){
-                                        case 101:
-                                            listener.onRequestError(ec,"数据格式错误");
-                                            break;
-                                        case 102:
-                                            listener.onRequestError(ec,"解密失败");
-                                            break;
-                                    }
-                                }
-                            }else{
-                                listener.onRequestNoData(response);
-                            }
-                        }
-                    }
-                },
+            public void onResponse(BaseResponse response) {
+                VolleyHttpClient.this.onResponse(response, listener);
+            }
+        },
 
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
 
-                        try {
-                            String errMsg = null;
-                            int errCode = -1;
-                            if (error == null) {
-
-                                errMsg = "请求服务器出错，错误代码未知";
-                            } else {
-                                errMsg = VolleyErrorHelper.getMessage(mContext, error);
-
-                                errCode = error.networkResponse == null ? errCode : error.networkResponse.statusCode;
-                            }
-                            if (listener != null) {
-                                listener.onRequestError(errCode, errMsg);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        VolleyHttpClient.this.onErrorResponse(error, listener);
 
                     }
                 }
@@ -123,23 +89,73 @@ public class VolleyHttpClient {
         volleySingleton.addToRequestQueue(request);
     }
 
+    public void multiRequest(String url, Map<String, String> params, Map<String,File> requestBody, final RequestListener listener) {
 
-    private void showLoading(int msg) {
+        if (listener != null)
+            listener.onPreRequest();
 
-        if (msg > 0 && mDialig != null) {
+        MultiPartRequest request = new MultiPartRequest(url, params, requestBody, new Response.Listener<BaseResponse>() {
 
-            mDialig.setMessage(msg);
-            mDialig.show();
+            public void onResponse(BaseResponse response) {
+                VolleyHttpClient.this.onResponse(response, listener);
+            }
+        },
 
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+
+                        VolleyHttpClient.this.onErrorResponse(error, listener);
+
+                    }
+                }
+        );
+
+
+        volleySingleton.addToRequestQueue(request);
+
+    }
+
+    private void onErrorResponse(VolleyError error, RequestListener listener) {
+        try {
+            String errMsg;
+            int errCode = -1;
+            if (error == null) {
+
+                errMsg = "请求服务器出错，错误代码未知";
+            } else {
+                errMsg = VolleyErrorHelper.getMessage(mContext, error);
+
+                errCode = error.networkResponse == null ? errCode : error.networkResponse.statusCode;
+            }
+            if (listener != null) {
+                listener.onRequestError(errCode, errMsg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
-
-    private void dismissLoading() {
-
-        if (mDialig != null && mDialig.isShowing())
-            mDialig.dismiss();
+    private void onResponse(BaseResponse response, RequestListener listener) {
+        if (listener != null) {
+            if (response.isSuccess()) {
+                if (response.getEc() == 0) {
+                    listener.onRequestSuccess(response);
+                } else {
+                    int ec = response.getEc();
+                    switch (ec) {
+                        case 101:
+                            listener.onRequestError(ec, "数据格式错误");
+                            break;
+                        case 102:
+                            listener.onRequestError(ec, "解密失败");
+                            break;
+                    }
+                }
+            } else {
+                listener.onRequestNoData(response);
+            }
+        }
     }
+
 
 }

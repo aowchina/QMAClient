@@ -15,7 +15,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -29,27 +28,21 @@ public class UniversalImageUtils {
     private ImageLoader mImgLoader;
     private static UniversalImageUtils instance = new UniversalImageUtils();
 
-    public static void displayImage(String url, ImageView imageView, DisplayImageOptions options) {
-
-
-        getInstance().getImgLoader().displayImage(url, imageView, options);
-    }
 
     public static UniversalImageUtils getInstance() {
         return instance;
     }
 
-
-    public static void displayImage(String url, ImageView imageView) {
-
-
-        getInstance().getImgLoader().displayImage(url, imageView);
+    public static void displayImage(String url,ImageView imageView,int resId){
+        getInstance().getImgLoader().displayImage(url, imageView, getDisplayOptions(resId));
     }
+
 
     public static void displayImageUseDefOptions(String url, ImageView imageView) {
 
-        getInstance().getImgLoader().displayImage(url, imageView, getDisplayOptions());
+        getInstance().getImgLoader().displayImage(url, imageView, getDisplayOptions(R.mipmap.default_pic));
     }
+
 
     public static void displayImageUseBigOptions(String url, ImageView imageView) {
 
@@ -61,19 +54,18 @@ public class UniversalImageUtils {
     }
 
     public static void loadDefImage(String url, ImageLoadingListener listener) {
-        getInstance().getImgLoader().loadImage(url, getDisplayOptions(), listener);
+        getInstance().getImgLoader().loadImage(url, getDisplayOptions(R.mipmap.default_pic), listener);
     }
 
-    public static void displayArticleImage(String url, ImageView imageView){
-        getInstance().getImgLoader().displayImage(url, imageView, getRoundDisplayer());
-    }
 
-    public static DisplayImageOptions getDisplayOptions() {
+
+
+    public static DisplayImageOptions getDisplayOptions(int resId) {
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.default_pic) //设置图片在下载期间显示的图片
-                .showImageForEmptyUri(R.mipmap.default_pic)//设置图片Uri为空或是错误的时候显示的图片
-                .showImageOnFail(R.mipmap.default_pic)  //设置图片加载/解码过程中错误时候显示的图片
+                .showImageOnLoading(resId) //设置图片在下载期间显示的图片
+                .showImageForEmptyUri(resId)//设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(resId)  //设置图片加载/解码过程中错误时候显示的图片
                 .cacheInMemory(true)//设置下载的图片是否缓存在内存中
                 .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
                 .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
@@ -98,23 +90,6 @@ public class UniversalImageUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型//
                 .resetViewBeforeLoading(true)//设置图片在下载前是否重置，复位
                 .displayer(new FadeInBitmapDisplayer(500))
-                .build();//构建完成
-
-        return options;
-    }
-
-    public static DisplayImageOptions getRoundDisplayer(){
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.default_pic) //设置图片在下载期间显示的图片
-                .showImageForEmptyUri(R.mipmap.default_pic)//设置图片Uri为空或是错误的时候显示的图片
-                .showImageOnFail(R.mipmap.default_pic)  //设置图片加载/解码过程中错误时候显示的图片
-                .cacheInMemory(true)//设置下载的图片是否缓存在内存中
-                .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
-                .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
-                .bitmapConfig(Bitmap.Config.ARGB_8888)//设置图片的解码类型//
-                .resetViewBeforeLoading(true)//设置图片在下载前是否重置，复位
-                .displayer(new RoundedBitmapDisplayer(1))
                 .build();//构建完成
 
         return options;

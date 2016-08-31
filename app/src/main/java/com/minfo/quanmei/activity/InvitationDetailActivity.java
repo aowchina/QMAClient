@@ -1,40 +1,29 @@
 package com.minfo.quanmei.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.adapter.InvitationDetailGRAdapter;
 import com.minfo.quanmei.config.ImageSelConfig;
-import com.minfo.quanmei.entity.Group;
 import com.minfo.quanmei.entity.GroupTag;
+import com.minfo.quanmei.http.BaseResponse;
+import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.utils.Constant;
-import com.minfo.quanmei.utils.MinfoImg;
-import com.minfo.quanmei.utils.MinfoUtils;
-import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.widget.LoadingDialog;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,49 +49,29 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     private TextView release;
     private EditText title;
     private EditText content;
-    private PopupWindow popupWindow;
-    private DisplayMetrics outMetrics;
     private LinearLayout linearLayoutInvitation;
     private LinearLayout linearLayoutDiary;
     private LinearLayout lLDiaryRelease;
-    private String[] arr = new String[]{"双眼皮", "开眼角"};
     private GridView gridViewLable;
 
     private LinearLayout llImgContainer;//显示图片的布局
     private boolean t1;//face开启或关闭的标志
     private boolean t2;//lable开启或关闭的标志
 
-    private boolean isWriteDiary;//表示是发帖还是写日记，默认为false,即写日记
 
     private List<GroupTag> list = new ArrayList<GroupTag>();
     private InvitationDetailGRAdapter invitationDetailGRAdapter;
     private boolean lableTag;
     private TextView faceTV;
-    public int num;
 
     private List<Bitmap> bitmapList = new ArrayList<>();
-    private List<Map<String, File>> files = new ArrayList<>();
     private String strTitle;
     private String strContent;
-    private Group groupDetail;
     private List<GroupTag> groupTags;
     private List<GroupTag> selectedTags = new ArrayList<>();//已选择的标签
 
     private ArrayList<String> imgPaths = new ArrayList<>();//从相册选择的照片的路径
 
-
-    private String cameraSavePath;
-    private String takephotoname;
-    private MinfoImg mfi;
-    private MinfoUtils mfu;
-    private int sw, sh;// 屏幕宽高
-
-    private boolean isExit = false;
-
-    private Group group;
-
-
-    private android.os.Handler handler;
     private LoadingDialog loadingDialog;
 
     @Override
@@ -151,70 +120,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         content.setOnClickListener(this);
         lLDiaryRelease.setOnClickListener(this);
 
-        Bundle bundle = getIntent().getBundleExtra("info");
-        if (bundle != null) {
-            imgPaths = bundle.getStringArrayList("imgUrls");
-            isWriteDiary=bundle.getBoolean("isWriteDiary");
-            if (isWriteDiary){
-                refreshTitleLabel(R.id.tv_write_diary);
-            }
-            if (imgPaths != null) {
-                showImgs();
-            }
-        }
-
         refreshTag();
-        initHandler();
-    }
-
-    private void initHandler() {
-
-        handler = new android.os.Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 1) {
-                    loadingDialog.dismiss();
-                    if(msg.obj!=null) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(msg.obj.toString());
-                            int errorcode = jsonObject.getInt("errorcode");
-                            switch (errorcode) {
-                                case 14:
-                                    ToastUtils.show(InvitationDetailActivity.this, "标题不合法");
-                                    break;
-                                case 15:
-                                    ToastUtils.show(InvitationDetailActivity.this, "请输入帖子内容");
-                                    break;
-                                case 18:
-                                case 19:
-                                    ToastUtils.show(InvitationDetailActivity.this, "您还未登录,请先登录~~");
-                                    LoginActivity.isJumpLogin = true;
-                                    utils.jumpAty(InvitationDetailActivity.this, LoginActivity.class, null);
-                                    break;
-                                case 0:
-                                    ToastUtils.show(InvitationDetailActivity.this, "发布成功");
-                                    Bundle bundle = new Bundle();
-                                    Constant.currentGroupIndex = 0;
-                                    bundle.putSerializable("group", Constant.groupDetail);
-                                    utils.jumpAty(InvitationDetailActivity.this, GroupTypeActivity.class, bundle);
-                                    appManager.finishActivity(InvitationDetailActivity.this);
-                                    break;
-                                default:
-                                    ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
-                                    break;
-                            }
-                        } catch (JSONException e) {
-                            ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
-                            e.printStackTrace();
-                        }
-                    }else{
-                        ToastUtils.show(InvitationDetailActivity.this, "服务器繁忙");
-                    }
-
-                }
-            }
-        };
     }
 
     /**
@@ -237,7 +143,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      */
     public void showImgs() {
         llImgContainer.removeAllViews();
-        for (int i = 0; imgPaths!=null&&i < imgPaths.size(); i++) {
+        for (int i = 0; imgPaths != null && i < imgPaths.size(); i++) {
             final int j = i;
             final View view = LayoutInflater.from(this).inflate(R.layout.item_container_img, null);
             ImageView ivDelete = (ImageView) view.findViewById(R.id.iv_delete);
@@ -269,16 +175,22 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.iv_upload_invitation:
             case R.id.iv_upload_invitation2:
-            case R.id.ll_diary_release:
                 if (imgPaths.size() < 9) {
-                    Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).multiSelect(true).build();
-                    Intent intent = new Intent(this,PhotoViewActivity.class);
-                    intent.putExtra("imgUrls",imgPaths);
-                    startActivityForResult(intent,1);
+                    Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).build();
+                    Intent intent = new Intent(this, PhotoViewActivity.class);
+                    intent.putExtra("imgUrls", imgPaths);
+                    startActivityForResult(intent, 1);
                 } else {
                     ToastUtils.show(this, "图片最多只能上传9张");
                 }
                 break;
+            case R.id.ll_diary_release:
+                //写日记，不传值
+                Constant.imageSelConfig = new ImageSelConfig.Builder().multiSelect(true).needCamera(true).build();
+                Intent intent = new Intent(this, PhotoViewActivity.class);
+                intent.putExtra("firstJumpWriteDiary", true);
+                startActivityForResult(intent, 1);
+
             case R.id.iv_face_invitation:
                 faceControl();
                 break;
@@ -293,11 +205,11 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.tv_release_invitation://点击发布
                 if (checkInput()) {
-                    if(utils.isOnLine(this)) {
+                    if (utils.isOnLine(this)) {
                         loadingDialog.show();
                         reqServer();
-                    }else{
-                        ToastUtils.show(this,"暂时无网络，请检查设置");
+                    } else {
+                        ToastUtils.show(this, "暂时无网络，请检查设置");
                     }
                 }
                 break;
@@ -320,11 +232,10 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 linearLayoutInvitation.setVisibility(View.VISIBLE);
                 linearLayoutDiary.setVisibility(View.GONE);
                 release.setVisibility(View.VISIBLE);
-                newInvitation.setTextColor(Color.RED);
+                newInvitation.setTextColor(getResources().getColor(R.color.basic_color));
                 newInvitation.setBackgroundResource(R.drawable.text_group_left);
                 writeDiary.setTextColor(Color.GRAY);
                 writeDiary.setBackgroundResource(R.drawable.text_group_right_un);
-                isWriteDiary = false;
                 break;
             case R.id.tv_write_diary:
                 linearLayoutInvitation.setVisibility(View.GONE);
@@ -334,7 +245,6 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
                 newInvitation.setBackgroundResource(R.drawable.text_group_left_un);
                 writeDiary.setTextColor(getResources().getColor(R.color.basic_color));
                 writeDiary.setBackgroundResource(R.drawable.text_group_right);
-                isWriteDiary = true;
                 break;
         }
     }
@@ -343,13 +253,12 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      * 发帖请求接口
      */
     private void reqServer() {
-        for (int i = 0; imgPaths!=null&&i < imgPaths.size(); i++) {
-            Map<String, File> map = new HashMap<>();
+        Map<String, File> map = new HashMap<>();
+        for (int i = 0; imgPaths != null && i < imgPaths.size(); i++) {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String imgName = getFilesDir() + File.separator + "IMG_" + timeStamp + i + ".jpg";
             imgUtils.createNewFile(imgName, imgPaths.get(i));
             map.put(imgName, new File(imgName));
-            files.add(map);
         }
 
         String tagIds = "";
@@ -367,25 +276,51 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
         if (Constant.groupDetail != null) {
             String str = utils.getBasePostStr() + "*" + Constant.user.getUserid() + "*" + Constant.groupDetail.getId() + "*" + tagIds + "*" + title + "*" + content;
             final Map<String, String> params = utils.getParams(str);
-            new Thread(new Runnable() {
+
+            httpClient.multiRequest(url, params, map, new RequestListener() {
                 @Override
-                public void run() {
-                    MyFileUpload fileUpload = new MyFileUpload();
-                    try {
-                        String msg = fileUpload.postForm(url, params, files);
-                        if (handler != null) {
-                            Message message = handler.obtainMessage(1, msg);
-                            handler.sendMessage(message);
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                public void onPreRequest() {
+                    loadingDialog.show();
                 }
-            }).start();
 
+                @Override
+                public void onRequestSuccess(BaseResponse response) {
+                    loadingDialog.dismiss();
+                    ToastUtils.show(InvitationDetailActivity.this, "发布成功");
+                    Bundle bundle = new Bundle();
+                    Constant.currentGroupIndex = 0;
+                    bundle.putSerializable("group", Constant.groupDetail);
+                    utils.jumpAty(InvitationDetailActivity.this, GroupTypeActivity.class, bundle);
+                    appManager.finishActivity(InvitationDetailActivity.this);
+                }
+
+                @Override
+                public void onRequestNoData(BaseResponse response) {
+                    loadingDialog.dismiss();
+                    int errorcode = response.getErrorcode();
+                    if(errorcode==14){
+                        ToastUtils.show(InvitationDetailActivity.this,"标题不合法");
+                    }else if(errorcode==15){
+                        ToastUtils.show(InvitationDetailActivity.this, "请输入帖子内容");
+                    }else if(errorcode==18||errorcode==19){
+                        ToastUtils.show(InvitationDetailActivity.this, "您还未登录,请先登录");
+                        LoginActivity.isJumpLogin = true;
+                        utils.jumpAty(InvitationDetailActivity.this, LoginActivity.class, null);
+                    }else{
+                        ToastUtils.show(InvitationDetailActivity.this,"服务器繁忙");
+                    }
+
+                }
+
+                @Override
+                public void onRequestError(int code, String msg) {
+                    loadingDialog.dismiss();
+                    ToastUtils.show(InvitationDetailActivity.this,msg);
+                }
+            });
 
         }
+
     }
 
     @Override
@@ -416,7 +351,7 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
      */
     public void faceControl() {
         if (!t1) {
-            faceTV.setVisibility(View.VISIBLE);
+            faceTV.setVisibility(View.GONE);
             gridViewLable.setVisibility(View.GONE);
             face.setImageResource(R.mipmap.btn_insert_face_sel);
             lable.setImageResource(R.mipmap.btn_insert_tag_nor);
@@ -450,44 +385,22 @@ public class InvitationDetailActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == Activity.RESULT_OK) {
-
-                imgPaths.add(cameraSavePath + File.separator + takephotoname);
-                showImgs();
-            }else if(resultCode==PhotoViewActivity.SELECT_PHOTO){
-                imgPaths = data.getBundleExtra("info").getStringArrayList("imgUrls");
-                showImgs();
+        if (requestCode == 1 && resultCode == PhotoViewActivity.SELECT_PHOTO) {
+            if (data != null) {
+                Bundle bundle = data.getBundleExtra("info");
+                if (bundle != null) {
+                    imgPaths = bundle.getStringArrayList("imgUrls");
+                    if (imgPaths != null) {
+                        showImgs();
+                    }
+                }
             }
-        } else {
-            ToastUtils.show(InvitationDetailActivity.this, "照相失败");
         }
     }
 
-
-    /**
-     * 创建照片保存路径
-     */
-    private boolean makeImgPath() {
-        cameraSavePath = Environment.getExternalStorageDirectory().getPath() + File.separator + "minfo_quanmei";
-        File filePath = new File(cameraSavePath);
-        if (!filePath.exists()) {
-            filePath.mkdirs();
-        }
-
-        if (!filePath.exists()) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 页面finish时清除临时保存的内容
-     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        appManager.finishActivity(InvitationDetailActivity.class);
     }
 
     @Override

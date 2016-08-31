@@ -1,8 +1,6 @@
 package com.minfo.quanmei.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.LoginActivity;
-import com.minfo.quanmei.activity.UpdateNoteActivity;
 import com.minfo.quanmei.entity.GroupArticle;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
@@ -31,13 +28,11 @@ import java.util.Map;
  */
 public class MyPostActivityAdapter extends BaseAdapter {
     private Context context;
-    private LayoutInflater inflater;
     private List<GroupArticle> list;
     private String str;
 
     public MyPostActivityAdapter(Context context,List<GroupArticle> list,String str) {
         this.context = context;
-        this.inflater = LayoutInflater.from(context);
         this.list=list;
         this.str=str;
     }
@@ -96,25 +91,6 @@ public class MyPostActivityAdapter extends BaseAdapter {
                 reqDeleteArticle(groupArticle.getId(), position);
             }
         });
-        viewHolder.edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentToDiaryDetail = new Intent(context, UpdateNoteActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("group", groupArticle);
-                if (!str.equals("")&&str!=null){
-                    if (str.equals("note")){
-                        bundle.putString("dorn", "note");
-                    }
-                    if (str.equals("diary")){
-                        bundle.putString("dorn", "diary");
-                    }
-                }
-
-                intentToDiaryDetail.putExtra("info", bundle);
-                context.startActivity(intentToDiaryDetail);
-            }
-        });
         return convertView;
     }
 
@@ -125,7 +101,6 @@ public class MyPostActivityAdapter extends BaseAdapter {
         private TextView content;
         private TextView time;
         private TextView name;
-        private ImageView edit;
         private ImageView delete;
         private TextView tv_note_post;
         private LinearLayout imgContiner;
@@ -138,7 +113,6 @@ public class MyPostActivityAdapter extends BaseAdapter {
             content = (TextView) view.findViewById(R.id.tv_note_content);
             name = (TextView) view.findViewById(R.id.tv_response_name);
             time = (TextView) view.findViewById(R.id.tv_response_time);
-            edit = (ImageView) view.findViewById(R.id.iv_edit);
             delete = (ImageView) view.findViewById(R.id.iv_delete);
             tv_note_post = (TextView)view.findViewById(R.id.tv_note_post);
 

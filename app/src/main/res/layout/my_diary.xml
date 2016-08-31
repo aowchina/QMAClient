@@ -9,28 +9,6 @@
         layout="@layout/common_top" />
 
     <LinearLayout
-        android:id="@+id/ll_diary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#ffffff"
-        android:visibility="gone"
-        android:padding="10dp">
-        <ImageView
-            android:id="@+id/iv_mydiary_invitation"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/topic_upload_pic"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginLeft="6dp"
-            android:text="发布新日记"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-    <LinearLayout
         android:id="@+id/ll_diary_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

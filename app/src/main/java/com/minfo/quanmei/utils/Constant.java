@@ -53,11 +53,6 @@ public class Constant {
      */
     public static List<GroupTag> selectGroupTags;
 
-    /**
-     * 临时帖子标题，内容
-     */
-    public static String noteTitle;
-    public static String noteContent;
 
     public static int currentGroupIndex = 0;
 

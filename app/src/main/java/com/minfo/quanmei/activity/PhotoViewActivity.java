@@ -81,6 +81,8 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
 
     private boolean hasFolderGened;
 
+    private boolean firstJumpWriteDiary;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +116,7 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
 
 
         selectedPaths = getIntent().getStringArrayListExtra("imgUrls");
+        firstJumpWriteDiary = getIntent().getBooleanExtra("firstJumpWriteDiary",false);
         if(selectedPaths==null){
             selectedPaths = new ArrayList<>();
         }
@@ -362,12 +365,40 @@ public class PhotoViewActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void complete() {
+
+    /**
+     * 选择图片完成
+     */
+    private void complete(){
+        if(firstJumpWriteDiary){
+            completeToJumpDiary();
+        }else{
+            completeNormal();
+        }
+    }
+
+    /**
+     * 跳转至来时的界面
+     */
+    private void completeNormal() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("imgUrls", selectedPaths);
         intent.putExtra("info", bundle);
         setResult(SELECT_PHOTO, intent);
+        finish();
+    }
+
+    /**
+     * 跳转至写日记界面，比较特殊
+     */
+    private void completeToJumpDiary(){
+        Intent intent = new Intent();
+        intent.setClass(this,WriteDiaryActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("imgUrls", selectedPaths);
+        intent.putExtra("info", bundle);
+        startActivity(intent);
         finish();
     }
 

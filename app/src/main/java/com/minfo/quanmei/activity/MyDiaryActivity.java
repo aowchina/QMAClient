@@ -2,7 +2,6 @@ package com.minfo.quanmei.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -31,10 +30,6 @@ import java.util.Map;
 public class MyDiaryActivity extends BaseActivity implements View.OnClickListener {
     private TextView tv_title;
     private ImageView iv_left_btn;
-    private ImageView mydiary_invitation;
-    private boolean isWriteDiary = true;
-    private ArrayList<String> imgPaths = new ArrayList<>();//从相册选择的照片的路径
-    private LinearLayout diaryLl;
     private LinearLayout nothingLi;
     private RefreshListView listView;
     private TextView mypost;
@@ -77,8 +72,6 @@ public class MyDiaryActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void findViews() {
-        mydiary_invitation = (ImageView) findViewById(R.id.iv_mydiary_invitation);
-        diaryLl = ((LinearLayout) findViewById(R.id.ll_diary));
         nothingLi = ((LinearLayout) findViewById(R.id.nothing_diary_layout));
         listView = ((RefreshListView) findViewById(R.id.my_diary_listview));
         mypost = (TextView) findViewById(R.id.tv_my_post);
@@ -88,7 +81,6 @@ public class MyDiaryActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initViews() {
-        diaryLl.setOnClickListener(this);
         myreply.setOnClickListener(this);
         mypost.setOnClickListener(this);
         refreshview1();
@@ -100,14 +92,6 @@ public class MyDiaryActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.iv_left:
                 finish();
-                break;
-            case R.id.ll_diary:
-                //跳转到相册
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isWriteDiary", isWriteDiary);
-                bundle.putStringArrayList("imgPaths", imgPaths);
-                utils.jumpAty(this, AlbumActivity.class, bundle);
-                appManager.finishActivity();
                 break;
             case R.id.tv_my_post:
                 page = 1;
@@ -126,7 +110,6 @@ public class MyDiaryActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void refreshview1() {
-        diaryLl.setVisibility(View.GONE);
         nothingLi.setVisibility(View.GONE);
         listView.setVisibility(View.VISIBLE);
         mypost.setBackgroundColor(getResources().getColor(R.color.basic_color));
@@ -170,7 +153,6 @@ public class MyDiaryActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void refreshview2() {
-        diaryLl.setVisibility(View.GONE);
         myreply.setBackgroundColor(getResources().getColor(R.color.basic_color));
         myreply.setTextColor(getResources().getColor(R.color.white));
         mypost.setBackgroundColor(getResources().getColor(R.color.white));

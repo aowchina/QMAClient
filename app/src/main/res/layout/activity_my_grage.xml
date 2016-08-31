@@ -4,40 +4,7 @@
     android:background="#FFF"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/mygrade_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/action_bar_back" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="我的等级"
-            android:textColor="@color/basic_color"
-            android:textSize="20sp" />
-
-
-    </RelativeLayout>
-
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.4dp"
-        android:background="#eee" />
+    <include layout="@layout/common_top" />
 
 
     <ScrollView
@@ -46,8 +13,8 @@
         android:layout_height="0dp"
         android:layout_weight="10"
         android:paddingLeft="5dp"
-        android:scrollbars="none"
-        android:paddingRight="5dp">
+        android:paddingRight="5dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -174,7 +141,6 @@
                 </LinearLayout>
 
 
-
             </LinearLayout>
 
             <View
@@ -214,8 +180,8 @@
             <com.minfo.quanmei.widget.LimitListView
                 android:id="@+id/llv_star_mygrade"
                 android:layout_width="match_parent"
-                android:scrollbars="none"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
 
             <View
                 android:layout_width="match_parent"
@@ -268,8 +234,8 @@
             <com.minfo.quanmei.widget.LimitListView
                 android:id="@+id/llv_grade_mygrade"
                 android:layout_width="match_parent"
-                android:scrollbars="none"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
         </LinearLayout>
     </ScrollView>
 

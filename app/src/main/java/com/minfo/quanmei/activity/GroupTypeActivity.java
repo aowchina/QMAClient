@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +32,7 @@ import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 import com.minfo.quanmei.widget.LimitListView;
+import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.PullScrollView;
 
 import java.util.ArrayList;
@@ -94,6 +94,7 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
     private boolean upload;
 
     private int currentListViewIndex = 0;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +138,8 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void initViews() {
+
+        loadingDialog = new LoadingDialog(this);
         listViewB.setFocusable(false);
         group = (Group) getIntent().getBundleExtra("info").getSerializable("group");
 
@@ -397,11 +400,12 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
         httpClient.post(articleInfoUrl, params, R.string.loading_msg, new RequestListener() {
             @Override
             public void onPreRequest() {
-
+                loadingDialog.show();
             }
 
             @Override
             public void onRequestSuccess(BaseResponse response) {
+                loadingDialog.dismiss();
                 groupDetail = response.getObj(Group.class);
                 temp = groupDetail.getIsin() == 1 ? true : false;
                 refreshGroupDetail();
@@ -412,11 +416,13 @@ public class GroupTypeActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onRequestNoData(BaseResponse response) {
+                loadingDialog.dismiss();
                 ToastUtils.show(GroupTypeActivity.this, "服务器繁忙");
             }
 
             @Override
             public void onRequestError(int code, String msg) {
+                loadingDialog.dismiss();
                 ToastUtils.show(GroupTypeActivity.this, msg);
             }
         });

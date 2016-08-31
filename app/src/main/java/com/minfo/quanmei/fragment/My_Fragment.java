@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +27,6 @@ import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.utils.Constant;
-import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 import com.minfo.quanmei.widget.DownLoadingDialog;
@@ -46,13 +43,11 @@ import org.w3c.dom.NodeList;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -72,7 +67,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private TextView myCity;
     private Button btnExit;
     private ImageView ivInfoBg;
-    private Handler handler;
 
     private ImageView ivGender;
 
@@ -84,8 +78,6 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
     private String downloadPath = "";
     private UpdateDialog updateDialog;
     private String apkName = "";
-    private List<Map<String, File>> files = new ArrayList<>();
-
     private LoadingDialog loadingDialog;
 
     private DownLoadingDialog downLoadingDialog;
@@ -131,6 +123,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         ivInfoBg.setOnClickListener(this);
         rlCourse.setOnClickListener(this);
         rlPocket.setOnClickListener(this);
+        loadingDialog = new LoadingDialog(mActivity);
         reqMyInfo();
 
     }
@@ -148,7 +141,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
             utils.sendMsg(MainActivity.myHandler, 1, myinfo);
 
             if (myinfo.getBgimg() != null && !"".equals(myinfo.getBgimg())) {
-                UniversalImageUtils.displayImageUseDefOptions(myinfo.getBgimg(), ivInfoBg);
+                UniversalImageUtils.displayImage(myinfo.getBgimg(), ivInfoBg,R.mipmap.ad_doctor);
             }
             String gender = myinfo.getSex();
             if (gender != null && (gender.equals("暂未设置") || gender.equals("女"))) {
@@ -157,49 +150,9 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 ivGender.setImageResource(R.mipmap.sex_male);
             }
         }
-        initHandler();
-
     }
 
-    private void initHandler() {
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 1) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
-                        int errorcode = jsonObject.getInt("errorcode");
-                        switch (errorcode) {
-                            case 0:
-                                ivInfoBg.setImageURI(Uri.fromFile(new File(selectPhotoPath)));
-                                ToastUtils.show(mActivity, "修改成功");
-                                break;
-                            case 12:
-                                ToastUtils.show(mActivity, "请上传一张图片");
-                                break;
-                            case 13:
-                                ToastUtils.show(mActivity, "所选上传图片格式不正确");
-                                break;
-                            case 14:
-                                ToastUtils.show(mActivity, "用户未登录");
-                                LoginActivity.isJumpLogin = true;
-                                utils.jumpAty(mActivity, LoginActivity.class, null);
-                                break;
-                            default:
-                                ToastUtils.show(mActivity, "服务器繁忙");
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-
-                    }
-
-                }
-            }
-        };
-    }
 
     @Override
     public void onClick(View v) {
@@ -400,30 +353,48 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
         final String url = getString(R.string.api_baseurl) + "user/EditBgImg.php";
         final Map<String, String> params = utils.getParams(utils.getBasePostStr() + "*" + Constant.user.getUserid());
 
-        files.clear();
-        Map<String, File> map = new HashMap<>();
+        final Map<String, File> map = new HashMap<>();
         File file = new File(selectPhotoPath);
         map.put(file.getName(), file);
-        files.add(map);
 
-
-        new Thread(new Runnable() {
+        httpClient.multiRequest(url, params, map, new RequestListener() {
             @Override
-            public void run() {
-                MyFileUpload fileUpload = new MyFileUpload();
-                try {
-                    String msg = fileUpload.postForm(url, params, files);
-
-                    if (handler != null) {
-                        Message message = handler.obtainMessage(1, msg);
-                        handler.sendMessage(message);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void onPreRequest() {
+                loadingDialog.show();
             }
-        }).start();
 
+            @Override
+            public void onRequestSuccess(BaseResponse response) {
+                loadingDialog.dismiss();
+                ivInfoBg.setImageURI(Uri.fromFile(new File(selectPhotoPath)));
+                ToastUtils.show(mActivity, "修改成功");
+            }
+
+            @Override
+            public void onRequestNoData(BaseResponse response) {
+                loadingDialog.dismiss();
+                int errorcode = response.getErrorcode();
+                if(errorcode==12){
+                    ToastUtils.show(mActivity, "请上传一张图片");
+                }else if(errorcode==13){
+                    ToastUtils.show(mActivity, "所选上传图片格式不正确");
+                }else if(errorcode==14){
+                    ToastUtils.show(mActivity, "用户未登录");
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(mActivity, LoginActivity.class, null);
+                }else{
+                    ToastUtils.show(mActivity, "服务器繁忙");
+                }
+
+            }
+
+            @Override
+            public void onRequestError(int code, String msg) {
+                loadingDialog.dismiss();
+                ToastUtils.show(mActivity,msg);
+
+            }
+        });
     }
 
 

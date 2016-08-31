@@ -3,13 +3,10 @@ package com.minfo.quanmei.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +24,6 @@ import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
 import com.minfo.quanmei.utils.Constant;
-import com.minfo.quanmei.utils.MyFileUpload;
 import com.minfo.quanmei.utils.ToastUtils;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 import com.minfo.quanmei.widget.ChangeAddressDialog;
@@ -35,24 +31,15 @@ import com.minfo.quanmei.widget.ChangeBirthDialog;
 import com.minfo.quanmei.widget.LoadingDialog;
 import com.minfo.quanmei.widget.ModifyGender;
 import com.minfo.quanmei.widget.ModifyPersonInfo;
-import com.minfo.quanmei.widget.SelectPicDialog;
-import com.minfo.quanmei.widget.SelectPicDialog.SelectPicDialogClickListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 public class PersonInfoActivity extends BaseActivity implements View.OnClickListener, ModifyPersonInfo.ModifyClickListener{
@@ -79,7 +66,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     private LoadingDialog loadingDialog;
 
-    private List<Map<String, File>> files = new ArrayList<>();
     private MyHandler myHandler;
     private Bitmap mBitmap;//个人二维码
 
@@ -191,7 +177,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         civHeadImage = (ImageView) findViewById(R.id.civ_head_image);
         civHeadImage.setOnClickListener(this);
         modifyGender = new ModifyGender(this);
-        int identifier = getResources().getIdentifier("", "", "");
     }
 
     @Override
@@ -214,35 +199,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         public void handleMessage(Message msg){
             PersonInfoActivity activity = activityWeakReference.get();
             if(activity!=null){
-                if (msg.what == 1) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
-                        int errorcode = jsonObject.getInt("errorcode");
-                        switch (errorcode) {
-                            case 0:
-                                activity.civHeadImage.setImageBitmap(activity.imgUtils.toRoundBitmap(BitmapFactory.decodeFile(activity.selectPhotoPath)));
-                                ToastUtils.show(activity, "头像修改成功");
-                                break;
-                            case 12:
-                                ToastUtils.show(activity, "请上传一张图片");
-                                break;
-                            case 13:
-                                ToastUtils.show(activity, "所选上传图片格式不正确");
-                                break;
-                            case 14:
-                                ToastUtils.show(activity, "用户未登录");
-                                LoginActivity.isJumpLogin = true;
-                                activity.utils.jumpAty(activity, LoginActivity.class, null);
-                                break;
-                            default:
-                                ToastUtils.show(activity,"服务器繁忙");
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
                 if (msg.what == 2) {
                     activity.tvAge.setText(msg.obj.toString());
                 }
@@ -274,18 +230,12 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.rl_age:
                 initBirthDialog();
-
                 break;
             case R.id.rl_region:
-
                 initAddressDialog();
-
                 break;
             case R.id.rl_level:
                 startActivity(new Intent(PersonInfoActivity.this, MyGrageActivity.class));
-                break;
-            case R.id.civ_head_image:
-                //TODO
                 break;
             case R.id.rl_qrcode:
                 generateBarCode();
@@ -534,33 +484,62 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
      * 更改头像接口
      */
     private void reqEditHeadImg() {
-        files.clear();
         Map<String, File> map = new HashMap<>();
         File file = new File(selectPhotoPath);
         map.put(file.getName(), file);
-        files.add(map);
 
         final String url = getResources().getString(R.string.api_baseurl) + "user/EditImg.php";
         String str = utils.getBasePostStr() + "*" + Constant.user.getUserid();
 
         final Map<String, String> params = utils.getParams(str);
+        Log.e(TAG,params.toString());
 
-        new Thread(new Runnable() {
+        httpClient.multiRequest(url, params, map, new RequestListener() {
             @Override
-            public void run() {
-                MyFileUpload fileUpload = new MyFileUpload();
-                try {
-                    String msg = fileUpload.postForm(url, params, files);
+            public void onPreRequest() {
 
-                    if (myHandler != null) {
-                        Message message = myHandler.obtainMessage(1, msg);
-                        myHandler.sendMessage(message);
-                    }
-                } catch (IOException e) {
+            }
+
+            @Override
+            public void onRequestSuccess(BaseResponse response) {
+                String imgUrl;
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    imgUrl = jsonObject.getString("img");
+                    UniversalImageUtils.disCircleImage(imgUrl, civHeadImage);
+                    user.setUserimg(imgUrl);
+                    utils.setUserimg(imgUrl);
+                    ToastUtils.show(PersonInfoActivity.this, "头像修改成功");
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
-        }).start();
+
+            @Override
+            public void onRequestNoData(BaseResponse response) {
+                int errorcode = response.getErrorcode();
+                if(errorcode==12){
+                    ToastUtils.show(PersonInfoActivity.this,"请上传一张图片");
+                }else if(errorcode==13){
+                    ToastUtils.show(PersonInfoActivity.this,"所选上传图片格式不正确");
+                }else if(errorcode==14){
+                    ToastUtils.show(PersonInfoActivity.this,"所选上传图片格式不正确");
+                    LoginActivity.isJumpLogin = true;
+                    utils.jumpAty(PersonInfoActivity.this, LoginActivity.class, null);
+                }else{
+                    ToastUtils.show(PersonInfoActivity.this,"服务器繁忙");
+                }
+
+            }
+
+            @Override
+            public void onRequestError(int code, String msg) {
+                ToastUtils.show(PersonInfoActivity.this,msg);
+
+            }
+        });
+
     }
 
 

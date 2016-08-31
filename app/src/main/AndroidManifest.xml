@@ -190,9 +190,6 @@
             android:name=".activity.JoinGroupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AlbumActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.PhotoViewActivity"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -356,9 +353,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MyReceiveActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.UpdateNoteActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MessageActivity"

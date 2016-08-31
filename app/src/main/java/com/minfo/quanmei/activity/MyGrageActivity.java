@@ -1,7 +1,6 @@
 package com.minfo.quanmei.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +19,10 @@ import com.minfo.quanmei.widget.LimitListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyGrageActivity extends BaseActivity implements View.OnClickListener {
+public class MyGrageActivity extends BaseActivity{
 
-    private ImageView back;
+    private ImageView ivLeft;
+    private TextView tvTitle;
     private ImageView icon;
     private TextView nickname;
     private TextView active;
@@ -63,9 +63,7 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void findViews() {
 
-        back = ((ImageView) findViewById(R.id.mygrade_back));
         scroll = ((ScrollView) findViewById(R.id.psl_mygrade));
-        //View view = LayoutInflater.from(this).inflate(R.layout.layout_mygrade_bodyview, null);
         icon = ((ImageView) findViewById(R.id.iv_icon_mygrade));
         tv_grade = (TextView)findViewById(R.id.tv_grade_mygrade);
         nickname = ((TextView) findViewById(R.id.tv_nickname_mygrade));
@@ -76,10 +74,17 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
         llContiner = ((LinearLayout) findViewById(R.id.ll_mygrde));
         tvActivePoint = (TextView) findViewById(R.id.tv_active_point);
 
-
-        //scroll.addBodyView(view);
-
-
+        ivLeft = (ImageView) findViewById(R.id.iv_left);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+        ivLeft.setVisibility(View.VISIBLE);
+        tvTitle.setVisibility(View.VISIBLE);
+        tvTitle.setText("我的等级");
+        ivLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -88,14 +93,9 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
         starListView.setFocusable(false);
         gradeListView.setFocusable(false);
 
-        back.setOnClickListener(this);
         setGradeImg(Constant.user.getStar()+1);
-        //if (listStar .size()==0) {
         initStarData(listStar);
-        //}
-        //if (listGrade .size()==0) {
         initGradeData(listGrade);
-        //}
         starListView.setAdapter(new MyGradeAdapter(this, listStar,0));
         gradeListView.setAdapter(new MyGradeAdapter(this, listGrade,1));
 
@@ -204,14 +204,4 @@ public class MyGrageActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.mygrade_back:
-                finish();
-                break;
-        }
-
-    }
 }

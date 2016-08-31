@@ -2,7 +2,6 @@ package com.minfo.quanmei.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -46,7 +45,7 @@ public class PhotoGridAdapter extends CommonAdapter<Image> {
             helper.getView(R.id.id_item_image).setVisibility(View.VISIBLE);
             helper.getView(R.id.iv_take_photo).setVisibility(View.INVISIBLE);
             helper.setImageResource(R.id.id_item_select, R.mipmap.album_photo_select_normal);
-            UniversalImageUtils.displayImage("file://"+item.path, (ImageView) helper.getView(R.id.id_item_image));
+            UniversalImageUtils.displayImageUseDefOptions("file://"+item.path, (ImageView) helper.getView(R.id.id_item_image));
         }
 
         final ImageView mImageView = helper.getView(R.id.id_item_image);

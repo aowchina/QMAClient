@@ -155,7 +155,6 @@ public class HospitalActivity extends BaseActivity implements View.OnClickListen
             public void refresh() {
                 page = 1;
                 isRefresh = true;
-                Log.e(TAG,"走没走");
                 reqHospitalData();
                 reqHospitalProductData();
             }
