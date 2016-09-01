@@ -6,18 +6,17 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.minfo.quanmei.R;
-import com.minfo.quanmei.adapter.ShowHospitalViewPagerAdapter;
+import com.minfo.quanmei.adapter.ShowImgViewPagerAdapter;
 import com.minfo.quanmei.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowHospitalImgActivity extends BaseActivity implements View.OnClickListener {
+public class ShowImgListActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView back;
     private ViewPager viewPager;
     private int flag;
-    private String str;
     List<String> list=new ArrayList<String>();
 
     @Override
@@ -28,7 +27,8 @@ public class ShowHospitalImgActivity extends BaseActivity implements View.OnClic
 
     @Override
     protected void findViews() {
-        back = ((ImageView) findViewById(R.id.show_hospital_back));
+        back = ((ImageView) findViewById(R.id.iv_left));
+        back.setVisibility(View.VISIBLE);
         viewPager = ((ViewPager) findViewById(R.id.vp_show_hos));
     }
 
@@ -41,9 +41,9 @@ public class ShowHospitalImgActivity extends BaseActivity implements View.OnClic
     }
     public void setImage(){
         if (list!=null) {
-            viewPager.setAdapter(new ShowHospitalViewPagerAdapter(ShowHospitalImgActivity.this, list));
+            viewPager.setAdapter(new ShowImgViewPagerAdapter(ShowImgListActivity.this, list));
         }else {
-            ToastUtils.show(ShowHospitalImgActivity.this, "当前无数据");
+            ToastUtils.show(ShowImgListActivity.this, "当前无数据");
         }
         viewPager.setCurrentItem(flag );
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -68,7 +68,7 @@ public class ShowHospitalImgActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.show_hospital_back:
+            case R.id.iv_left:
                 onBackPressed();
                 break;
         }

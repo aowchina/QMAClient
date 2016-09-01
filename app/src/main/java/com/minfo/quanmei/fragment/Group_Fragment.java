@@ -16,7 +16,6 @@ import com.minfo.quanmei.activity.GroupTypeActivity;
 import com.minfo.quanmei.activity.NoteDetailActivity;
 import com.minfo.quanmei.adapter.BaseViewHolder;
 import com.minfo.quanmei.adapter.CommonAdapter;
-import com.minfo.quanmei.adapter.GroupHeadGVAdapter;
 import com.minfo.quanmei.adapter.GroupHeadListAdapter;
 import com.minfo.quanmei.adapter.GroupPullAdapter;
 import com.minfo.quanmei.entity.Group;
@@ -45,7 +44,6 @@ public class Group_Fragment extends BaseFragment implements View.OnClickListener
     private LimitGridView headGridView;
     private LimitListView headListView;
     private List<GroupArticle> dataList = new ArrayList<GroupArticle>();
-    private GroupHeadGVAdapter groupHeadGVAdapter;
     private GroupHeadListAdapter groupHeadListAdapter;
     private GroupPullAdapter groupPullAdapter;
     private PullScrollView pullScrollView;

@@ -1,47 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="#fff"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ImageView
-            android:id="@+id/show_hospital_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:padding="8dp"
-            android:src="@mipmap/action_bar_back" />
-
-
-    </RelativeLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.6dp"
-        android:background="#eee" />
-
+    <include layout="@layout/common_top" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="50dp"
-        android:paddingBottom="50dp"
-        android:layout_weight="10">
+        android:layout_weight="10"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
 
         <android.support.v4.view.ViewPager
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/vp_show_hos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/vp_show_hos">
-        </android.support.v4.view.ViewPager>
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
 

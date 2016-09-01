@@ -1,6 +1,7 @@
 package com.minfo.quanmei.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.activity.ShowImgListActivity;
 import com.minfo.quanmei.entity.GroupArticle;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,7 +55,7 @@ public class StartDiaryLVAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        GroupArticle diary = (GroupArticle) list.get(position);
+        final GroupArticle diary = (GroupArticle) list.get(position);
         ViewHolderB viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.start_diary_item, parent, false);
@@ -85,6 +88,25 @@ public class StartDiaryLVAdapter extends BaseAdapter {
             viewHolder.iconB.setVisibility(View.GONE);
         }
         UniversalImageUtils.disCircleImage(diary.getUserimg(), viewHolder.useIcon);
+
+        viewHolder.iconA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowImgListActivity.class);
+                intent.putExtra("ID", 0);
+                intent.putStringArrayListExtra("IMG",(ArrayList)diary.getImgs());
+                context.startActivity(intent);
+            }
+        });
+        viewHolder.iconB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowImgListActivity.class);
+                intent.putExtra("ID", 1);
+                intent.putStringArrayListExtra("IMG",(ArrayList)diary.getImgs());
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,6 +118,7 @@ public class HospitalIntroduceActivity extends BaseActivity implements View.OnCl
             @Override
             public void onRequestSuccess(BaseResponse response) {
                 hospitalIntroduce = response.getObj(HospitalIntroduce.class);
+                Log.e(TAG,hospitalIntroduce.toString());
                 if (hospitalIntroduce != null) {
                     setHospitalIntroduceData();
 
@@ -197,7 +199,7 @@ public class HospitalIntroduceActivity extends BaseActivity implements View.OnCl
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HospitalIntroduceActivity.this, ShowHospitalImgActivity.class);
+                    Intent intent = new Intent(HospitalIntroduceActivity.this, ShowImgListActivity.class);
                     intent.putExtra("ID", j);
                     intent.putStringArrayListExtra("IMG", hospitalIntroduce.getXcimg());
                     startActivity(intent);

@@ -191,7 +191,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PhotoViewActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MyGrageActivity"
             android:screenOrientation="portrait" />
@@ -208,7 +208,7 @@
             android:name=".activity.HospitalIntroduceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ShowHospitalImgActivity"
+            android:name=".activity.ShowImgListActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ReplyNoteActivity"

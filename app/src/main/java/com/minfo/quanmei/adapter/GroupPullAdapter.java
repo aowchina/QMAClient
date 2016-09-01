@@ -2,6 +2,7 @@ package com.minfo.quanmei.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.activity.ShowImgListActivity;
 import com.minfo.quanmei.entity.GroupArticle;
 import com.minfo.quanmei.utils.UniversalImageUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,22 +44,6 @@ public class GroupPullAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        int type = 0;
-//        if (position % 2 == 0 & position != 0) {
-//            type = 1;
-//        } else if (position % 2 != 0) {
-//            type = 2;
-//        }
-//        return type;
-//    }
-
-//    @Override
-//    public int getViewTypeCount() {
-//        return 3;
-//    }
-
     @Override
     public int getCount() {
         return list.size();
@@ -82,7 +69,7 @@ public class GroupPullAdapter extends BaseAdapter {
         } else {
             viewHolderA = (ViewHolderA) convertView.getTag();
         }
-        List<String> img = list.get(position).getImgs();
+        final List<String> img = list.get(position).getImgs();
         viewHolderA.img_group1.setVisibility(View.VISIBLE);
         viewHolderA.img_group2.setVisibility(View.VISIBLE);
         if (Integer.parseInt(list.get(position).getType()) == 1) {
@@ -118,6 +105,25 @@ public class GroupPullAdapter extends BaseAdapter {
         viewHolderA.shareCount0.setText(list.get(position).getPl());
         UniversalImageUtils.disCircleImage(list.get(position).getUserimg(), viewHolderA.useIcon0);
         viewHolderA.tv_body_start0.setText("[" + list.get(position).getGroupname() + "]");
+
+        viewHolderA.img_group1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowImgListActivity.class);
+                intent.putExtra("ID", 0);
+                intent.putStringArrayListExtra("IMG",(ArrayList)img);
+                context.startActivity(intent);
+            }
+        });
+        viewHolderA.img_group2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowImgListActivity.class);
+                intent.putExtra("ID", 1);
+                intent.putStringArrayListExtra("IMG",(ArrayList)img);
+                context.startActivity(intent);
+            }
+        });
 
         return convertView;
     }
