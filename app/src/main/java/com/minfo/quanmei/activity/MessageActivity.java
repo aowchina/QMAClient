@@ -1,12 +1,17 @@
 package com.minfo.quanmei.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.chat.Constant;
+import com.minfo.quanmei.chat.ui.ChatActivity;
+import com.minfo.quanmei.utils.ToastUtils;
 
 public class MessageActivity extends BaseActivity implements View.OnClickListener {
 
@@ -17,6 +22,8 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
     private TextView tvMessage;
     private TextView tvMessageNum;
     private TextView tvMessageTime;
+
+    private TextView tvAsk;
 
     private LinearLayout llGroupNotify;
     private int replyNum;
@@ -42,6 +49,9 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         tvMessage = (TextView) findViewById(R.id.tv_message);
         tvMessageNum  = (TextView) findViewById(R.id.tv_message_num);
         tvMessageTime = (TextView) findViewById(R.id.tv_last_message_time);
+
+        tvAsk = (TextView) findViewById(R.id.tv_ask);
+        tvAsk.setOnClickListener(this);
 
 
         llGroupNotify = (LinearLayout) findViewById(R.id.ll_group_notify);
@@ -80,6 +90,17 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.iv_left:
                 finish();
+                break;
+            case R.id.tv_ask:
+//                String toUserName = "594111915";//默认用户
+                String toUserName = "785251622";//默认用户
+                if(toUserName.equals(EMClient.getInstance().getCurrentUser())){
+                    ToastUtils.show(this,R.string.Cant_chat_with_yourself);
+                }else {
+                    Intent intent = new Intent(this, ChatActivity.class);
+                    intent.putExtra(Constant.EXTRA_USER_ID,toUserName);
+                    startActivity(intent);
+                }
                 break;
         }
     }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
 import com.minfo.quanmei.R;
 import com.minfo.quanmei.activity.LoginActivity;
 import com.minfo.quanmei.activity.MainActivity;
@@ -22,6 +23,7 @@ import com.minfo.quanmei.activity.MyReceiveActivity;
 import com.minfo.quanmei.activity.OrderListActivity;
 import com.minfo.quanmei.activity.PhotoViewActivity;
 import com.minfo.quanmei.activity.PocketActivity;
+import com.minfo.quanmei.chat.ChatHelper;
 import com.minfo.quanmei.config.ImageSelConfig;
 import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
@@ -179,6 +181,7 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 utils.jumpAty(getActivity(), PocketActivity.class, null);
                 break;
             case R.id.btn_exit_login:
+                logoutHx();
                 reqExitLogin();
                 break;
             case R.id.iv_info_bg:
@@ -188,6 +191,25 @@ public class My_Fragment extends BaseFragment implements View.OnClickListener {
                 startActivityForResult(new Intent(mActivity, PhotoViewActivity.class), SELECT_PHOTO);
                 break;
         }
+    }
+
+    private void logoutHx() {
+        ChatHelper.getInstance().logout(false, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                Log.e(TAG,"logout hx success");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e(TAG,"logout hx fail "+s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
     }
 
     /**

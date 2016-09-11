@@ -68,7 +68,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 utils.jumpAty(this, ContactUsActivity.class, null);
                 break;
             case R.id.rl_check_update:
-                // checkUpdate();
+                 checkUpdate();
 
 //                getPopupWindow(v);
                 break;
@@ -85,6 +85,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
     //退出登录接口
     private void reqExitLogin() {
             String url = getResources().getString(R.string.api_baseurl) + "public/GetOut.php";

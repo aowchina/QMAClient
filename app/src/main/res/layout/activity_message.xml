@@ -1,17 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
 
-              tools:context="com.minfo.quanmei.activity.MessageActivity">
+    tools:context="com.minfo.quanmei.activity.MessageActivity">
 
-    <include layout="@layout/common_top"/>
+    <include layout="@layout/common_top" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#f5f5f5"/>
+        android:background="#f5f5f5" />
 
     <LinearLayout
         android:id="@+id/ll_group_notify"
@@ -25,7 +25,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:src="@mipmap/conversation_icon_group"/>
+            android:src="@mipmap/conversation_icon_group" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -39,13 +39,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="小组通知"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="你有新消息"/>
+                android:text="你有新消息" />
 
         </LinearLayout>
 
@@ -57,9 +57,9 @@
             android:background="@drawable/shape_circle_view"
             android:gravity="center"
             android:text="1"
-            android:visibility="invisible"
             android:textColor="@color/white"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tv_last_message_time"
@@ -67,12 +67,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:layout_weight="1"
-            android:text="18:45"/>
+            android:text="18:45" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#f5f5f5"/>
+        android:background="#f5f5f5" />
+
+    <LinearLayout
+        android:id="@+id/ll_ask"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_ask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="咨询"
+            android:textSize="15sp"
+            android:textColor="@color/basic_color"/>
+    </LinearLayout>
 
 </LinearLayout>

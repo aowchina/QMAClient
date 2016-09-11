@@ -462,7 +462,7 @@ public class Start_Fragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onRequestError(int code, String msg) {
-                ToastUtils.show(mActivity,msg);
+//                ToastUtils.show(mActivity,msg);
             }
         });
     }

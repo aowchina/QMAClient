@@ -19,12 +19,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.minfo.quanmei.R;
+import com.minfo.quanmei.chat.ChatHelper;
 import com.minfo.quanmei.entity.User;
 import com.minfo.quanmei.http.BaseResponse;
 import com.minfo.quanmei.http.RequestListener;
-import com.minfo.quanmei.receiver.LoginSuccessReceiver;
-import com.minfo.quanmei.service.LoginSuccessService;
 import com.minfo.quanmei.utils.Constant;
 import com.minfo.quanmei.utils.MyCheck;
 import com.minfo.quanmei.utils.ToastUtils;
@@ -271,7 +272,45 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             setResult(1);
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(!ChatHelper.getInstance().isLoggedIn()){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loginHx();
+                        }
+                    });
+                }
+            }
+        }).start();
+
+
+
         LoginActivity.this.finish();
+    }
+
+    private void loginHx() {
+        if(TextUtils.isEmpty(pwd)){
+            pwd = "111111";
+        }
+        EMClient.getInstance().login(utils.getUserid()+"", pwd, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                Log.e(TAG,"login hx success");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e(TAG,"login hx fail "+s);
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
     }
 
     /**
@@ -403,9 +442,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             try {
                 JSONObject jo = (JSONObject) value;
                 String nickName = utils.convertNickname(jo.getString("nickname"));
-                String gender = jo.getString("gender");
                 String figureUrl = jo.getString("figureurl_qq_1");
-                String level = jo.getString("level");
 
                 reqThirdLoginServer(3, openid, nickName, figureUrl);
 

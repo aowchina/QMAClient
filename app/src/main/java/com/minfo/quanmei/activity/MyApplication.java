@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.minfo.quanmei.chat.ChatHelper;
+
 /**
  * Created by liujing on 15/8/25.
  */
@@ -65,6 +67,8 @@ public class MyApplication extends Application {
 
             }
         });
+
+        ChatHelper.getInstance().init(this);
 
     }
 
